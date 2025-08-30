@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>%sveltekit.error.message%</title>
+	<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+	<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+	<main class="grid min-h-full place-items-center px-6 py-24 sm:py-32">
+		<!-- Beispiel mit Status 404 -->
+		<h1 class="text-error text-4xl font-bold text-center">
+			%sveltekit.status%
+		</h1>
+		<div>
+			<p class="text-center text-base-content/80 text-lg mt-4">
+				%sveltekit.error.message%
+			</p>
+			<p class="text-center mt-10">
+				<a class="btn" href="/">Go back home</a>
+			</p>
+		</div>
+	</main>
+</div>
+</body>
+</html>

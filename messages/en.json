@@ -1,0 +1,17 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from en!",
+	"benefit1": "3% discount on box orders",
+	"benefit2": "Free shipping over xx€",
+	"benefit3": "Fast delivery with DHL",
+	"search": "Search for cigars...",
+	"categories": "Categories",
+	"cigars": "Cigars",
+	"zigarillos": "Zigarillos",
+	"pipestobacco": "Pipes & Tobacco",
+	"accessories": "Accessories",
+	"spirits": "Spirits",
+	"gifts": "Gifts",
+	"sale": "Sale %",
+	"news": "News & Infos"
+}

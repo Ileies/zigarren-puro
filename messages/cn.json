@@ -1,0 +1,17 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from cn!",
+	"benefit1": "3% 折扣",
+	"benefit2": "免费送货超过 xx€",
+	"benefit3": "快速配送与 DHL",
+	"search": "搜索雪茄...",
+	"categories": "类别",
+	"cigars": "雪茄",
+	"zigarillos": "小雪茄",
+	"pipestobacco": "烟斗与烟草",
+	"accessories": "配件",
+	"spirits": "烈酒",
+	"gifts": "礼品",
+	"sale": "特价",
+	"news": "新闻资讯"
+}

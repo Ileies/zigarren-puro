@@ -1,0 +1,17 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "hello_world": "Hello, {name} from ar!",
+  "benefit1": "3% خصم على طلبات الصناديق",
+  "benefit2": "الشحن المجاني لطلبات أكثر من xx€",
+  "benefit3": "الشحن السريع بواسطة DHL",
+  "search": "البحث عن سجائر...",
+  "categories": "الفئات",
+  "cigars": "السجائر",
+  "zigarillos": "السجائر الصغيرة",
+  "pipestobacco": "الأنابيب والتبغ",
+  "accessories": "الإكسسوارات",
+  "spirits": "المشروبات الكحولية",
+  "gifts": "الهدايا",
+  "sale": "الخصم %",
+  "news": "الأخبار والمعلومات"
+}

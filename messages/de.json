@@ -1,0 +1,17 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from de!",
+	"benefit1": "3% Rabatt auf Kistenbestellungen",
+	"benefit2": "Versandkostenfreie Lieferung ab xx€",
+	"benefit3": "Schnelle Lieferung mit DHL",
+	"search": "Suchen Sie nach Zigarren...",
+	"categories": "Kategorien",
+	"cigars": "Zigarren",
+	"zigarillos": "Zigarillos",
+	"pipestobacco": "Pfeifen & Tabak",
+	"accessories": "Zubehör",
+	"spirits": "Spirituosen",
+	"gifts": "Geschenkideen",
+	"sale": "Sale %",
+	"news": "News & Infos"
+}

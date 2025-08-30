@@ -1,0 +1,28 @@
+<!doctype html>
+<html class="scroll-smooth" lang="%paraglide.lang%" dir="%paraglide.textDirection%">
+	<head>
+		<meta charset="utf-8" />
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<meta content="yes" name="mobile-web-app-capable" />
+		<meta content="Elias Klassen" name="author" />
+		<meta content="Elias Klassen" name="copyright" />
+		<!--<meta content="" name="keywords" />-->
+		<!--<meta content="@" name="twitter:site" />-->
+		<!--<meta content="summary_large_image" name="twitter:card" />-->
+		<meta content="website" property="og:type" />
+		<link href="%sveltekit.assets%/favicon.png" rel="icon" />
+		<link href="%sveltekit.assets%/favicon.png" rel="apple-touch-icon" />
+		<!--<link href="%sveltekit.assets%/manifest.json" rel="manifest" crossorigin="use-credentials" />-->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-QLQT0NQC66"></script>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+			gtag('config', 'G-QLQT0NQC66');
+		</script>
+	</body>
+</html>

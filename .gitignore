@@ -1,0 +1,18 @@
+.*
+
+!.gitignore
+!.prettierignore
+!.prettierrc
+
+# Logs
+*.log*
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Custom
+node_modules
+/build
+src/lib/paraglide
+/_resources
