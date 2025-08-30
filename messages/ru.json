@@ -1,0 +1,18 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"hello_world": "Hello, {name} from ru!",
+	"benefit1": "3% скидка на заказы в коробках",
+	"benefit2": "Бесплатная доставка от xx€",
+	"benefit3": "Быстрая доставка с DHL",
+	"search": "Поиск по сигарам...",
+	"categories": "Категории",
+	"followUs": "Следите за нами",
+	"cigars": "Сигары",
+	"zigarillos": "Сигарillos",
+	"pipestobacco": "Сигарные трубки и табак",
+	"accessories": "Аксессуары",
+	"spirits": "Спиртные напитки",
+	"gifts": "Подарочные идеи",
+	"sale": "Скидки %",
+	"news": "Новости и Информация"
+}

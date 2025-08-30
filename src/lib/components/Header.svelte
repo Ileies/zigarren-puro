@@ -182,7 +182,7 @@
 				<!-- Drawer Footer -->
 				<div class="mt-auto p-6 bg-base-200 border-t border-base-300">
 					<div class="text-center mb-4">
-						<p class="text-sm font-medium text-base-content/80 mb-3">Folgen Sie uns</p>
+						<p class="text-sm font-medium text-base-content/80 mb-3">{m.followUs()}</p>
 						<div class="flex justify-center gap-4">
 							<a
 								href={facebook}
