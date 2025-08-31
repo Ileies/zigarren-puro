@@ -6,12 +6,12 @@
 	let { children } = $props();
 </script>
 
-<div class="flex flex-col min-h-svh">
+<div class="min-h-screen flex flex-col">
 	<Header />
 
-	<main class="flex-1 flex flex-col p-4 w-full max-w-4xl mx-auto box-border">
+	<main class="flex-1 flex flex-col w-full box-border">
 		{@render children()}
 	</main>
-
-	<Footer />
 </div>
+
+<Footer />
