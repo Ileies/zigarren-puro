@@ -1,10 +1,25 @@
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
+	import HeroCarousel from '$lib/components/homepage/HeroCarousel.svelte';
+	import FeaturedBrands from '$lib/components/homepage/FeaturedBrands.svelte';
+	import AllBrandsCarousel from '$lib/components/homepage/AllBrandsCarousel.svelte';
+	import CallToAction from '$lib/components/homepage/CallToAction.svelte';
 </script>
 
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Zigarren Puro - Premium Zigarren & Tabakwaren</title>
+	<meta name="description" content="Entdecken Sie unsere exklusive Auswahl an Premium-Zigarren von weltbekannten Marken." />
 </svelte:head>
 
-<h1>{m.hello_world({ name: 'SvelteKit User' })}</h1>
+<HeroCarousel />
+<FeaturedBrands />
+<AllBrandsCarousel />
+<CallToAction />
+
+TODO Later:
+Empfehlungen
+About (Laden vorstellen)
+Tasting Rum [divider] Zigarre
+Sprituosen
+
+
+
