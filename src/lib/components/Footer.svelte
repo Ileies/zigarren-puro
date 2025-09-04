@@ -156,17 +156,18 @@
 					{/each}
 				</ul>
 
-				<!-- Features -->
+				<!-- Opening Hours -->
 				<div class="mt-6">
-					<h4 class="font-medium mb-3">{m.ourAdvantages()}</h4>
-					<div class="space-y-2">
-						{#each features as feature (feature.text)}
-							{@const Icon = feature.icon}
-							<div class="flex items-center gap-2 text-sm text-neutral-content/80">
-								<Icon class="w-4 h-4 text-secondary" />
-								<span>{feature.text}</span>
-							</div>
-						{/each}
+					<h4 class="font-medium mb-3">Öffnungszeiten</h4>
+					<div class="space-y-1 text-sm text-neutral-content/80">
+						<div class="flex justify-between">
+							<span>Mo-Sa:</span>
+							<span class="mr-5">13:00 - 19:00</span>
+						</div>
+						<div class="flex justify-between">
+							<span>So:</span>
+							<span class="mr-5">Geschlossen</span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -183,6 +184,19 @@
 						</li>
 					{/each}
 				</ul>
+
+				<!-- Awards & Partners -->
+				<div class="mt-6">
+					<h4 class="font-medium mb-3">Unsere Partner</h4>
+					<div class="flex gap-4 items-center">
+						<div class="grayscale hover:grayscale-0 transition-all duration-300">
+							<img src="/awards/davidoff.png" alt="Davidoff" class="h-16 object-contain" />
+						</div>
+						<div class="grayscale hover:grayscale-0 transition-all duration-300">
+							<img src="/awards/habanos.png" alt="Habanos" class="h-16 object-contain" />
+						</div>
+					</div>
+				</div>
 
 				<!-- Payment Methods -->
 				<div class="mt-6">
