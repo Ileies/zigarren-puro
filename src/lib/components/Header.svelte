@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { BadgePercent, CircleUser, Facebook, Instagram, Menu, Search, ShoppingCart, Truck, X } from 'lucide-svelte';
+	import { BadgePercent, CircleUser, Menu, Search, ShoppingCart, Truck, X } from 'lucide-svelte';
+	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import LanguageSelector from './LanguageSelector.svelte';
 	import { facebook, instagram } from '$lib/config';
 	import { m } from '$lib/paraglide/messages.js';
 
-	const navigation = [
+    const navigation = [
 		{ title: m.cigars(), href: '/search?t=cigars' },
 		{ title: m.zigarillos(), href: '/search?t=zigarillos' },
 		{ title: m.pipestobacco(), href: '/search?t=pipes+tobacco' },
@@ -87,11 +88,11 @@
 					<div class="flex gap-4 items-center">
 						<a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook"
 							 class="hover:text-accent transition-colors">
-							<Facebook class="w-4 h-4" />
+							<SiFacebook size={16} />
 						</a>
 						<a href={instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram"
 							 class="hover:text-accent transition-colors">
-							<Instagram class="w-4 h-4" />
+							<SiInstagram size={16} />
 						</a>
 						<LanguageSelector />
 					</div>
@@ -191,7 +192,7 @@
 								aria-label="Facebook"
 								class="btn btn-circle btn-outline btn-sm hover:btn-primary transition-colors"
 							>
-								<Facebook class="w-5 h-5" />
+								<SiFacebook size={20} />
 							</a>
 							<a
 								href={instagram}
@@ -200,7 +201,7 @@
 								aria-label="Instagram"
 								class="btn btn-circle btn-outline btn-sm hover:btn-primary transition-colors"
 							>
-								<Instagram class="w-5 h-5" />
+								<SiInstagram size={20} />
 							</a>
 						</div>
 					</div>

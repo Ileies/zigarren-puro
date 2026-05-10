@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { Award, Facebook, Globe, Instagram, Mail, MapPin, Phone, Shield, Truck } from 'lucide-svelte';
-	import { address, location, facebook, instagram, phone, email } from '$lib/config';
+	import { Award, Globe, Mail, MapPin, Phone, Shield, Truck } from 'lucide-svelte';
+	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
+	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
 	import { m } from '$lib/paraglide/messages.js';
 
 	const customerServiceLinks = [
@@ -13,7 +14,7 @@
 	const companyLinks = [
 		{ title: m.aboutUs(), href: '/about' },
 		{ title: m.news(), href: '/news' },
-		{ title: m.careers(), href: '/careers' },
+		{ title: m.careers(), href: '/career' },
 		{ title: m.partners(), href: '/partners' }
 	];
 
@@ -44,6 +45,33 @@
 			customerEmail = '';
 		}, 1000);
 	};
+
+	const methods = [{
+		title: 'VISA & MC',
+		icon: 'visa-mc',
+		description: 'VISA & MC',
+	}, {
+		title: 'Amex',
+		icon: 'amex',
+		description: 'Amex',
+	}, {
+		title: 'Vorkasse',
+		icon: 'vorkasse',
+		description: 'Vorkasse',
+	}, {
+		title: 'SEPA',
+		icon: 'sepa',
+		description: 'SEPA',
+	}, {
+		title: 'Nachnahme',
+		icon: 'nachnahme',
+		description: 'Nachnahme',
+	}, {
+		title: 'Klarna',
+		icon: 'klarna-sofort',
+		description: 'Klarna',
+	}];
+	// TODO: maybe add Giro, Google, Apple
 </script>
 
 <footer class="bg-neutral text-neutral-content">
@@ -95,7 +123,7 @@
 							aria-label="Facebook"
 							class="btn btn-circle btn-outline btn-sm hover:btn-secondary transition-colors"
 						>
-							<Facebook class="w-4 h-4" />
+							<SiFacebook size={16} />
 						</a>
 						<a
 							href={instagram}
@@ -104,7 +132,7 @@
 							aria-label="Instagram"
 							class="btn btn-circle btn-outline btn-sm hover:btn-secondary transition-colors"
 						>
-							<Instagram class="w-4 h-4" />
+							<SiInstagram size={16} />
 						</a>
 					</div>
 				</div>
@@ -137,7 +165,7 @@
 						</a>
 						<a class="flex items-start gap-2" href={location} target="_blank">
 							<MapPin class="w-4 h-4 mt-0.5" />
-							<span>Zigarren Puro GmbH<br />{address.split(', ')[0]}<br />{address.split(', ')[1]}</span>
+							<span>Zigarren Puro GmbH<br />{storeAddress.split(', ')[0]}<br />{storeAddress.split(', ')[1]}</span>
 						</a>
 					</div>
 				</div>
@@ -160,13 +188,13 @@
 				<div class="mt-6">
 					<h4 class="font-medium mb-3">Öffnungszeiten</h4>
 					<div class="space-y-1 text-sm text-neutral-content/80">
-						<div class="flex justify-between">
-							<span>Mo-Sa:</span>
-							<span class="mr-5">13:00 - 19:00</span>
+						<div class="flex gap-4">
+							<span class="min-w-[3rem]">Mo-Sa:</span>
+							<span>13:00 - 19:00</span>
 						</div>
-						<div class="flex justify-between">
-							<span>So:</span>
-							<span class="mr-5">Geschlossen</span>
+						<div class="flex gap-4">
+							<span class="min-w-[3rem]">So:</span>
+							<span>Geschlossen</span>
 						</div>
 					</div>
 				</div>
@@ -187,7 +215,7 @@
 
 				<!-- Awards & Partners -->
 				<div class="mt-6">
-					<h4 class="font-medium mb-3">Unsere Partner</h4>
+					<h4 class="font-medium mb-3">{m.awards()}</h4>
 					<div class="flex gap-4 items-center">
 						<div class="grayscale hover:grayscale-0 transition-all duration-300">
 							<img src="/awards/davidoff.png" alt="Davidoff" class="h-16 object-contain" />
@@ -201,10 +229,9 @@
 				<!-- Payment Methods -->
 				<div class="mt-6">
 					<h4 class="font-medium mb-3">{m.paymentMethods()}</h4>
-					<div class="grid grid-cols-3 gap-2">
-						{#each ['VISA', 'MC', 'PayPal', 'SEPA', 'Crypto', 'Klarna'] as method (method)}
-							<!-- Payment method icons/logos would go here -->
-							<div class="bg-base-100 rounded p-2 text-center text-xs text-base-content">{method}</div>
+					<div class="grid grid-cols-3 gap-2 max-w-[200px]">
+						{#each methods as method (method)}
+							<img src={`/payment-methods/${method.icon}.svg`} alt={method.title} title={method.title} class="h-10" />
 						{/each}
 					</div>
 				</div>
