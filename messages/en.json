@@ -1,6 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from en!",
+
 	"benefit1": "3% discount on box orders",
 	"benefit2": "Free shipping over xx€",
 	"benefit3": "Fast delivery with DHL",
@@ -46,5 +46,16 @@
 	"ourAdvantages": "Our Advantages",
 	"madeInGermany": "Made in Germany",
 	"sslSecure": "SSL Secure",
-	"companyDescription": "Premium cigars, cigarillos and spirits for connoisseurs and enthusiasts."
+	"companyDescription": "Premium cigars, cigarillos and spirits for connoisseurs and enthusiasts.",
+	"awards": "Awards",
+	
+	"tastingEvents": "Tasting Events",
+	"rumTastings": "Rum Tastings",
+	"cigarTastings": "Cigar Tastings",
+	"joinOurTastings": "Join our exclusive tasting events",
+	"rumTastingDesc": "Discover the world of premium rums with our experts",
+	"cigarTastingDesc": "Experience the art of cigar making at our cigar tastings",
+	"upcomingEvents": "Upcoming Events",
+	"bookNow": "Book Now",
+	"learnMore": "Learn More"
 }

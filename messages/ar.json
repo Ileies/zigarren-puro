@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello_world": "Hello, {name} from ar!",
+
   "benefit1": "3% خصم على طلبات الصناديق",
   "benefit2": "الشحن المجاني لطلبات أكثر من xx€",
   "benefit3": "الشحن السريع بواسطة DHL",
@@ -46,5 +46,16 @@
   "ourAdvantages": "مزايانا",
   "madeInGermany": "صنع في ألمانيا",
   "sslSecure": "آمن SSL",
-  "companyDescription": "سجائر وسجائر صغيرة ومشروبات كحولية فاخرة للخبراء والمتذوقين."
+  "companyDescription": "سجائر وسجائر صغيرة ومشروبات كحولية فاخرة للخبراء والمتذوقين.",
+  "awards": "الجوائز",
+
+  "tastingEvents": "أحداث التذوق",
+  "rumTastings": "تذوق الروم",
+  "cigarTastings": "تذوق السجائر",
+  "joinOurTastings": "انضم إلى أحداث التذوق الحصرية لدينا",
+  "rumTastingDesc": "اكتشف عالم الروم المتميز مع خبرائنا",
+  "cigarTastingDesc": "اختبر فن صناعة السجائر في جلسات تذوق السجائر لدينا",
+  "upcomingEvents": "الأحداث القادمة",
+  "bookNow": "احجز الآن",
+  "learnMore": "تعلم المزيد"
 }

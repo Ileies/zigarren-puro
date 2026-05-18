@@ -1,6 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from de!",
+	
 	"benefit1": "3% Rabatt auf Kistenbestellungen",
 	"benefit2": "Versandkostenfreie Lieferung ab xx€",
 	"benefit3": "Schnelle Lieferung mit DHL",
@@ -46,5 +46,16 @@
 	"ourAdvantages": "Unsere Vorteile",
 	"madeInGermany": "Made in Germany",
 	"sslSecure": "SSL Secure",
-	"companyDescription": "Premium Zigarren, Zigarillos und Spirituosen für Kenner und Genießer."
+	"companyDescription": "Premium Zigarren, Zigarillos und Spirituosen für Kenner und Genießer.",
+	"awards": "Auszeichnungen",
+
+	"tastingEvents": "Verkostungsevents",
+	"rumTastings": "Rum-Verkostungen",
+	"cigarTastings": "Zigarren-Verkostungen",
+	"joinOurTastings": "Nehmen Sie an unseren exklusiven Verkostungen teil",
+	"rumTastingDesc": "Entdecken Sie die Welt der Premium-Rums mit unseren Experten",
+	"cigarTastingDesc": "Erleben Sie die Kunst der Zigarrenherstellung bei unseren Zigarren-Verkostungen",
+	"upcomingEvents": "Kommende Events",
+	"bookNow": "Jetzt buchen",
+	"learnMore": "Mehr erfahren"
 }

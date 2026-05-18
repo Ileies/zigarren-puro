@@ -1,6 +1,6 @@
 {
 	"$schema": "https://inlang.com/schema/inlang-message-format",
-	"hello_world": "Hello, {name} from cn!",
+
 	"benefit1": "3% 折扣",
 	"benefit2": "免费送货超过 xx€",
 	"benefit3": "快速配送与 DHL",
@@ -46,5 +46,16 @@
 	"ourAdvantages": "我们的优势",
 	"madeInGermany": "德国制造",
 	"sslSecure": "SSL安全",
-	"companyDescription": "为鉴赏家和爱好者提供优质雪茄、小雪茄和烈酒。"
+	"companyDescription": "为鉴赏家和爱好者提供优质雪茄、小雪茄和烈酒。",
+	"awards": "奖项",
+	
+	"tastingEvents": "品鉴活动",
+	"rumTastings": "朗姆酒品鉴",
+	"cigarTastings": "雪茄品鉴",
+	"joinOurTastings": "参加我们的专属品鉴活动",
+	"rumTastingDesc": "与我们的专家一起探索优质朗姆酒的世界",
+	"cigarTastingDesc": "在我们的雪茄品鉴会上体验雪茄制作艺术",
+	"upcomingEvents": "即将举行的活动",
+	"bookNow": "立即预订",
+	"learnMore": "了解更多"
 }
