@@ -20,7 +20,7 @@ export const actions: Actions = {
 		}
 
 		const [customer] = await db
-			.select({ id: customerTable.id })
+			.select({ id: customerTable.id, isVerified: customerTable.isVerified })
 			.from(customerTable)
 			.where(eq(customerTable.email, email));
 
@@ -66,6 +66,6 @@ export const actions: Actions = {
 		const session = await auth.createSession(token, customer.id);
 		auth.setSessionTokenCookie(event, token, session.expiresAt);
 
-		redirect(302, '/');
+		redirect(302, customer.isVerified ? '/' : '/verify-email');
 	}
 };

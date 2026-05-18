@@ -5,6 +5,7 @@ import db from '$lib/server/db';
 import { authCredentialsTable, customerTable } from '$lib/server/db/schema';
 import * as auth from '$lib/server/auth';
 import { Gender } from '$lib/types';
+import { sendVerificationEmail } from '$lib/server/functions';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/');
@@ -111,6 +112,9 @@ export const actions: Actions = {
 		const session = await auth.createSession(token, customer.id);
 		auth.setSessionTokenCookie(event, token, session.expiresAt);
 
-		redirect(302, '/');
+		// Fire-and-forget — registration still succeeds if email fails
+		sendVerificationEmail(customer.id, email, firstName).catch(console.error);
+
+		redirect(302, '/verify-email');
 	}
 };
