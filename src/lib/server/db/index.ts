@@ -1,4 +1,4 @@
-import { drizzle } from 'drizzle-orm/bun-sql';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import * as schema from './schema';
 import { DATABASE_URL } from '$env/static/private';
 

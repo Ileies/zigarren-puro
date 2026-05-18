@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="980" height="680" viewBox="0 0 980 680">
+  <defs>
+    <linearGradient id="c" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFF"/>
+      <stop offset="100%" stop-color="#EDEDED"/>
+    </linearGradient>
+    <filter id="a" width="113.3%" height="120%" x="-6.7%" y="-10%" filterUnits="objectBoundingBox">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="2.5" result="shadowSpreadOuter1"/>
+      <feOffset in="shadowSpreadOuter1" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="17.5"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0"/>
+    </filter>
+    <rect id="b" width="900" height="600" x="0" y="0" rx="80"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <g transform="translate(40 40)">
+      <use xlink:href="#b" fill="#000" filter="url(#a)"/>
+      <use xlink:href="#b" fill="url(#c)"/>
+    </g>
+    <g fill-rule="nonzero">
+      <path fill="#FF5A00" d="M435.249 91.739h109.385V288.26H435.249z"/>
+      <path fill="#EB001B" d="M442.53 190c0-39.927 18.771-75.364 47.574-98.26C468.906 75.072 442.167 65 413 65c-69.094 0-125 55.906-125 125s55.906 125 125 125c29.167 0 55.906-10.073 77.104-26.74-28.843-22.572-47.573-58.333-47.573-98.26Z"/>
+      <path fill="#F79E1B" d="M692.207 190c0 69.094-55.906 125-125 125-29.167 0-55.906-10.073-77.103-26.74 29.166-22.936 47.572-58.333 47.572-98.26 0-39.927-18.77-75.364-47.572-98.26C511.26 75.072 538 65 567.167 65c69.134 0 125.04 56.27 125.04 125Z"/>
+    </g>
+    <path fill="#1434CB" fill-rule="nonzero" d="M607.063 364.5c-54.786 0-103.745 28.396-103.745 80.861 0 60.167 86.83 64.323 86.83 94.549 0 12.727-14.584 24.12-39.495 24.12-35.353 0-61.777-15.92-61.777-15.92l-11.306 52.943s30.44 13.447 70.852 13.447c59.898 0 107.03-29.79 107.03-83.152 0-63.578-87.192-67.61-87.192-95.665 0-9.97 11.973-20.894 36.813-20.894 28.026 0 50.892 11.578 50.892 11.578l11.065-51.134S642.15 364.5 607.063 364.5Zm-501.236 3.86-1.327 7.717s23.048 4.219 43.807 12.633c26.729 9.649 28.633 15.266 33.135 32.712l49.053 189.098h65.756l101.303-242.16h-65.606l-65.093 164.646-26.561-139.562c-2.436-15.973-14.775-25.085-29.879-25.085H105.827Zm318.107 0L372.47 610.52h62.56l51.285-242.16h-62.38Zm348.921 0c-15.086 0-23.078 8.076-28.944 22.19l-91.654 219.97h65.605l12.693-36.662h79.927l7.718 36.662h57.887l-50.5-242.16h-52.732Zm8.532 65.424 19.447 90.87h-52.099l32.652-90.87Z"/>
+  </g>
+</svg>

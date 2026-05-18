@@ -71,4 +71,3 @@ The platform caters to cigar enthusiasts and connoisseurs, providing detailed pr
 - **AR Features**: Virtual product visualization and sizing
 - **Social Commerce**: Integration with social media platforms for direct selling
 - **Advanced Analytics**: Business intelligence dashboard for sales insights
-
