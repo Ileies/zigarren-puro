@@ -4,6 +4,9 @@
 	import LanguageSelector from './LanguageSelector.svelte';
 	import { facebook, instagram } from '$lib/config';
 	import { m } from '$lib/paraglide/messages.js';
+	import type { SessionValidationResult } from '$lib/server/auth';
+
+	let { user }: { user: SessionValidationResult['user'] } = $props();
 
     const navigation = [
 		{ title: m.cigars(), href: '/search?t=cigars' },
@@ -66,8 +69,7 @@
 							</div>
 
 							<div class="flex items-center gap-2 flex-shrink-0">
-								<a href="/login" class="btn btn-ghost btn-circle transition-colors"
-									 aria-label="Login">
+								<a href={user ? '/account' : '/login'} class="btn btn-ghost btn-circle transition-colors" aria-label={user ? 'Mein Konto' : 'Anmelden'}>
 									<CircleUser class="w-7 h-7" />
 								</a>
 								<a href="/cart" class="btn btn-ghost btn-circle transition-colors relative"
@@ -114,9 +116,28 @@
 
 						<!-- Icons -->
 						<div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-							<a class="btn btn-ghost transition-colors p-2" href="/login" aria-label="Login">
-								<CircleUser class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-							</a>
+							{#if user}
+								<div class="dropdown dropdown-end">
+									<button tabindex="0" class="btn btn-ghost transition-colors p-2" aria-label="Konto">
+										<CircleUser class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+									</button>
+									<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+									<ul tabindex="0" class="dropdown-content menu bg-base-100 text-base-content rounded-box z-50 w-52 p-2 shadow-lg ring-1 ring-base-300 mt-1">
+										<li class="menu-title text-xs px-3 py-1">{user.firstName} {user.lastName}</li>
+										<li><a href="/account">Mein Konto</a></li>
+										<li><a href="/account/orders">Meine Bestellungen</a></li>
+										<li>
+											<form method="POST" action="/logout">
+												<button type="submit" class="w-full text-left text-error">Abmelden</button>
+											</form>
+										</li>
+									</ul>
+								</div>
+							{:else}
+								<a class="btn btn-ghost transition-colors p-2" href="/login" aria-label="Anmelden">
+									<CircleUser class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+								</a>
+							{/if}
 							<a class="btn btn-ghost transition-colors p-2 relative" href="/cart" aria-label="Cart">
 								<ShoppingCart class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
 								<!-- Cart badge placeholder -->
@@ -182,6 +203,26 @@
 
 				<!-- Drawer Footer -->
 				<div class="mt-auto p-6 bg-base-200 border-t border-base-300">
+					<!-- User / Auth -->
+					<div class="mb-5">
+						{#if user}
+							<p class="text-sm font-medium text-base-content mb-2">
+								Hallo, {user.firstName}
+							</p>
+							<div class="flex gap-2">
+								<a href="/account" onclick={() => mobileMenuOpen = false} class="btn btn-outline btn-sm flex-1">Mein Konto</a>
+								<form method="POST" action="/logout" class="flex-1">
+									<button type="submit" class="btn btn-ghost btn-sm w-full text-error">Abmelden</button>
+								</form>
+							</div>
+						{:else}
+							<div class="flex gap-2">
+								<a href="/login" onclick={() => mobileMenuOpen = false} class="btn btn-primary btn-sm flex-1">Anmelden</a>
+								<a href="/register" onclick={() => mobileMenuOpen = false} class="btn btn-outline btn-sm flex-1">Registrieren</a>
+							</div>
+						{/if}
+					</div>
+
 					<div class="text-center mb-4">
 						<p class="text-sm font-medium text-base-content/80 mb-3">{m.followUs()}</p>
 						<div class="flex justify-center gap-4">
