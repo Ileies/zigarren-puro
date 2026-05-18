@@ -50,7 +50,6 @@
 		"@fontsource/inter": "^5.2.8",
 		"@fontsource/playfair-display": "^5.2.8",
 		"@fontsource/source-serif-pro": "^5.2.5",
-		"@inlang/paraglide-js": "^2.18.0",
 		"drizzle-orm": "^0.45.2",
 		"postgres": "^3.4.9"
 	},
