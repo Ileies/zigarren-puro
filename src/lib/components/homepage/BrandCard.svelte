@@ -20,9 +20,9 @@
 	}: BrandCardProps = $props();
 </script>
 
-<div class="group bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
-	<div class="relative overflow-hidden h-60">
-		<Picture src={src} alt={alt} class="w-full h-full" />
+<div class="group bg-base-100 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
+	<div class="relative overflow-hidden h-64">
+		<Picture src={src} alt={alt} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 		<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 	</div>
 	<div class="p-6">

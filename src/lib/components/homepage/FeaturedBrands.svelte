@@ -5,6 +5,7 @@
 <!-- Featured Brands Section -->
 <section class="py-12 lg:py-16 bg-base-100">
 	<div class="container mx-auto px-6">
+		
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
 			<BrandCard 
 				src="/brands/vegafina.png"

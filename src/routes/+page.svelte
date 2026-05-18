@@ -3,6 +3,10 @@
 	import FeaturedBrands from '$lib/components/homepage/FeaturedBrands.svelte';
 	import AllBrandsCarousel from '$lib/components/homepage/AllBrandsCarousel.svelte';
 	import CallToAction from '$lib/components/homepage/CallToAction.svelte';
+	import Recommendations from '$lib/components/homepage/Recommendations.svelte';
+	import About from '$lib/components/homepage/About.svelte';
+	import Tasting from '$lib/components/homepage/Tasting.svelte';
+	import Spirits from '$lib/components/homepage/Spirits.svelte';
 </script>
 
 <svelte:head>
@@ -14,12 +18,7 @@
 <FeaturedBrands />
 <AllBrandsCarousel />
 <CallToAction />
-
-TODO Later:
-Empfehlungen
-About (Laden vorstellen)
-Tasting Rum [divider] Zigarre
-Sprituosen
-
-
-
+<Recommendations />
+<About />
+<Tasting />
+<Spirits />
