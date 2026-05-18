@@ -1,7 +1,7 @@
 import { sequence } from '@sveltejs/kit/hooks';
 import * as auth from '$lib/server/auth';
 import { type Handle } from '@sveltejs/kit';
-import { paraglideMiddleware } from '$lib/paraglide/server';
+import { cookieName, getTextDirection, locales, runWithLocale } from '$lib/messages';
 import Logger from '$lib/server/Logger';
 import db from '$lib/server/db';
 import { env } from '$env/dynamic/private';
@@ -79,12 +79,15 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-const handleParaglide: Handle = ({ event, resolve }) =>
-	paraglideMiddleware(event.request, ({ request, locale }) => {
-		event.request = request;
-		return resolve(event, {
-			transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
-		});
-	});
+const handleLocale: Handle = ({ event, resolve }) => {
+	const raw = event.cookies.get(cookieName) ?? 'de';
+	const locale = (locales as readonly string[]).includes(raw) ? raw : 'de';
+	return runWithLocale(locale, () =>
+		resolve(event, {
+			transformPageChunk: ({ html }) =>
+				html.replace('%lang%', locale).replace('%dir%', getTextDirection(locale))
+		})
+	);
+};
 
-export const handle: Handle = sequence(handleAdmin, handleChecks, handleAuth, handleParaglide);
+export const handle: Handle = sequence(handleAdmin, handleChecks, handleAuth, handleLocale);

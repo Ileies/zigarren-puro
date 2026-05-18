@@ -3,7 +3,7 @@
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import LanguageSelector from './LanguageSelector.svelte';
 	import { facebook, instagram } from '$lib/config';
-	import { m } from '$lib/paraglide/messages.js';
+	import * as m from '$lib/messages';
 	import type { SessionValidationResult } from '$lib/server/auth';
 
 	let { user }: { user: SessionValidationResult['user'] } = $props();

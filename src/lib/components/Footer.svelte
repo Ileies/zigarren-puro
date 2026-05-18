@@ -2,7 +2,7 @@
 	import { Award, Globe, Mail, MapPin, Phone, Shield, Truck } from 'lucide-svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
-	import { m } from '$lib/paraglide/messages.js';
+	import * as m from '$lib/messages';
 
 	const customerServiceLinks = [
 		{ title: m.contact(), href: '/contact' },

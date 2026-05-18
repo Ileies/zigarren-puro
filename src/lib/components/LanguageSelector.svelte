@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getLocale, locales, setLocale } from '$lib/paraglide/runtime';
+	import { getLocale, locales, setLocale } from '$lib/messages';
 	import { ChevronDown } from 'lucide-svelte';
 
 	let isOpen = $state(false);
@@ -14,7 +14,6 @@
 			.join('');
 	};
 
-	// Use all supported locales from Paraglide
 	const supportedLanguages = locales;
 
 	function handleLanguageChange(locale: typeof locales[number]) {

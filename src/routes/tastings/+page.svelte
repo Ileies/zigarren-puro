@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Wine, Cigarette, Calendar, Users, Clock, MapPin } from 'lucide-svelte';
-	import { m } from '$lib/paraglide/messages.js';
+	import * as m from '$lib/messages';
 
 	// Sample tasting events data - this could come from a database or API
 	const rumTastings = [
