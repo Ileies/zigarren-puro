@@ -17,8 +17,8 @@
 
 ### Formulare & Kleinigkeiten
 
-- [ ] **Newsletter-Anmeldung** (Footer) — Formular existiert, aber Submit-Handler fehlt (`TODO`-Kommentar in `Footer.svelte:42`).
-- [ ] **Karriere-Bewerbungsformular** `/career` — macht aktuell nur einen Fake-Submit mit `setTimeout`, kein echter Versand (`TODO`-Kommentar in `+page.svelte:15`).
+- [x] **Newsletter-Anmeldung** (Footer) — POSTet an `/newsletter?/subscribe`; setzt `marketingConsent` für bestehende Kunden, sendet Bestätigungs-E-Mail.
+- [x] **Karriere-Bewerbungsformular** `/career` — sendet E-Mail an Shop-Postfach, Honeypot, Erfolgs-/Fehlermeldung.
 
 ### Admin
 
