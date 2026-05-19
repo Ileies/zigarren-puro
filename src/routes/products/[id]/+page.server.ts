@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import db from '$lib/server/db';
 import { addToCart } from '$lib/server/cart';
@@ -8,12 +8,13 @@ import {
 	cigarDetailsTable,
 	cigarilloDetailsTable,
 	beverageDetailsTable,
-	toolDetailsTable
+	toolDetailsTable,
+	wishlistTable
 } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { ProductType } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
 	const [product] = await db
 		.select({
 			id: productTable.id,
@@ -49,12 +50,40 @@ export const load: PageServerLoad = async ({ params }) => {
 		details = d ?? null;
 	}
 
-	return { product, details };
+	let isWishlisted = false;
+	if (locals.user) {
+		const [wish] = await db
+			.select()
+			.from(wishlistTable)
+			.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+		isWishlisted = !!wish;
+	}
+
+	return { product, details, isWishlisted };
 };
 
 export const actions: Actions = {
 	addToCart: async ({ cookies, params }) => {
 		addToCart(cookies, params.id);
 		return { success: true };
+	},
+
+	toggleWishlist: async ({ locals, params }) => {
+		if (!locals.user) redirect(302, '/login');
+
+		const [existing] = await db
+			.select()
+			.from(wishlistTable)
+			.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+
+		if (existing) {
+			await db
+				.delete(wishlistTable)
+				.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+			return { wishlisted: false };
+		} else {
+			await db.insert(wishlistTable).values({ customerId: locals.user.id, productId: params.id });
+			return { wishlisted: true };
+		}
 	}
 };

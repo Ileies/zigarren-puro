@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
-	import { MapPin, Shield, User } from 'lucide-svelte';
+	import { Heart, MapPin, Package, Shield, User } from 'lucide-svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -46,7 +46,7 @@
 				</div>
 				<div>
 					<p class="font-medium text-base-content">Adressen</p>
-					<p class="text-xs text-base-content/60">Liefr- & Rechnungsadressen verwalten</p>
+					<p class="text-xs text-base-content/60">Liefer- & Rechnungsadressen verwalten</p>
 				</div>
 			</a>
 			<a
@@ -54,11 +54,23 @@
 				class="flex items-center gap-3 rounded-xl bg-base-100 p-4 shadow-sm ring-1 ring-base-300 transition-shadow hover:shadow-md"
 			>
 				<div class="rounded-lg bg-secondary/10 p-2">
-					<Shield class="h-5 w-5 text-secondary" />
+					<Package class="h-5 w-5 text-secondary" />
 				</div>
 				<div>
 					<p class="font-medium text-base-content">Bestellungen</p>
 					<p class="text-xs text-base-content/60">Bestellhistorie einsehen</p>
+				</div>
+			</a>
+			<a
+				href="/account/wishlist"
+				class="flex items-center gap-3 rounded-xl bg-base-100 p-4 shadow-sm ring-1 ring-base-300 transition-shadow hover:shadow-md"
+			>
+				<div class="rounded-lg bg-error/10 p-2">
+					<Heart class="h-5 w-5 text-error" />
+				</div>
+				<div>
+					<p class="font-medium text-base-content">Wunschliste</p>
+					<p class="text-xs text-base-content/60">Gemerkte Produkte anzeigen</p>
 				</div>
 			</a>
 		</div>

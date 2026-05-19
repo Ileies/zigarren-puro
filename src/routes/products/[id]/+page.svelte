@@ -1,11 +1,18 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Package, ShoppingCart, ArrowLeft, MapPin, Award, Check } from 'lucide-svelte';
+	import { Package, ShoppingCart, ArrowLeft, MapPin, Award, Check, Heart } from 'lucide-svelte';
 	import { ProductType, CigarStrength } from '$lib/types';
+	import type { ActionData } from './$types';
 
 	let addedFeedback = $state(false);
 
-	let { data } = $props();
+	let { data, form }: { data: any; form: ActionData } = $props();
+
+	let isWishlisted = $state(data.isWishlisted);
+
+	$effect(() => {
+		if (form && 'wishlisted' in form) isWishlisted = form.wishlisted as boolean;
+	});
 
 	function formatPrice(price: string) {
 		return parseFloat(price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
@@ -85,32 +92,45 @@
 				<p class="text-base-content/70 leading-relaxed">{data.product.description}</p>
 			{/if}
 
-			<form
-				method="POST"
-				action="?/addToCart"
-				use:enhance={() => {
-					return async ({ update }) => {
-						await update({ reset: false });
-						addedFeedback = true;
-						setTimeout(() => (addedFeedback = false), 2000);
-					};
-				}}
-			>
-				<button
-					type="submit"
-					class="btn btn-secondary btn-lg gap-2 mt-2 w-full transition-all"
-					class:btn-success={addedFeedback}
-					disabled={data.product.stock === 0}
+			<div class="flex gap-2 mt-2">
+				<form
+					method="POST"
+					action="?/addToCart"
+					class="flex-1"
+					use:enhance={() => {
+						return async ({ update }) => {
+							await update({ reset: false });
+							addedFeedback = true;
+							setTimeout(() => (addedFeedback = false), 2000);
+						};
+					}}
 				>
-					{#if addedFeedback}
-						<Check class="w-5 h-5" />
-						Hinzugefügt!
-					{:else}
-						<ShoppingCart class="w-5 h-5" />
-						In den Warenkorb
-					{/if}
-				</button>
-			</form>
+					<button
+						type="submit"
+						class="btn btn-secondary btn-lg gap-2 w-full transition-all"
+						class:btn-success={addedFeedback}
+						disabled={data.product.stock === 0}
+					>
+						{#if addedFeedback}
+							<Check class="w-5 h-5" />
+							Hinzugefügt!
+						{:else}
+							<ShoppingCart class="w-5 h-5" />
+							In den Warenkorb
+						{/if}
+					</button>
+				</form>
+
+				<form method="POST" action="?/toggleWishlist" use:enhance={() => ({ update }) => update({ reset: false })}>
+					<button
+						type="submit"
+						class="btn btn-lg btn-ghost border border-base-300"
+						title={isWishlisted ? 'Von Wunschliste entfernen' : 'Zur Wunschliste hinzufügen'}
+					>
+						<Heart class="w-5 h-5 transition-all" fill={isWishlisted ? 'currentColor' : 'none'} color={isWishlisted ? 'oklch(var(--er))' : 'currentColor'} />
+					</button>
+				</form>
+			</div>
 
 			<p class="text-xs text-base-content/40">Art.-Nr.: {data.product.sku}</p>
 		</div>

@@ -1,4 +1,4 @@
-import { boolean, date, decimal, integer, jsonb, pgTable, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, date, decimal, integer, jsonb, pgTable, primaryKey, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { productTable } from './schemaProducts';
 import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
@@ -64,9 +64,18 @@ export const orderItemTable = pgTable('order_items', {
 	metadata: jsonb('metadata')  // For storing product-specific details at time of order
 });
 
+export const wishlistTable = pgTable('wishlists', {
+	customerId: uuid('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
+	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+}, (table) => [
+	primaryKey({ columns: [table.customerId, table.productId] })
+]);
+
 export const customerRelations = relations(customerTable, ({ one, many }) => ({
 	orders: many(orderTable),
 	addresses: many(addressTable),
+	wishlists: many(wishlistTable),
 	authCredentials: one(authCredentialsTable, {
 		fields: [customerTable.id],
 		references: [authCredentialsTable.customerId]
@@ -105,6 +114,17 @@ export const orderItemRelations = relations(orderItemTable, ({ one }) => ({
 	}),
 	product: one(productTable, {
 		fields: [orderItemTable.productId],
+		references: [productTable.id]
+	})
+}));
+
+export const wishlistRelations = relations(wishlistTable, ({ one }) => ({
+	customer: one(customerTable, {
+		fields: [wishlistTable.customerId],
+		references: [customerTable.id]
+	}),
+	product: one(productTable, {
+		fields: [wishlistTable.productId],
 		references: [productTable.id]
 	})
 }));
