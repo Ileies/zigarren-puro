@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
-	let { form }: { form: ActionData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	let loading = $state(false);
 </script>
@@ -21,6 +21,12 @@
 
 		<div class="rounded-2xl bg-base-100 p-8 shadow-sm ring-1 ring-base-300">
 			<h1 class="mb-6 text-xl font-semibold text-base-content">Anmelden</h1>
+
+			{#if data.passwordReset}
+				<div class="mb-4 rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
+					Ihr Passwort wurde erfolgreich zurückgesetzt. Bitte melden Sie sich an.
+				</div>
+			{/if}
 
 			<form
 				method="POST"

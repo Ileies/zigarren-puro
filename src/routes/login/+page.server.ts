@@ -5,8 +5,9 @@ import db from '$lib/server/db';
 import { authCredentialsTable, customerTable } from '$lib/server/db/schema';
 import * as auth from '$lib/server/auth';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) redirect(302, '/');
+	return { passwordReset: url.searchParams.get('reset') === '1' };
 };
 
 export const actions: Actions = {
