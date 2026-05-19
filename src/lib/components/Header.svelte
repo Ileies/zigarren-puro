@@ -6,7 +6,7 @@
 	import * as m from '$lib/messages';
 	import type { SessionValidationResult } from '$lib/server/auth';
 
-	let { user }: { user: SessionValidationResult['user'] } = $props();
+	let { user, cartCount = 0 }: { user: SessionValidationResult['user']; cartCount?: number } = $props();
 
     const navigation = [
 		{ title: m.cigars(), href: '/shop?type=cigar' },
@@ -75,7 +75,7 @@
 								<a href="/cart" class="btn btn-ghost btn-circle transition-colors relative"
 									 aria-label="Cart">
 									<ShoppingCart class="w-7 h-7" />
-									<span class="badge badge-accent badge-xs absolute -top-1 -right-1 hidden">0</span>
+									{#if cartCount > 0}<span class="badge badge-accent badge-xs absolute -top-1 -right-1">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
 								</a>
 							</div>
 						</div>
@@ -141,7 +141,7 @@
 							<a class="btn btn-ghost transition-colors p-2 relative" href="/cart" aria-label="Cart">
 								<ShoppingCart class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
 								<!-- Cart badge placeholder -->
-								<span class="badge badge-accent badge-xs absolute -top-1 -right-1 hidden">0</span>
+								{#if cartCount > 0}<span class="badge badge-accent badge-xs absolute -top-1 -right-1">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
 							</a>
 						</div>
 					</div>

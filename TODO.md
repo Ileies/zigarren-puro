@@ -4,7 +4,6 @@
 
 ### Kernfunktionen (E-Commerce)
 
-- [ ] **Warenkorb** `/cart` — UI-Gerüst vorhanden (leerer Zustand, Order-Summary-Sidebar), aber keine Logik. Braucht: Cart-State (Store oder Cookie), Mengenänderung, Entfernen, Zwischensumme.
 - [ ] **Checkout** — fehlt komplett. Adresseingabe, Versandoptionen, Zahlungsauswahl, Bestellbestätigung.
 - [ ] **Zahlungs-Gateway** — Stripe (Karte) und/oder PayPal integrieren. Schema (`schemaShop`) ist vorbereitet.
 
@@ -31,6 +30,7 @@
 
 ## Erledigt
 
+- [x] **Warenkorb** `/cart` — Cookie-basierter Cart-State, Mengenänderung, Entfernen, Leeren, Zwischensumme + Versandberechnung, Badge im Header, "In den Warenkorb" auf Produkt- und Shop-Seite.
 - [x] **Produktkatalog** `/shop` — Route mit Datenbankanbindung, Typ-Filter und Sortierung.
 - [x] **Suchseite** `/search` — Volltext-Suche (ILIKE) + Typ-Filter mit DB-Anbindung.
 - [x] **Produktdetailseite** `/products/[id]` — Vollständige Produktinfos inkl. typ-spezifischer Details (Zigarre, Spirituose, Zubehör).

@@ -15,7 +15,7 @@
 	{@render children()}
 {:else}
 	<div class="min-h-screen flex flex-col">
-		<Header user={data.user} />
+		<Header user={data.user} cartCount={data.cartCount} />
 
 		<main class="flex-1 flex flex-col w-full box-border">
 			{@render children()}
