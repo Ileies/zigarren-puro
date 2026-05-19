@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { ShoppingCart, ArrowRight, Lock, Truck, Trash2, Plus, Minus, Package } from 'lucide-svelte';
+	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 
 	let { data } = $props();
 
@@ -8,13 +9,10 @@
 		return cents.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 
-	const FREE_SHIPPING_THRESHOLD = 150;
-	const SHIPPING_COST = 5.99;
-
 	const subtotal = $derived(
 		data.items.reduce((sum, item) => sum + parseFloat(item.price) * item.qty, 0)
 	);
-	const shippingCost = $derived(subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST);
+	const shippingCost = $derived(subtotal >= freeShippingThreshold ? 0 : shippingCosts.standard);
 	const total = $derived(subtotal + shippingCost);
 </script>
 
@@ -154,19 +152,19 @@
 					</div>
 				</div>
 
-				{#if subtotal < FREE_SHIPPING_THRESHOLD}
+				{#if subtotal < freeShippingThreshold}
 					<div class="card bg-base-100 border border-base-200 shadow-sm">
 						<div class="card-body py-4">
 							<div class="flex items-start gap-3 text-sm">
 								<Truck class="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
 								<div class="flex-1">
 									<p class="text-base-content/70">
-										Noch <strong>{formatPrice(FREE_SHIPPING_THRESHOLD - subtotal)}</strong> bis zum kostenlosen Versand.
+										Noch <strong>{formatPrice(freeShippingThreshold - subtotal)}</strong> bis zum kostenlosen Versand.
 									</p>
 									<progress
 										class="progress progress-secondary w-full mt-2"
 										value={subtotal}
-										max={FREE_SHIPPING_THRESHOLD}
+										max={freeShippingThreshold}
 									></progress>
 								</div>
 							</div>

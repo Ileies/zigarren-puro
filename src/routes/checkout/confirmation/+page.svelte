@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { CheckCircle, Package, Building2, Truck, ArrowRight } from 'lucide-svelte';
 	import * as m from '$lib/messages';
+	import { bankAccount } from '$lib/config';
 
 	let { data } = $props();
 
@@ -53,15 +54,15 @@
 			<div class="bg-base-200 rounded-lg p-4 space-y-2 text-sm font-mono">
 				<div class="flex justify-between gap-4">
 					<span class="text-base-content/50 shrink-0">Kontoinhaber</span>
-					<span class="font-semibold text-right">Zigarren Puro GmbH</span>
+					<span class="font-semibold text-right">{bankAccount.accountHolder}</span>
 				</div>
 				<div class="flex justify-between gap-4">
 					<span class="text-base-content/50 shrink-0">IBAN</span>
-					<span class="font-semibold text-right">DE00 0000 0000 0000 0000 00</span>
+					<span class="font-semibold text-right">{bankAccount.iban}</span>
 				</div>
 				<div class="flex justify-between gap-4">
 					<span class="text-base-content/50 shrink-0">BIC</span>
-					<span class="font-semibold">XXXXXXXX</span>
+					<span class="font-semibold">{bankAccount.bic}</span>
 				</div>
 				<div class="divider my-1"></div>
 				<div class="flex justify-between gap-4">

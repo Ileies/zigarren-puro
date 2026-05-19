@@ -13,9 +13,7 @@ import {
 import { getCart, setCart } from '$lib/server/cart';
 import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '$lib/types';
 import { sendOrderConfirmationEmail } from '$lib/server/functions';
-
-const FREE_SHIPPING_THRESHOLD = 150;
-const SHIPPING_COSTS = { standard: 5.99, express: 12.99 };
+import { freeShippingThreshold, shippingCosts } from '$lib/config';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	if (!locals.user) redirect(302, '/login?redirect=/checkout');
@@ -129,7 +127,7 @@ export const actions: Actions = {
 			const p = products.find((p) => p.id === item.id)!;
 			return sum + parseFloat(p.price) * item.qty;
 		}, 0);
-		const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COSTS[shippingMethodKey];
+		const shippingCost = subtotal >= freeShippingThreshold ? 0 : shippingCosts[shippingMethodKey];
 		const total = subtotal + shippingCost;
 
 		// Resolve shipping address

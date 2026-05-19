@@ -2,6 +2,7 @@
 	import { enhance } from '$app/forms';
 	import { Lock, Truck, ChevronLeft, Package, CreditCard, Building2, AlertCircle } from 'lucide-svelte';
 	import * as m from '$lib/messages';
+	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 
 	let { data, form } = $props();
 
@@ -12,8 +13,6 @@
 		'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen'
 	];
 
-	const FREE_SHIPPING_THRESHOLD = 150;
-	const SHIPPING_COSTS = { standard: 5.99, express: 12.99 };
 
 	const savedShipping = data.addresses.filter((a) => a.type === 'shipping');
 	const savedBilling = data.addresses.filter((a) => a.type === 'billing');
@@ -64,7 +63,7 @@
 		data.items.reduce((sum, item) => sum + parseFloat(item.price) * item.qty, 0)
 	);
 	const shippingCost = $derived(
-		subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COSTS[shippingMethod]
+		subtotal >= freeShippingThreshold ? 0 : shippingCosts[shippingMethod]
 	);
 	const total = $derived(subtotal + shippingCost);
 
@@ -424,13 +423,13 @@
 										<input type="radio" name="shippingMethod" class="radio radio-secondary radio-sm" value="standard" bind:group={shippingMethod} />
 										<div>
 											<p class="text-sm font-medium">{m.checkoutStandard()}</p>
-											{#if subtotal >= FREE_SHIPPING_THRESHOLD}
+											{#if subtotal >= freeShippingThreshold}
 												<p class="text-xs text-success">{m.checkoutFreeShipping()}</p>
 											{/if}
 										</div>
 									</div>
 									<span class="text-sm font-semibold">
-										{subtotal >= FREE_SHIPPING_THRESHOLD ? m.checkoutFreeShipping() : formatPrice(SHIPPING_COSTS.standard)}
+										{subtotal >= freeShippingThreshold ? m.checkoutFreeShipping() : formatPrice(shippingCosts.standard)}
 									</span>
 								</label>
 								<label class="flex cursor-pointer items-center justify-between rounded-lg border border-base-200 p-3 hover:border-secondary transition-colors {shippingMethod === 'express' ? 'border-secondary bg-secondary/5' : ''}">
@@ -438,7 +437,7 @@
 										<input type="radio" name="shippingMethod" class="radio radio-secondary radio-sm" value="express" bind:group={shippingMethod} />
 										<p class="text-sm font-medium">{m.checkoutExpress()}</p>
 									</div>
-									<span class="text-sm font-semibold">{formatPrice(SHIPPING_COSTS.express)}</span>
+									<span class="text-sm font-semibold">{formatPrice(shippingCosts.express)}</span>
 								</label>
 							</div>
 						</div>

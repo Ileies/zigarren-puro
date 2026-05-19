@@ -6,6 +6,7 @@ import Logger from '$lib/server/Logger';
 import db from '$lib/server/db';
 import { tokenTable } from '$lib/server/db/schema';
 import { TokenType } from '$lib/types';
+import { bankAccount, companyName } from '$lib/config';
 
 function generateToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(24));
@@ -65,7 +66,7 @@ function baseLayout(content: string, footer: string): string {
           <tr>
             <td style="background:#111111;padding:24px 48px;text-align:center">
               <p style="margin:0 0 6px;color:#666;font-size:11px;letter-spacing:1px;text-transform:uppercase">
-                Zigarren Puro &nbsp;·&nbsp; Weidengasse 25 &nbsp;·&nbsp; 50668 Köln
+                ${companyName} &nbsp;·&nbsp; Weidengasse 25 &nbsp;·&nbsp; 50668 Köln
               </p>
               ${footer}
             </td>
@@ -185,9 +186,9 @@ function orderConfirmationEmailHtml(
           Bitte überweisen Sie <strong>${fmt(total)}</strong> innerhalb von 7 Tagen an:
         </p>
         <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:13px;color:#444;line-height:2">
-          <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>Zigarren Puro GmbH</strong></td></tr>
-          <tr><td style="padding-right:16px;color:#888">IBAN</td><td><strong>DE00 0000 0000 0000 0000 00</strong></td></tr>
-          <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>XXXXXXXX</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>${bankAccount.accountHolder}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">IBAN</td><td><strong>${bankAccount.iban}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>${bankAccount.bic}</strong></td></tr>
           <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>#${orderShort}</strong></td></tr>
         </table>
       </div>
