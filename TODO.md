@@ -11,7 +11,7 @@
 
 - [x] **Passwort-Reset** `/forgot-password` + `/reset-password` — E-Mail-Flow mit 1h-Token, User-Enumeration-sicher.
 - [x] **Mein Konto / Profil** `/account` — Profil bearbeiten (Name, Telefon, Anrede, Marketing-Einwilligung), Passwort ändern; Adressverwaltung unter `/account/addresses`.
-- [ ] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
+- [x] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
 - [ ] **Wunschliste** — Schema prüfen/ergänzen, UI in Produktdetail und Profilseite.
 - [ ] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
 
