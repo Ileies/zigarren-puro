@@ -1,26 +1,12 @@
 <script lang="ts">
 	import { Mail, Users, Heart, Award, Coffee, Clock, MapPin, Briefcase, Star, Send, Phone } from 'lucide-svelte';
 	import { email, phone, storeAddress } from '$lib/config';
-	
-	let contactEmail = $state('');
-	let contactMessage = $state('');
-	let contactName = $state('');
-	let isSubmitting = $state(false);
-	
-	const handleContactSubmit = async (e: Event) => {
-		e.preventDefault();
-		if (!contactEmail.trim() || !contactMessage.trim() || !contactName.trim()) return;
+	import { enhance } from '$app/forms';
+	import * as m from '$lib/messages';
 
-		isSubmitting = true;
-		// TODO: Implement contact form submission
-		setTimeout(() => {
-			isSubmitting = false;
-			contactEmail = '';
-			contactMessage = '';
-			contactName = '';
-			// Show success message
-		}, 1000);
-	};
+	let { form }: { form: { success?: boolean; error?: string } | null } = $props();
+
+	let isSubmitting = $state(false);
 
 	const benefits = [
 		{ icon: Heart, title: 'Familiäres Arbeitsklima', description: 'Persönliche Atmosphäre in einem kleinen, eingespielten Team' },
@@ -245,69 +231,90 @@
 					<Send class="w-5 h-5 text-secondary" />
 					Erste Kontaktaufnahme
 				</h3>
-				
-				<form onsubmit={handleContactSubmit} class="space-y-4">
-					<div class="form-control">
-						<label class="label" for="contact-name">
-							<span class="label-text">Name *</span>
-						</label>
-						<input 
-							id="contact-name"
-							type="text" 
-							placeholder="Ihr vollständiger Name" 
-							class="input input-bordered" 
-							bind:value={contactName}
-							required 
-						/>
+
+				{#if form?.success}
+					<div class="alert alert-success" role="status">
+						<span>{m.careerMessageSent()}</span>
 					</div>
-					
-					<div class="form-control">
-						<label class="label" for="contact-email">
-							<span class="label-text">E-Mail *</span>
-						</label>
-						<input 
-							id="contact-email"
-							type="email" 
-							placeholder="ihre.email@beispiel.de" 
-							class="input input-bordered" 
-							bind:value={contactEmail}
-							required 
-						/>
+				{:else}
+					{#if form?.error}
+						<div class="alert alert-error mb-4" role="alert">
+							<span>{form.error}</span>
+						</div>
+					{/if}
+
+					<form
+						method="POST"
+						class="space-y-4"
+						use:enhance={() => {
+							isSubmitting = true;
+							return async ({ update }) => {
+								isSubmitting = false;
+								await update();
+							};
+						}}
+					>
+						<!-- Honeypot -->
+						<input type="text" name="company" class="hidden" tabindex="-1" autocomplete="off" />
+
+						<div class="form-control">
+							<label class="label" for="contact-name">
+								<span class="label-text">Name *</span>
+							</label>
+							<input
+								id="contact-name"
+								type="text"
+								name="name"
+								placeholder="Ihr vollständiger Name"
+								class="input input-bordered"
+								required
+							/>
+						</div>
+
+						<div class="form-control">
+							<label class="label" for="contact-email">
+								<span class="label-text">E-Mail *</span>
+							</label>
+							<input
+								id="contact-email"
+								type="email"
+								name="email"
+								placeholder="ihre.email@beispiel.de"
+								class="input input-bordered"
+								required
+							/>
+						</div>
+
+						<div class="form-control">
+							<label class="label" for="contact-message">
+								<span class="label-text">Nachricht *</span>
+							</label>
+							<textarea
+								id="contact-message"
+								name="message"
+								class="textarea textarea-bordered h-32"
+								placeholder="Erzählen Sie uns etwas über sich und Ihr Interesse an einer Mitarbeit bei Zigarren Puro..."
+								required
+							></textarea>
+						</div>
+
+						<div class="form-control mt-6">
+							<button type="submit" class="btn btn-secondary" disabled={isSubmitting}>
+								{#if isSubmitting}
+									<span class="loading loading-spinner loading-sm"></span>
+									Wird gesendet...
+								{:else}
+									<Send class="w-4 h-4" />
+									Nachricht senden
+								{/if}
+							</button>
+						</div>
+					</form>
+
+					<div class="text-xs text-base-content/60 mt-4">
+						* Pflichtfelder. Ihre Daten werden vertraulich behandelt und nur für die Bearbeitung Ihrer Anfrage verwendet.
 					</div>
-					
-					<div class="form-control">
-						<label class="label" for="contact-message">
-							<span class="label-text">Nachricht *</span>
-						</label>
-						<textarea 
-							id="contact-message"
-							class="textarea textarea-bordered h-32" 
-							placeholder="Erzählen Sie uns etwas über sich und Ihr Interesse an einer Mitarbeit bei Zigarren Puro..."
-							bind:value={contactMessage}
-							required
-						></textarea>
-					</div>
-					
-					<div class="form-control mt-6">
-						<button 
-							type="submit" 
-							class="btn btn-secondary"
-							disabled={isSubmitting}
-						>
-							{#if isSubmitting}
-								<span class="loading loading-spinner loading-sm"></span>
-								Wird gesendet...
-							{:else}
-								<Send class="w-4 h-4" />
-								Nachricht senden
-							{/if}
-						</button>
-					</div>
-				</form>
-				
-				<div class="text-xs text-base-content/60 mt-4">
-					* Pflichtfelder. Ihre Daten werden vertraulich behandelt und nur für die Bearbeitung Ihrer Anfrage verwendet.
-				</div>
+				{/if}
 			</div>
 		</div>
 	</div>
