@@ -10,7 +10,7 @@
 ### Benutzerbereich
 
 - [ ] **Passwort-Reset** `/forgot-password` — `TokenType.PASSWORD_RESET` ist im Schema definiert, Route und UI fehlen komplett.
-- [ ] **Mein Konto / Profil** `/account` — Route fehlt. Profil bearbeiten, Adressverwaltung (`addressTable` ist im Schema vorhanden), Passwort ändern.
+- [x] **Mein Konto / Profil** `/account` — Profil bearbeiten (Name, Telefon, Anrede, Marketing-Einwilligung), Passwort ändern; Adressverwaltung unter `/account/addresses`.
 - [ ] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
 - [ ] **Wunschliste** — Schema prüfen/ergänzen, UI in Produktdetail und Profilseite.
 - [ ] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
