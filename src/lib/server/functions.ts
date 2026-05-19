@@ -120,7 +120,125 @@ function verificationEmailHtml(firstName: string, verifyUrl: string, unsubscribe
 	return baseLayout(content, footer);
 }
 
+// ─── Email templates ─────────────────────────────────────────────────────────
+
+function orderConfirmationEmailHtml(
+	firstName: string,
+	orderId: string,
+	orderShort: string,
+	items: { name: string; qty: number; unitPrice: number }[],
+	subtotal: number,
+	shippingCost: number,
+	total: number,
+	unsubscribeUrl: string
+): string {
+	const fmt = (n: number) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+	const itemRows = items
+		.map(
+			(i) => `
+      <tr>
+        <td style="padding:8px 0;color:#444;font-size:14px;border-bottom:1px solid #f0f0f0">
+          ${i.name} <span style="color:#888">×${i.qty}</span>
+        </td>
+        <td style="padding:8px 0;color:#444;font-size:14px;border-bottom:1px solid #f0f0f0;text-align:right;white-space:nowrap">
+          ${fmt(i.unitPrice * i.qty)}
+        </td>
+      </tr>`
+		)
+		.join('');
+
+	const content = `
+      <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Vielen Dank für Ihre Bestellung!
+      </h2>
+      <p style="margin:0 0 28px;color:#444;font-size:15px;line-height:1.8">
+        Guten Tag ${firstName},<br/>
+        wir haben Ihre Bestellung erhalten und freuen uns, sie für Sie vorzubereiten.
+      </p>
+
+      <div style="background:#f9f7f4;border-radius:4px;padding:16px 20px;margin-bottom:28px">
+        <p style="margin:0 4px 0 0;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px">Bestellnummer</p>
+        <p style="margin:4px 0 0;color:#1a1a1a;font-size:18px;font-weight:bold;font-family:monospace">#${orderShort}</p>
+      </div>
+
+      <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
+        <tbody>${itemRows}</tbody>
+        <tfoot>
+          <tr>
+            <td style="padding:10px 0 4px;color:#888;font-size:13px">Zwischensumme</td>
+            <td style="padding:10px 0 4px;color:#888;font-size:13px;text-align:right">${fmt(subtotal)}</td>
+          </tr>
+          <tr>
+            <td style="padding:4px 0;color:#888;font-size:13px">Versand</td>
+            <td style="padding:4px 0;color:#888;font-size:13px;text-align:right">${shippingCost === 0 ? 'Kostenlos' : fmt(shippingCost)}</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 0 0;color:#1a1a1a;font-size:16px;font-weight:bold;border-top:2px solid #e0e0e0">Gesamt</td>
+            <td style="padding:12px 0 0;color:#1a1a1a;font-size:16px;font-weight:bold;text-align:right;border-top:2px solid #e0e0e0">${fmt(total)}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div style="background:#fffbf0;border:1px solid #d4af37;border-radius:4px;padding:20px;margin-bottom:28px">
+        <p style="margin:0 0 12px;color:#1a1a1a;font-size:14px;font-weight:bold">Bankverbindung für die Überweisung</p>
+        <p style="margin:0 0 6px;color:#444;font-size:13px;line-height:1.8">
+          Bitte überweisen Sie <strong>${fmt(total)}</strong> innerhalb von 7 Tagen an:
+        </p>
+        <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:13px;color:#444;line-height:2">
+          <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>Zigarren Puro GmbH</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">IBAN</td><td><strong>DE00 0000 0000 0000 0000 00</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>XXXXXXXX</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>#${orderShort}</strong></td></tr>
+        </table>
+      </div>
+
+      <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
+        Nach Zahlungseingang wird Ihre Bestellung umgehend bearbeitet und versendet.
+        Bei Fragen erreichen Sie uns unter
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesem Link</a>.
+      </p>`;
+
+	const footer = `<p style="margin:0;font-size:11px">
+        <a href="${unsubscribeUrl}" style="color:#666;text-decoration:none">E-Mails abbestellen</a>
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
 // ─── Public functions ─────────────────────────────────────────────────────────
+
+export async function sendOrderConfirmationEmail(
+	customerId: string,
+	email: string,
+	firstName: string,
+	orderId: string,
+	items: { name: string; qty: number; unitPrice: number }[],
+	subtotal: number,
+	shippingCost: number,
+	total: number
+): Promise<void> {
+	const orderShort = orderId.slice(0, 8).toUpperCase();
+	const unsubscribeUrl = await generateUnsubscribeLink(customerId);
+
+	await sendMail(
+		{
+			to: email,
+			subject: `Ihre Bestellung #${orderShort} bei Zigarren Puro`,
+			html: orderConfirmationEmailHtml(
+				firstName,
+				orderId,
+				orderShort,
+				items,
+				subtotal,
+				shippingCost,
+				total,
+				unsubscribeUrl
+			),
+			text: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck #${orderShort}.\n\nZigarren Puro`
+		},
+		customerId
+	);
+}
 
 export async function sendVerificationEmail(
 	customerId: string,

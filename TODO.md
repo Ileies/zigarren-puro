@@ -4,7 +4,7 @@
 
 ### Kernfunktionen (E-Commerce)
 
-- [ ] **Checkout** — fehlt komplett. Adresseingabe, Versandoptionen, Zahlungsauswahl, Bestellbestätigung.
+- [x] **Checkout** — `/checkout` + `/checkout/confirmation`: 2-Schritt-Flow, Adressauswahl (gespeichert/neu), Versandart (Standard/Express), Vorkasse-Zahlung, Bestellbestätigung mit Bankdaten. **Bankdaten in `confirmation/+page.svelte` und `functions.ts` noch mit echten Daten befüllen.**
 - [ ] **Zahlungs-Gateway** — Stripe (Karte) und/oder PayPal integrieren. Schema (`schemaShop`) ist vorbereitet.
 
 ### Benutzerbereich

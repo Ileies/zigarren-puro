@@ -474,5 +474,271 @@
 		"المنتجات",
 		"产品",
 		"Товары"
+	],
+	"checkoutTitle": [
+		"Zur Kasse",
+		"Checkout",
+		"إتمام الشراء",
+		"收银台",
+		"Оформление заказа"
+	],
+	"checkoutStep1": [
+		"Lieferadresse",
+		"Shipping Address",
+		"عنوان التوصيل",
+		"收货地址",
+		"Адрес доставки"
+	],
+	"checkoutStep2": [
+		"Zahlung & Überprüfung",
+		"Payment & Review",
+		"الدفع والمراجعة",
+		"支付与确认",
+		"Оплата и проверка"
+	],
+	"checkoutShippingAddress": [
+		"Lieferadresse",
+		"Shipping Address",
+		"عنوان التوصيل",
+		"收货地址",
+		"Адрес доставки"
+	],
+	"checkoutBillingAddress": [
+		"Rechnungsadresse",
+		"Billing Address",
+		"عنوان الفاتورة",
+		"账单地址",
+		"Платёжный адрес"
+	],
+	"checkoutSameAsShipping": [
+		"Rechnungsadresse entspricht Lieferadresse",
+		"Billing address same as shipping",
+		"عنوان الفاتورة نفس عنوان التوصيل",
+		"账单地址与收货地址相同",
+		"Платёжный адрес совпадает с адресом доставки"
+	],
+	"checkoutSavedAddresses": [
+		"Gespeicherte Adressen",
+		"Saved Addresses",
+		"العناوين المحفوظة",
+		"已保存地址",
+		"Сохранённые адреса"
+	],
+	"checkoutNewAddress": [
+		"Neue Adresse eingeben",
+		"Enter New Address",
+		"إدخال عنوان جديد",
+		"输入新地址",
+		"Ввести новый адрес"
+	],
+	"checkoutStreet": [
+		"Straße und Hausnummer",
+		"Street and house number",
+		"الشارع ورقم المنزل",
+		"街道和门牌号",
+		"Улица и номер дома"
+	],
+	"checkoutPostalCode": [
+		"Postleitzahl",
+		"Postal Code",
+		"الرمز البريدي",
+		"邮政编码",
+		"Почтовый индекс"
+	],
+	"checkoutCity": [
+		"Stadt",
+		"City",
+		"المدينة",
+		"城市",
+		"Город"
+	],
+	"checkoutState": [
+		"Bundesland",
+		"State",
+		"الولاية",
+		"省/州",
+		"Регион"
+	],
+	"checkoutContinue": [
+		"Weiter",
+		"Continue",
+		"متابعة",
+		"继续",
+		"Продолжить"
+	],
+	"checkoutBack": [
+		"Zurück",
+		"Back",
+		"رجوع",
+		"返回",
+		"Назад"
+	],
+	"checkoutShippingMethod": [
+		"Versandart",
+		"Shipping Method",
+		"طريقة الشحن",
+		"运送方式",
+		"Способ доставки"
+	],
+	"checkoutStandard": [
+		"Standardversand (3–5 Werktage)",
+		"Standard Shipping (3–5 business days)",
+		"الشحن العادي (3–5 أيام عمل)",
+		"标准运送（3-5个工作日）",
+		"Стандартная доставка (3–5 рабочих дней)"
+	],
+	"checkoutExpress": [
+		"Expressversand (1–2 Werktage)",
+		"Express Shipping (1–2 business days)",
+		"الشحن السريع (1–2 أيام عمل)",
+		"快递（1-2个工作日）",
+		"Экспресс-доставка (1–2 рабочих дня)"
+	],
+	"checkoutPaymentMethod": [
+		"Zahlungsart",
+		"Payment Method",
+		"طريقة الدفع",
+		"支付方式",
+		"Способ оплаты"
+	],
+	"checkoutBankTransfer": [
+		"Vorkasse (Banküberweisung)",
+		"Prepayment (Bank Transfer)",
+		"الدفع المسبق (تحويل بنكي)",
+		"预付款（银行转账）",
+		"Предоплата (банковский перевод)"
+	],
+	"checkoutBankTransferDesc": [
+		"Überweisen Sie den Betrag nach der Bestellung. Ihre Bestellung wird nach Zahlungseingang bearbeitet.",
+		"Transfer the amount after ordering. Your order will be processed upon receipt of payment.",
+		"قم بتحويل المبلغ بعد الطلب. سيتم معالجة طلبك عند استلام الدفع.",
+		"下单后转账。收到付款后将处理您的订单。",
+		"Переведите сумму после заказа. Ваш заказ будет обработан после получения оплаты."
+	],
+	"checkoutNotes": [
+		"Anmerkungen zur Bestellung",
+		"Order Notes",
+		"ملاحظات الطلب",
+		"订单备注",
+		"Примечания к заказу"
+	],
+	"checkoutNotesPlaceholder": [
+		"Besondere Wünsche oder Hinweise...",
+		"Special requests or instructions...",
+		"طلبات خاصة أو تعليمات...",
+		"特殊要求或说明...",
+		"Особые пожелания или инструкции..."
+	],
+	"checkoutOrderSummary": [
+		"Bestellübersicht",
+		"Order Summary",
+		"ملخص الطلب",
+		"订单摘要",
+		"Сводка заказа"
+	],
+	"checkoutSubtotal": [
+		"Zwischensumme",
+		"Subtotal",
+		"المجموع الفرعي",
+		"小计",
+		"Промежуточный итог"
+	],
+	"checkoutFreeShipping": [
+		"Kostenlos",
+		"Free",
+		"مجاني",
+		"免费",
+		"Бесплатно"
+	],
+	"checkoutTotal": [
+		"Gesamt",
+		"Total",
+		"الإجمالي",
+		"总计",
+		"Итого"
+	],
+	"checkoutVatNote": [
+		"inkl. MwSt. und Tabaksteuer",
+		"incl. VAT and tobacco tax",
+		"شاملاً ضريبة القيمة المضافة وضريبة التبغ",
+		"含增值税和烟草税",
+		"включая НДС и акциз на табак"
+	],
+	"checkoutPlaceOrder": [
+		"Kostenpflichtig bestellen",
+		"Place Order",
+		"تقديم الطلب",
+		"提交订单",
+		"Оформить заказ"
+	],
+	"checkoutAgeError": [
+		"Sie müssen mindestens 18 Jahre alt sein, um Tabakprodukte zu kaufen.",
+		"You must be at least 18 years old to purchase tobacco products.",
+		"يجب أن يكون عمرك 18 عامًا على الأقل لشراء منتجات التبغ.",
+		"您必须年满18岁才能购买烟草产品。",
+		"Вам должно быть не менее 18 лет для покупки табачных изделий."
+	],
+	"checkoutStockError": [
+		"Ein oder mehrere Produkte sind nicht mehr in der gewünschten Menge verfügbar.",
+		"One or more products are no longer available in the requested quantity.",
+		"منتج واحد أو أكثر لم يعد متاحاً بالكمية المطلوبة.",
+		"一个或多个商品的库存不足。",
+		"Один или несколько товаров недоступны в запрошенном количестве."
+	],
+	"checkoutConfirmed": [
+		"Bestellung erfolgreich aufgegeben!",
+		"Order placed successfully!",
+		"تم تقديم الطلب بنجاح!",
+		"订单提交成功！",
+		"Заказ успешно оформлен!"
+	],
+	"checkoutOrderNumber": [
+		"Bestellnummer",
+		"Order Number",
+		"رقم الطلب",
+		"订单号",
+		"Номер заказа"
+	],
+	"checkoutEmailSent": [
+		"Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet.",
+		"A confirmation email has been sent to your address.",
+		"تم إرسال بريد إلكتروني للتأكيد إلى عنوانك.",
+		"确认邮件已发送至您的邮箱。",
+		"Письмо с подтверждением отправлено на ваш адрес."
+	],
+	"checkoutBankDetails": [
+		"Bankverbindung für die Überweisung",
+		"Bank Details for Transfer",
+		"تفاصيل البنك للتحويل",
+		"转账银行信息",
+		"Банковские реквизиты для перевода"
+	],
+	"checkoutBankPaymentNote": [
+		"Bitte überweisen Sie den Betrag innerhalb von 7 Tagen und geben Sie Ihre Bestellnummer als Verwendungszweck an.",
+		"Please transfer the amount within 7 days and include your order number as the payment reference.",
+		"يرجى تحويل المبلغ خلال 7 أيام مع الإشارة إلى رقم طلبك.",
+		"请在7天内完成转账，并在备注中注明您的订单号。",
+		"Пожалуйста, переведите сумму в течение 7 дней, указав номер заказа."
+	],
+	"checkoutContinueShopping": [
+		"Weiter einkaufen",
+		"Continue Shopping",
+		"مواصلة التسوق",
+		"继续购物",
+		"Продолжить покупки"
+	],
+	"checkoutDeliveryTo": [
+		"Lieferung an",
+		"Delivering to",
+		"التوصيل إلى",
+		"送达至",
+		"Доставка по адресу"
+	],
+	"checkoutSelectState": [
+		"Bundesland wählen",
+		"Select state",
+		"اختر الولاية",
+		"选择省/州",
+		"Выберите регион"
 	]
 }
