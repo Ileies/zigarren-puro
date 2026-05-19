@@ -19,7 +19,7 @@
 	
 	// Show 5 brands at once on large screens, 3 on medium, 2 on small
 	const brandsPerView = 5;
-	const maxIndex = Math.max(0, brands.length - brandsPerView);
+	const maxIndex = $derived(Math.max(0, brands.length - brandsPerView));
 	
 	function autoNext() {
 		if (!isPaused && autoplay) {
