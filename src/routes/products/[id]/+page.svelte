@@ -8,11 +8,9 @@
 
 	let { data, form }: { data: any; form: ActionData } = $props();
 
-	let isWishlisted = $state(data.isWishlisted);
-
-	$effect(() => {
-		if (form && 'wishlisted' in form) isWishlisted = form.wishlisted as boolean;
-	});
+	const isWishlisted = $derived(
+		form != null && 'wishlisted' in form ? (form as { wishlisted: boolean }).wishlisted : data.isWishlisted
+	);
 
 	function formatPrice(price: string) {
 		return parseFloat(price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });

@@ -2,6 +2,10 @@
 
 ## Offen
 
+### Tech & Infrastruktur
+
+- [ ] **UI-Framework auf shadcn-svelte migrieren** — Aktuell daisyUI; für einen Premium-Brand mit reguliertem Commerce-Kontext ist shadcn die bessere Basis (mehr Kontrolle, professionelleres Erscheinungsbild, kein generischer daisyUI-Look).
+
 ### Kernfunktionen (E-Commerce)
 
 - [x] **Checkout** — `/checkout` + `/checkout/confirmation`: 2-Schritt-Flow, Adressauswahl (gespeichert/neu), Versandart (Standard/Express), Vorkasse-Zahlung, Bestellbestätigung mit Bankdaten. **Bankdaten in `confirmation/+page.svelte` und `functions.ts` noch mit echten Daten befüllen.**
@@ -12,7 +16,7 @@
 - [x] **Passwort-Reset** `/forgot-password` + `/reset-password` — E-Mail-Flow mit 1h-Token, User-Enumeration-sicher.
 - [x] **Mein Konto / Profil** `/account` — Profil bearbeiten (Name, Telefon, Anrede, Marketing-Einwilligung), Passwort ändern; Adressverwaltung unter `/account/addresses`.
 - [x] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
-- [ ] **Wunschliste** — Schema prüfen/ergänzen, UI in Produktdetail und Profilseite.
+- [x] **Wunschliste** — Schema (`wishlists`-Tabelle, Composite PK), Heart-Button auf Produktdetailseite, `/account/wishlist`-Seite mit Entfernen & In-den-Warenkorb, Link im Account-Dashboard.
 - [ ] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
 
 ### Formulare & Kleinigkeiten
