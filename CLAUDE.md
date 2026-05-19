@@ -121,8 +121,9 @@ bun run db:push    # Schema auf Supabase pushen (kein Migration-File, direktes P
 
 - Übersetzungen: `messages/*.json` (Schlüssel-Wert, Parameter mit `{placeholder}`)
 - Standardsprache: `de`
-- `messages.ts` wird **automatisch generiert** — nicht manuell ändern
+- `messages.ts` wird **automatisch generiert** — **niemals manuell bearbeiten oder manuell neu generieren**
 - Neue Texte: In alle 5 JSON-Dateien eintragen, dann `bun run dev` neu starten
+- `messages.ts` regenerieren: **immer** über `bun run dev` oder `bun run build` — nie per Script oder Bash-Einzeiler
 - Sprachauswahl: Cookie `LOCALE` (Browser oder LanguageSelector-Komponente)
 - RTL: Arabisch wird automatisch erkannt, `locals.dir` = `"rtl"`
 - Zugriff auf dem Server: `locals.locale`, `locals.dir`
