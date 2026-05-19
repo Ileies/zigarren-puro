@@ -22,11 +22,11 @@
 
 ### Admin
 
-- [ ] **Produkt-Detailbearbeitung** `/admin/inventory/[id]` — aktuell Stub. Vollständiges Bearbeitungsformular für alle Produktfelder (inkl. typ-spezifische Details: Zigarren, Spirituosen etc.).
+- [x] **Produkt-Detailbearbeitung** `/admin/inventory/[id]` — vollständiges Bearbeitungsformular für alle Produktfelder (inkl. typ-spezifische Details: Zigarren, Spirituosen etc.).
 
 ### Compliance & Rechtliches
 
-- [ ] **Altersverifikation beim Checkout** — serverseitig prüfen, dass der Nutzer eingeloggt ist und das hinterlegte Geburtsdatum ≥ 18 Jahre ergibt. Geburtsdatum wird bei der Registrierung bereits erfasst.
+- [x] **Altersverifikation beim Checkout** — serverseitig prüfen, dass der Nutzer eingeloggt ist und das hinterlegte Geburtsdatum ≥ 18 Jahre ergibt. Geburtsdatum wird bei der Registrierung bereits erfasst.
 
 ## Erledigt
 
