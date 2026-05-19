@@ -4,9 +4,6 @@
 
 ### Kernfunktionen (E-Commerce)
 
-- [ ] **Produktkatalog** `/products` oder `/shop` — Route existiert nicht. Braucht Datenbankanbindung, Kategorie-Navigation, Produktkarten mit Bild/Preis/Verfügbarkeit.
-- [ ] **Suchseite** `/search` — UI und URL-Parameter vorhanden, aber keine Datenbankabfrage. Filter (Kategorie, Stärke, Preis) müssen gegen `schemaProducts` laufen.
-- [ ] **Produktdetailseite** `/products/[slug]` — fehlt komplett. Braucht vollständige Produktinfos inkl. Zigarren-Spezifikationen, Bilder, In-den-Warenkorb-Button.
 - [ ] **Warenkorb** `/cart` — UI-Gerüst vorhanden (leerer Zustand, Order-Summary-Sidebar), aber keine Logik. Braucht: Cart-State (Store oder Cookie), Mengenänderung, Entfernen, Zwischensumme.
 - [ ] **Checkout** — fehlt komplett. Adresseingabe, Versandoptionen, Zahlungsauswahl, Bestellbestätigung.
 - [ ] **Zahlungs-Gateway** — Stripe (Karte) und/oder PayPal integrieren. Schema (`schemaShop`) ist vorbereitet.
@@ -33,6 +30,10 @@
 - [ ] **Altersverifikation beim Checkout** — serverseitig prüfen, dass der Nutzer eingeloggt ist und das hinterlegte Geburtsdatum ≥ 18 Jahre ergibt. Geburtsdatum wird bei der Registrierung bereits erfasst.
 
 ## Erledigt
+
+- [x] **Produktkatalog** `/shop` — Route mit Datenbankanbindung, Typ-Filter und Sortierung.
+- [x] **Suchseite** `/search` — Volltext-Suche (ILIKE) + Typ-Filter mit DB-Anbindung.
+- [x] **Produktdetailseite** `/products/[id]` — Vollständige Produktinfos inkl. typ-spezifischer Details (Zigarre, Spirituose, Zubehör).
 
 - [x] Datenbankschema (Auth, Produkte, Shop, Logs)
 - [x] Authentifizierung (Registrierung, Login, Logout, E-Mail-Verifizierung)
