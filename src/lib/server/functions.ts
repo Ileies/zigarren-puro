@@ -4,9 +4,10 @@ import { PUBLIC_APP_NAME, PUBLIC_ORIGIN } from '$env/static/public';
 import type { Options } from 'nodemailer/lib/mailer';
 import Logger from '$lib/server/Logger';
 import db from '$lib/server/db';
-import { tokenTable } from '$lib/server/db/schema';
+import { tokenTable, authCredentialsTable } from '$lib/server/db/schema';
 import { TokenType } from '$lib/types';
 import { bankAccount, companyName } from '$lib/config';
+import { and, eq, isNull } from 'drizzle-orm';
 
 function generateToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(24));
@@ -31,7 +32,27 @@ export async function generateVerificationToken(customerId: string): Promise<str
 	return token;
 }
 
-// ─── Email templates ──────────────────────────────────────────────────────────
+export async function generatePasswordResetToken(customerId: string): Promise<string> {
+	await db
+		.update(tokenTable)
+		.set({ revokedAt: new Date() })
+		.where(
+			and(
+				eq(tokenTable.customerId, customerId),
+				eq(tokenTable.type, TokenType.PASSWORD_RESET),
+				isNull(tokenTable.revokedAt),
+				isNull(tokenTable.usedAt)
+			)
+		);
+	const token = generateToken();
+	const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
+	await db
+		.insert(tokenTable)
+		.values({ token, customerId, type: TokenType.PASSWORD_RESET, expiresAt });
+	return token;
+}
+
+// ─── Email templates ─────────────────────────────────────────────────────────
 
 function baseLayout(content: string, footer: string): string {
 	return `<!DOCTYPE html>
@@ -116,6 +137,47 @@ function verificationEmailHtml(firstName: string, verifyUrl: string, unsubscribe
 
 	const footer = `<p style="margin:0;font-size:11px">
         <a href="${unsubscribeUrl}" style="color:#666;text-decoration:none">E-Mails abbestellen</a>
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+function passwordResetEmailHtml(firstName: string, resetUrl: string): string {
+	const content = `
+      <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Passwort zurücksetzen
+      </h2>
+      <p style="margin:0 0 12px;color:#444;font-size:15px;line-height:1.8">Guten Tag ${firstName},</p>
+      <p style="margin:0 0 32px;color:#444;font-size:15px;line-height:1.8">
+        Sie haben angefordert, Ihr Passwort zurückzusetzen. Klicken Sie auf den folgenden
+        Button, um ein neues Passwort zu vergeben.
+      </p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background:#d4af37;border-radius:2px">
+            <a href="${resetUrl}"
+               style="display:inline-block;padding:15px 40px;color:#1a1a1a;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:2px;text-transform:uppercase">
+              Passwort zurücksetzen
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:32px 0 0;color:#888;font-size:13px;line-height:1.7">
+        Dieser Link ist <strong>1 Stunde</strong> gültig. Falls Sie diese Anfrage nicht
+        gestellt haben, können Sie diese E-Mail ignorieren – Ihr Konto bleibt unverändert.
+      </p>
+
+      <div style="margin:32px 0 28px;border-top:1px solid #eeeeee"></div>
+
+      <p style="margin:0;color:#aaa;font-size:12px;line-height:1.7">
+        Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br />
+        <a href="${resetUrl}" style="color:#b8834a;word-break:break-all">${resetUrl}</a>
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
       </p>`;
 
 	return baseLayout(content, footer);
@@ -239,6 +301,22 @@ export async function sendOrderConfirmationEmail(
 		},
 		customerId
 	);
+}
+
+export async function sendPasswordResetEmail(
+	customerId: string,
+	email: string,
+	firstName: string
+): Promise<void> {
+	const token = await generatePasswordResetToken(customerId);
+	const resetUrl = `https://${PUBLIC_ORIGIN}/reset-password?token=${token}`;
+
+	await sendMail({
+		to: email,
+		subject: 'Passwort zurücksetzen – Zigarren Puro',
+		html: passwordResetEmailHtml(firstName, resetUrl),
+		text: `Guten Tag ${firstName},\n\nSie haben angefordert, Ihr Passwort zurückzusetzen.\n\nBitte öffnen Sie folgenden Link:\n${resetUrl}\n\nDieser Link ist 1 Stunde gültig.\n\nZigarren Puro`
+	});
 }
 
 export async function sendVerificationEmail(
