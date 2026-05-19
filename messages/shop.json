@@ -740,5 +740,26 @@
 		"اختر الولاية",
 		"选择省/州",
 		"Выберите регион"
+	],
+	"newsletterSuccess": [
+		"Vielen Dank! Sie erhalten in Kürze eine Bestätigung per E-Mail.",
+		"Thank you! You will receive a confirmation email shortly.",
+		"شكراً! ستتلقى رسالة تأكيد عبر البريد الإلكتروني قريباً.",
+		"谢谢！您将很快收到一封确认邮件。",
+		"Спасибо! Вы скоро получите письмо с подтверждением."
+	],
+	"careerMessageSent": [
+		"Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns so bald wie möglich bei Ihnen.",
+		"Your message has been sent successfully. We will get back to you as soon as possible.",
+		"تم إرسال رسالتك بنجاح. سنتواصل معك في أقرب وقت ممكن.",
+		"您的消息已成功发送。我们将尽快与您联系。",
+		"Ваше сообщение успешно отправлено. Мы свяжемся с вами как можно скорее."
+	],
+	"careerMessageError": [
+		"Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.",
+		"Your message could not be sent. Please try again.",
+		"تعذر إرسال رسالتك. يرجى المحاولة مرة أخرى.",
+		"您的消息无法发送，请重试。",
+		"Не удалось отправить ваше сообщение. Пожалуйста, попробуйте еще раз."
 	]
 }

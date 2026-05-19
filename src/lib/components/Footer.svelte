@@ -3,6 +3,7 @@
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
 	import * as m from '$lib/messages';
+	import { enhance } from '$app/forms';
 
 	const customerServiceLinks = [
 		{ title: m.contact(), href: '/contact' },
@@ -33,18 +34,7 @@
 
 	let customerEmail = $state('');
 	let isSubscribing = $state(false);
-
-	const handleNewsletterSubmit = async (e: Event) => {
-		e.preventDefault();
-		if (!customerEmail.trim()) return;
-
-		isSubscribing = true;
-		// TODO: Implement newsletter subscription
-		setTimeout(() => {
-			isSubscribing = false;
-			customerEmail = '';
-		}, 1000);
-	};
+	let subscribeSuccess = $state(false);
 
 	const methods = [{
 		title: 'VISA & MC',
@@ -91,25 +81,46 @@
 				<div class="mb-6">
 					<h3 class="text-lg font-semibold mb-3">{m.newsletter()}</h3>
 					<p class="text-sm text-neutral-content/80 mb-4">{m.newsletterDesc()}</p>
-					<form onsubmit={handleNewsletterSubmit} class="flex gap-2">
-						<label class="input input-bordered input-sm bg-base-100 text-base-content flex-1">
-							<Mail class="w-4 h-4 opacity-70" />
-							<input 
-								type="email" 
-								placeholder={m.yourEmail()} 
-								bind:value={customerEmail}
-								required
-								class="grow bg-transparent"
-							/>
-						</label>
-						<button 
-							type="submit" 
-							class="btn btn-secondary btn-sm flex-shrink-0"
-							disabled={isSubscribing}
+					{#if subscribeSuccess}
+						<p class="text-sm text-success">{m.newsletterSuccess()}</p>
+					{:else}
+						<form
+							action="/newsletter?/subscribe"
+							method="POST"
+							class="flex gap-2"
+							use:enhance={() => {
+								isSubscribing = true;
+								return async ({ result, update }) => {
+									isSubscribing = false;
+									if (result.type === 'success') {
+										subscribeSuccess = true;
+										customerEmail = '';
+									} else {
+										await update();
+									}
+								};
+							}}
 						>
-							{isSubscribing ? m.processing() : m.subscribe()}
-						</button>
-					</form>
+							<label class="input input-bordered input-sm bg-base-100 text-base-content flex-1">
+								<Mail class="w-4 h-4 opacity-70" />
+								<input
+									type="email"
+									name="email"
+									placeholder={m.yourEmail()}
+									bind:value={customerEmail}
+									required
+									class="grow bg-transparent"
+								/>
+							</label>
+							<button
+								type="submit"
+								class="btn btn-secondary btn-sm flex-shrink-0"
+								disabled={isSubscribing}
+							>
+								{isSubscribing ? m.processing() : m.subscribe()}
+							</button>
+						</form>
+					{/if}
 				</div>
 
 				<!-- Social Media -->
