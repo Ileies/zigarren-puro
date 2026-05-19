@@ -9,11 +9,11 @@
 	let { user }: { user: SessionValidationResult['user'] } = $props();
 
     const navigation = [
-		{ title: m.cigars(), href: '/search?t=cigars' },
-		{ title: m.zigarillos(), href: '/search?t=zigarillos' },
+		{ title: m.cigars(), href: '/shop?type=cigar' },
+		{ title: m.zigarillos(), href: '/shop?type=cigarillo' },
 		{ title: m.pipestobacco(), href: '/search?t=pipes+tobacco' },
-		{ title: m.accessories(), href: '/search?t=accessories' },
-		{ title: m.spirits(), href: '/search?t=spirits' },
+		{ title: m.accessories(), href: '/shop?type=tool' },
+		{ title: m.spirits(), href: '/shop?type=beverage' },
 		{ title: m.gifts(), href: '/search?t=gifts' },
 		{ title: m.sale(), href: '/search?flag=sale' },
 		{ title: m.news(), href: '/news' }

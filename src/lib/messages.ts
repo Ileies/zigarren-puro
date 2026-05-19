@@ -101,3 +101,16 @@ export function cigarTastingDesc(p?: Record<string, string | number>): string { 
 export function upcomingEvents(p?: Record<string, string | number>): string { return _t(["Kommende Events","Upcoming Events","الأحداث القادمة","即将举行的活动","Предстоящие события"], p); }
 export function bookNow(p?: Record<string, string | number>): string { return _t(["Jetzt buchen","Book Now","احجز الآن","立即预订","Забронировать"], p); }
 export function learnMore(p?: Record<string, string | number>): string { return _t(["Mehr erfahren","Learn More","تعلم المزيد","了解更多","Узнать больше"], p); }
+export function shopTitle(p?: Record<string, string | number>): string { return _t(["Unser Shop","Our Shop","متجرنا","我们的商店","Наш магазин"], p); }
+export function allProducts(p?: Record<string, string | number>): string { return _t(["Alle Produkte","All Products","جميع المنتجات","所有产品","Все товары"], p); }
+export function sortBy(p?: Record<string, string | number>): string { return _t(["Sortierung","Sort by","ترتيب حسب","排序","Сортировка"], p); }
+export function sortNameAsc(p?: Record<string, string | number>): string { return _t(["Name A–Z","Name A–Z","الاسم أ–ي","名称 A–Z","Имя A–Z"], p); }
+export function sortNameDesc(p?: Record<string, string | number>): string { return _t(["Name Z–A","Name Z–A","الاسم ي–أ","名称 Z–A","Имя Z–A"], p); }
+export function sortPriceAsc(p?: Record<string, string | number>): string { return _t(["Preis aufsteigend","Price Ascending","السعر تصاعدي","价格升序","Цена по возрастанию"], p); }
+export function sortPriceDesc(p?: Record<string, string | number>): string { return _t(["Preis absteigend","Price Descending","السعر تنازلي","价格降序","Цена по убыванию"], p); }
+export function inStock(p?: Record<string, string | number>): string { return _t(["Auf Lager","In Stock","متوفر","有库存","В наличии"], p); }
+export function outOfStock(p?: Record<string, string | number>): string { return _t(["Ausverkauft","Out of Stock","نفد المخزون","缺货","Нет в наличии"], p); }
+export function addToCart(p?: Record<string, string | number>): string { return _t(["In den Warenkorb","Add to Cart","أضف إلى السلة","加入购物车","В корзину"], p); }
+export function noProductsFound(p?: Record<string, string | number>): string { return _t(["Keine Produkte gefunden","No products found","لم يتم العثور على منتجات","未找到产品","Товары не найдены"], p); }
+export function tools(p?: Record<string, string | number>): string { return _t(["Zubehör","Accessories","الإكسسوارات","配件","Аксессуары"], p); }
+export function products(p?: Record<string, string | number>): string { return _t(["Produkte","Products","المنتجات","产品","Товары"], p); }

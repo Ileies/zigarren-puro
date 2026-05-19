@@ -383,5 +383,96 @@
 		"تعلم المزيد",
 		"了解更多",
 		"Узнать больше"
+	],
+	"shopTitle": [
+		"Unser Shop",
+		"Our Shop",
+		"متجرنا",
+		"我们的商店",
+		"Наш магазин"
+	],
+	"allProducts": [
+		"Alle Produkte",
+		"All Products",
+		"جميع المنتجات",
+		"所有产品",
+		"Все товары"
+	],
+	"sortBy": [
+		"Sortierung",
+		"Sort by",
+		"ترتيب حسب",
+		"排序",
+		"Сортировка"
+	],
+	"sortNameAsc": [
+		"Name A–Z",
+		"Name A–Z",
+		"الاسم أ–ي",
+		"名称 A–Z",
+		"Имя A–Z"
+	],
+	"sortNameDesc": [
+		"Name Z–A",
+		"Name Z–A",
+		"الاسم ي–أ",
+		"名称 Z–A",
+		"Имя Z–A"
+	],
+	"sortPriceAsc": [
+		"Preis aufsteigend",
+		"Price Ascending",
+		"السعر تصاعدي",
+		"价格升序",
+		"Цена по возрастанию"
+	],
+	"sortPriceDesc": [
+		"Preis absteigend",
+		"Price Descending",
+		"السعر تنازلي",
+		"价格降序",
+		"Цена по убыванию"
+	],
+	"inStock": [
+		"Auf Lager",
+		"In Stock",
+		"متوفر",
+		"有库存",
+		"В наличии"
+	],
+	"outOfStock": [
+		"Ausverkauft",
+		"Out of Stock",
+		"نفد المخزون",
+		"缺货",
+		"Нет в наличии"
+	],
+	"addToCart": [
+		"In den Warenkorb",
+		"Add to Cart",
+		"أضف إلى السلة",
+		"加入购物车",
+		"В корзину"
+	],
+	"noProductsFound": [
+		"Keine Produkte gefunden",
+		"No products found",
+		"لم يتم العثور على منتجات",
+		"未找到产品",
+		"Товары не найдены"
+	],
+	"tools": [
+		"Zubehör",
+		"Accessories",
+		"الإكسسوارات",
+		"配件",
+		"Аксессуары"
+	],
+	"products": [
+		"Produkte",
+		"Products",
+		"المنتجات",
+		"产品",
+		"Товары"
 	]
 }
