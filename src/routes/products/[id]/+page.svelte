@@ -1,6 +1,9 @@
 <script lang="ts">
-	import { Package, ShoppingCart, ArrowLeft, MapPin, Award } from 'lucide-svelte';
+	import { enhance } from '$app/forms';
+	import { Package, ShoppingCart, ArrowLeft, MapPin, Award, Check } from 'lucide-svelte';
 	import { ProductType, CigarStrength } from '$lib/types';
+
+	let addedFeedback = $state(false);
 
 	let { data } = $props();
 
@@ -82,13 +85,32 @@
 				<p class="text-base-content/70 leading-relaxed">{data.product.description}</p>
 			{/if}
 
-			<button
-				class="btn btn-secondary btn-lg gap-2 mt-2"
-				disabled={data.product.stock === 0}
+			<form
+				method="POST"
+				action="?/addToCart"
+				use:enhance={() => {
+					return async ({ update }) => {
+						await update({ reset: false });
+						addedFeedback = true;
+						setTimeout(() => (addedFeedback = false), 2000);
+					};
+				}}
 			>
-				<ShoppingCart class="w-5 h-5" />
-				In den Warenkorb
-			</button>
+				<button
+					type="submit"
+					class="btn btn-secondary btn-lg gap-2 mt-2 w-full transition-all"
+					class:btn-success={addedFeedback}
+					disabled={data.product.stock === 0}
+				>
+					{#if addedFeedback}
+						<Check class="w-5 h-5" />
+						Hinzugefügt!
+					{:else}
+						<ShoppingCart class="w-5 h-5" />
+						In den Warenkorb
+					{/if}
+				</button>
+			</form>
 
 			<p class="text-xs text-base-content/40">Art.-Nr.: {data.product.sku}</p>
 		</div>

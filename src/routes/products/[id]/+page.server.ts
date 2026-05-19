@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { PageServerLoad, Actions } from './$types';
 import db from '$lib/server/db';
+import { addToCart } from '$lib/server/cart';
 import {
 	productTable,
 	producerTable,
@@ -49,4 +50,11 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	return { product, details };
+};
+
+export const actions: Actions = {
+	addToCart: async ({ cookies, params }) => {
+		addToCart(cookies, params.id);
+		return { success: true };
+	}
 };

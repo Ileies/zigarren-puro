@@ -1,9 +1,24 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { Package, ShoppingCart, SlidersHorizontal } from 'lucide-svelte';
+	import { enhance } from '$app/forms';
+	import { Package, ShoppingCart, SlidersHorizontal, Check } from 'lucide-svelte';
 	import * as m from '$lib/messages';
 	import { ProductType } from '$lib/types';
+
+	let justAdded = $state<string | null>(null);
+
+	function handleAddToCart(productId: string) {
+		return () => {
+			return async ({ update }: { update: (opts?: { reset?: boolean }) => Promise<void> }) => {
+				await update({ reset: false });
+				justAdded = productId;
+				setTimeout(() => {
+					if (justAdded === productId) justAdded = null;
+				}, 1500);
+			};
+		};
+	}
 
 	let { data } = $props();
 
@@ -90,14 +105,12 @@
 	{:else}
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 			{#each data.products as product (product.id)}
-				<a
-					href="/products/{product.id}"
-					class="card bg-base-100 border border-base-300 hover:border-secondary hover:shadow-md transition-all duration-200 group"
-				>
-					<!-- Placeholder image area -->
-					<figure class="aspect-square bg-base-200 flex items-center justify-center rounded-t-box overflow-hidden">
-						<Package class="w-16 h-16 text-base-content/20 group-hover:text-base-content/30 transition-colors" />
-					</figure>
+				<div class="card bg-base-100 border border-base-300 hover:border-secondary hover:shadow-md transition-all duration-200 group">
+					<a href="/products/{product.id}" class="contents">
+						<figure class="aspect-square bg-base-200 flex items-center justify-center rounded-t-box overflow-hidden">
+							<Package class="w-16 h-16 text-base-content/20 group-hover:text-base-content/30 transition-colors" />
+						</figure>
+					</a>
 
 					<div class="card-body p-4 gap-1">
 						{#if product.producerName}
@@ -106,9 +119,9 @@
 							</p>
 						{/if}
 
-						<h2 class="font-semibold text-sm leading-snug line-clamp-2">
+						<a href="/products/{product.id}" class="font-semibold text-sm leading-snug line-clamp-2 hover:text-secondary transition-colors">
 							{product.name}
-						</h2>
+						</a>
 
 						<div class="flex items-center justify-between mt-2">
 							<span class="text-lg font-bold text-secondary">
@@ -122,16 +135,30 @@
 							{/if}
 						</div>
 
-						<button
-							class="btn btn-secondary btn-sm w-full mt-3 gap-2"
-							onclick={(e) => e.preventDefault()}
-							disabled={product.stock === 0}
+						<form
+							method="POST"
+							action="/cart?/add"
+							use:enhance={handleAddToCart(product.id)}
 						>
-							<ShoppingCart class="w-4 h-4" />
-							{m.addToCart()}
-						</button>
+							<input type="hidden" name="id" value={product.id} />
+							<button
+								type="submit"
+								class="btn btn-sm w-full mt-3 gap-2 transition-all"
+								class:btn-secondary={justAdded !== product.id}
+								class:btn-success={justAdded === product.id}
+								disabled={product.stock === 0}
+							>
+								{#if justAdded === product.id}
+									<Check class="w-4 h-4" />
+									Hinzugefügt!
+								{:else}
+									<ShoppingCart class="w-4 h-4" />
+									{m.addToCart()}
+								{/if}
+							</button>
+						</form>
 					</div>
-				</a>
+				</div>
 			{/each}
 		</div>
 	{/if}
