@@ -11,6 +11,12 @@ import {
 import { eq, asc } from 'drizzle-orm';
 import { error, redirect } from '@sveltejs/kit';
 import type { BeverageType, CigarStrength, FilterType } from '$lib/types';
+import { writeFile, unlink, mkdir, readdir } from 'node:fs/promises';
+import { join } from 'node:path';
+
+const PRODUCT_IMAGES_DIR = join(process.cwd(), 'static', 'product-images');
+const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_SIZE = 5 * 1024 * 1024;
 
 export const load: PageServerLoad = async ({ params }) => {
 	const [product, producers] = await Promise.all([
@@ -145,6 +151,61 @@ export const actions: Actions = {
 		}
 
 		return { success: true };
+	},
+
+	uploadImage: async ({ request, params }) => {
+		const data = await request.formData();
+		const file = data.get('image') as File;
+
+		if (!file || file.size === 0) return { error: 'Keine Datei ausgewählt' };
+		if (!ALLOWED_MIME.includes(file.type)) return { error: 'Nur JPG, PNG und WebP sind erlaubt' };
+		if (file.size > MAX_SIZE) return { error: 'Datei zu groß (max. 5 MB)' };
+
+		const ext = file.type === 'image/jpeg' ? 'jpg' : file.type === 'image/png' ? 'png' : 'webp';
+		const filename = `${params.id}.${ext}`;
+
+		await mkdir(PRODUCT_IMAGES_DIR, { recursive: true });
+
+		// Remove any existing image for this product (different extension)
+		try {
+			const existing = await readdir(PRODUCT_IMAGES_DIR);
+			for (const f of existing) {
+				if (f.startsWith(params.id + '.') && f !== filename) {
+					await unlink(join(PRODUCT_IMAGES_DIR, f));
+				}
+			}
+		} catch {}
+
+		await writeFile(join(PRODUCT_IMAGES_DIR, filename), Buffer.from(await file.arrayBuffer()));
+		await db
+			.update(productTable)
+			.set({ imageUrl: `/product-images/${filename}`, updatedAt: new Date() })
+			.where(eq(productTable.id, params.id));
+
+		return { imageSuccess: true };
+	},
+
+	removeImage: async ({ params }) => {
+		const product = await db.query.productTable.findFirst({
+			where: eq(productTable.id, params.id),
+			columns: { imageUrl: true }
+		});
+
+		if (product?.imageUrl) {
+			const filename = product.imageUrl.split('/').pop();
+			if (filename) {
+				try {
+					await unlink(join(PRODUCT_IMAGES_DIR, filename));
+				} catch {}
+			}
+		}
+
+		await db
+			.update(productTable)
+			.set({ imageUrl: null, updatedAt: new Date() })
+			.where(eq(productTable.id, params.id));
+
+		return { imageRemoved: true };
 	},
 
 	delete: async ({ params }) => {

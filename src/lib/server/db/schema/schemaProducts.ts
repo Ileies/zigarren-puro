@@ -16,6 +16,7 @@ export const productTable = pgTable('products', {
 	producerId: uuid('producer_id').references(() => producerTable.id, { onDelete: 'cascade' }).notNull(),
 	name: varchar('name').notNull(),
 	description: text('description'),
+	imageUrl: varchar('image_url'),
 	price: decimal('price', { precision: 10, scale: 2 }).notNull(),
 	stock: integer('stock').notNull().default(0),
 	sku: varchar('sku').notNull().unique(),

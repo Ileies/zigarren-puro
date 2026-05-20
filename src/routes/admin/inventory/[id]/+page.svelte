@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { data, form } = $props();
+	let { data, form }: { data: any; form: Record<string, unknown> | null } = $props();
 	let product = $derived(data.product);
 
 	const typeLabels: Record<string, string> = {
@@ -39,11 +39,63 @@
 			Produkt wurde gespeichert.
 		</div>
 	{/if}
+	{#if form?.imageSuccess}
+		<div class="mb-4 rounded-md bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
+			Bild wurde hochgeladen.
+		</div>
+	{/if}
+	{#if form?.imageRemoved}
+		<div class="mb-4 rounded-md bg-zinc-50 border border-zinc-200 px-4 py-3 text-sm text-zinc-700">
+			Bild wurde entfernt.
+		</div>
+	{/if}
 	{#if form?.error}
 		<div class="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
 			{form.error}
 		</div>
 	{/if}
+
+	<!-- Image upload -->
+	<div class="bg-white rounded-lg border border-zinc-200 p-5 mb-6">
+		<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-4">Produktbild</h2>
+		<div class="flex items-start gap-5">
+			<div class="w-28 h-28 bg-zinc-100 rounded-md flex items-center justify-center overflow-hidden flex-shrink-0 border border-zinc-200">
+				{#if product.imageUrl}
+					<img src={product.imageUrl} alt={product.name} class="w-full h-full object-cover" />
+				{:else}
+					<span class="text-xs text-zinc-400">Kein Bild</span>
+				{/if}
+			</div>
+			<div class="flex flex-col gap-3 flex-1">
+				<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
+					<label class={labelClass} for="image">JPG, PNG oder WebP · max. 5 MB</label>
+					<div class="flex gap-2 mt-1">
+						<input
+							id="image"
+							name="image"
+							type="file"
+							accept="image/jpeg,image/png,image/webp"
+							required
+							class="flex-1 text-sm text-zinc-600 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200 cursor-pointer"
+						/>
+						<button
+							type="submit"
+							class="bg-zinc-900 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-zinc-700 transition-colors whitespace-nowrap"
+						>
+							Hochladen
+						</button>
+					</div>
+				</form>
+				{#if product.imageUrl}
+					<form method="POST" action="?/removeImage" use:enhance>
+						<button type="submit" class="text-xs text-red-500 hover:text-red-700 underline underline-offset-2">
+							Bild entfernen
+						</button>
+					</form>
+				{/if}
+			</div>
+		</div>
+	</div>
 
 	<form method="POST" action="?/update" use:enhance class="space-y-6 mb-6">
 		<!-- Base fields -->
