@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Hero from '$lib/components/homepage/Hero.svelte';
 	import HeroCarousel from '$lib/components/homepage/HeroCarousel.svelte';
 	import FeaturedBrands from '$lib/components/homepage/FeaturedBrands.svelte';
 	import AllBrandsCarousel from '$lib/components/homepage/AllBrandsCarousel.svelte';
@@ -14,6 +15,7 @@
 	<meta name="description" content="Entdecken Sie unsere exklusive Auswahl an Premium-Zigarren von weltbekannten Marken." />
 </svelte:head>
 
+<Hero />
 <HeroCarousel />
 <FeaturedBrands />
 <AllBrandsCarousel />
