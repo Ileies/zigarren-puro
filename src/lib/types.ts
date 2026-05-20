@@ -24,6 +24,7 @@ export enum TokenType {
 	SESSION = 'session',
 	PASSWORD_RESET = 'password_reset',
 	EMAIL_VERIFICATION = 'email_verification',
+	EMAIL_CHANGE = 'email_change',
 	REMEMBER_ME = 'remember_me',
 	API_KEY = 'api_key',
 	REFRESH_TOKEN = 'refresh_token',

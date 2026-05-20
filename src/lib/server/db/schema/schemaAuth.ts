@@ -30,6 +30,7 @@ export const tokenTable = pgTable('tokens', {
 		.references(() => customerTable.id, { onDelete: 'cascade' })
 		.notNull(),
 	type: text('type').notNull().$type<TokenType>(),
+	metadata: text('metadata'), // JSON string for additional data (e.g. new email for EMAIL_CHANGE)
 	usedAt: timestamp('used_at'),
 	expiresAt: timestamp('expires_at').notNull(),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
