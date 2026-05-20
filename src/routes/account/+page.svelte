@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
-	import { Heart, MapPin, Package, Shield, User } from '@lucide/svelte';
+	import { Heart, Mail, MapPin, Package, Shield, User } from '@lucide/svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	let activeTab = $state<'profile' | 'password'>('profile');
+	let activeTab = $state<'profile' | 'password' | 'email'>('profile');
 	let profileLoading = $state(false);
 	let passwordLoading = $state(false);
+	let emailLoading = $state(false);
 	let newPassword = $state('');
 	let confirmPassword = $state('');
 
@@ -17,6 +18,7 @@
 	$effect(() => {
 		if (form?.action === 'password') activeTab = 'password';
 		if (form?.action === 'profile') activeTab = 'profile';
+		if (form?.action === 'email') activeTab = 'email';
 	});
 </script>
 
@@ -102,6 +104,18 @@
 					<Shield class="h-4 w-4" />
 					Passwort ändern
 				</button>
+				<button
+					onclick={() => (activeTab = 'email')}
+					class={[
+						'flex items-center gap-2 px-6 py-4 text-sm font-medium transition-colors',
+						activeTab === 'email'
+							? 'border-b-2 border-primary text-primary'
+							: 'text-base-content/60'
+					].join(' ')}
+				>
+					<Mail class="h-4 w-4" />
+					E-Mail ändern
+				</button>
 			</div>
 
 			<div class="p-6 sm:p-8">
@@ -165,7 +179,14 @@
 								disabled
 								class="input input-bordered w-full opacity-60"
 							/>
-							<p class="text-xs text-base-content/50">E-Mail-Adresse kann nicht geändert werden.</p>
+							<p class="text-xs text-base-content/50">
+							E-Mail-Adresse ändern unter
+							<button
+								type="button"
+								onclick={() => (activeTab = 'email')}
+								class="text-primary underline underline-offset-2"
+							>E-Mail ändern</button>.
+						</p>
 						</label>
 
 						<!-- Phone + Gender -->
@@ -222,7 +243,7 @@
 					</form>
 
 				<!-- Password Tab -->
-				{:else}
+				{:else if activeTab === 'password'}
 					{#if form?.action === 'password' && form.success}
 						<div class="mb-5 rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
 							Passwort erfolgreich geändert.
@@ -309,6 +330,75 @@
 							</button>
 						</div>
 					</form>
+
+				<!-- Email Tab -->
+				{:else if activeTab === 'email'}
+					{#if form?.action === 'email' && form.success}
+						<div class="rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
+							Bestätigungslink gesendet. Bitte prüfen Sie Ihren Posteingang und klicken Sie auf den Link, um die neue E-Mail-Adresse zu aktivieren.
+						</div>
+					{:else}
+						{#if form?.action === 'email' && form.error}
+							<div class="mb-5 rounded-lg bg-error/10 px-4 py-3 text-sm text-error">
+								{form.error}
+							</div>
+						{/if}
+
+						<p class="mb-5 text-sm text-base-content/60">
+							Aktuelle E-Mail-Adresse: <span class="font-medium text-base-content">{data.customer.email}</span>
+						</p>
+
+						<form
+							method="POST"
+							action="?/changeEmail"
+							use:enhance={() => {
+								emailLoading = true;
+								return async ({ update }) => {
+									emailLoading = false;
+									await update();
+								};
+							}}
+							class="flex flex-col gap-5"
+						>
+							<label class="flex flex-col gap-1.5">
+								<span class="text-sm font-medium">Neue E-Mail-Adresse <span class="text-error">*</span></span>
+								<input
+									type="email"
+									name="newEmail"
+									required
+									autocomplete="email"
+									placeholder="neue@email.de"
+									class="input input-bordered w-full focus:input-primary"
+								/>
+							</label>
+
+							<label class="flex flex-col gap-1.5">
+								<span class="text-sm font-medium">Aktuelles Passwort <span class="text-error">*</span></span>
+								<input
+									type="password"
+									name="currentPassword"
+									required
+									autocomplete="current-password"
+									placeholder="••••••••"
+									class="input input-bordered w-full focus:input-primary"
+								/>
+							</label>
+
+							<p class="text-xs text-base-content/50">
+								Sie erhalten einen Bestätigungslink an die neue E-Mail-Adresse. Die Änderung wird erst nach Klick auf diesen Link wirksam.
+							</p>
+
+							<div class="flex justify-end">
+								<button type="submit" disabled={emailLoading} class="btn btn-primary">
+									{#if emailLoading}
+										<span class="loading loading-spinner loading-sm"></span>
+									{:else}
+										Bestätigungslink senden
+									{/if}
+								</button>
+							</div>
+						</form>
+					{/if}
 				{/if}
 			</div>
 		</div>

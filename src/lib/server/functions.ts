@@ -32,6 +32,26 @@ export async function generateVerificationToken(customerId: string): Promise<str
 	return token;
 }
 
+export async function generateEmailChangeToken(customerId: string, newEmail: string): Promise<string> {
+	await db
+		.update(tokenTable)
+		.set({ revokedAt: new Date() })
+		.where(
+			and(
+				eq(tokenTable.customerId, customerId),
+				eq(tokenTable.type, TokenType.EMAIL_CHANGE),
+				isNull(tokenTable.revokedAt),
+				isNull(tokenTable.usedAt)
+			)
+		);
+	const token = generateToken();
+	const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
+	await db
+		.insert(tokenTable)
+		.values({ token, customerId, type: TokenType.EMAIL_CHANGE, metadata: newEmail, expiresAt });
+	return token;
+}
+
 export async function generatePasswordResetToken(customerId: string): Promise<string> {
 	await db
 		.update(tokenTable)
@@ -183,6 +203,47 @@ function passwordResetEmailHtml(firstName: string, resetUrl: string): string {
 	return baseLayout(content, footer);
 }
 
+function emailChangeEmailHtml(firstName: string, confirmUrl: string, newEmail: string): string {
+	const content = `
+      <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Neue E-Mail-Adresse bestätigen
+      </h2>
+      <p style="margin:0 0 12px;color:#444;font-size:15px;line-height:1.8">Guten Tag ${firstName},</p>
+      <p style="margin:0 0 32px;color:#444;font-size:15px;line-height:1.8">
+        Sie haben angefordert, Ihre E-Mail-Adresse zu ändern. Klicken Sie auf den folgenden
+        Button, um <strong>${newEmail}</strong> als Ihre neue E-Mail-Adresse zu bestätigen.
+      </p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background:#d4af37;border-radius:2px">
+            <a href="${confirmUrl}"
+               style="display:inline-block;padding:15px 40px;color:#1a1a1a;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:2px;text-transform:uppercase">
+              E-Mail bestätigen
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:32px 0 0;color:#888;font-size:13px;line-height:1.7">
+        Dieser Link ist <strong>1 Stunde</strong> gültig. Falls Sie diese Anfrage nicht
+        gestellt haben, können Sie diese E-Mail ignorieren – Ihre E-Mail-Adresse bleibt unverändert.
+      </p>
+
+      <div style="margin:32px 0 28px;border-top:1px solid #eeeeee"></div>
+
+      <p style="margin:0;color:#aaa;font-size:12px;line-height:1.7">
+        Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br />
+        <a href="${confirmUrl}" style="color:#b8834a;word-break:break-all">${confirmUrl}</a>
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
 // ─── Email templates ─────────────────────────────────────────────────────────
 
 function orderConfirmationEmailHtml(
@@ -301,6 +362,22 @@ export async function sendOrderConfirmationEmail(
 		},
 		customerId
 	);
+}
+
+export async function sendEmailChangeConfirmation(
+	customerId: string,
+	newEmail: string,
+	firstName: string
+): Promise<void> {
+	const token = await generateEmailChangeToken(customerId, newEmail);
+	const confirmUrl = `https://${PUBLIC_ORIGIN}/account/confirm-email?token=${token}`;
+
+	await sendMail({
+		to: newEmail,
+		subject: 'Neue E-Mail-Adresse bestätigen – Zigarren Puro',
+		html: emailChangeEmailHtml(firstName, confirmUrl, newEmail),
+		text: `Guten Tag ${firstName},\n\nBitte bestätigen Sie Ihre neue E-Mail-Adresse (${newEmail}) unter folgendem Link:\n${confirmUrl}\n\nDieser Link ist 1 Stunde gültig.\n\nZigarren Puro`
+	});
 }
 
 export async function sendPasswordResetEmail(

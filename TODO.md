@@ -5,6 +5,7 @@
 ### Tech & Infrastruktur
 
 - [ ] **UI-Framework auf shadcn-svelte migrieren** — Aktuell daisyUI; für einen Premium-Brand mit reguliertem Commerce-Kontext ist shadcn die bessere Basis (mehr Kontrolle, professionelleres Erscheinungsbild, kein generischer daisyUI-Look).
+- [x] **Homepage Hero** — Eigenständige Hero-Sektion über dem Karussell: Vollbild-Hintergrund, Shop-Name, Tagline, CTA-Button „Jetzt entdecken".
 
 ### Kernfunktionen (E-Commerce)
 
@@ -18,6 +19,7 @@
 - [x] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
 - [x] **Wunschliste** — Schema (`wishlists`-Tabelle, Composite PK), Heart-Button auf Produktdetailseite, `/account/wishlist`-Seite mit Entfernen & In-den-Warenkorb, Link im Account-Dashboard.
 - [ ] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
+- [x] **E-Mail ändern** — Flow: Nutzer gibt neue E-Mail + aktuelles Passwort ein → Bestätigungs-Link an neue Adresse → Klick aktualisiert E-Mail in DB. Bestätigungsseite unter `/account/confirm-email`.
 
 ### Formulare & Kleinigkeiten
 
@@ -27,6 +29,7 @@
 ### Admin
 
 - [x] **Produkt-Detailbearbeitung** `/admin/inventory/[id]` — vollständiges Bearbeitungsformular für alle Produktfelder (inkl. typ-spezifische Details: Zigarren, Spirituosen etc.).
+- [x] **Bild-Upload im Admin** — Datei-Upload auf der Produkt-Bearbeitungsseite; Bild wird in `static/product-images/` gespeichert, URL in `products.image_url`. Produktdetailseite zeigt das Bild wenn vorhanden.
 
 ### Compliance & Rechtliches
 

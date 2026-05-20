@@ -5,6 +5,7 @@ import db from '$lib/server/db';
 import { authCredentialsTable, customerTable } from '$lib/server/db/schema';
 import * as auth from '$lib/server/auth';
 import type { Gender } from '$lib/types';
+import { sendEmailChangeConfirmation } from '$lib/server/functions';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -89,5 +90,54 @@ export const actions: Actions = {
 			.where(eq(authCredentialsTable.customerId, locals.user.id));
 
 		return { action: 'password', success: true };
+	},
+
+	changeEmail: async ({ locals, request }) => {
+		if (!locals.user) redirect(302, '/login');
+
+		const data = await request.formData();
+		const newEmail = data.get('newEmail')?.toString().trim().toLowerCase() ?? '';
+		const currentPassword = data.get('currentPassword')?.toString() ?? '';
+
+		if (!newEmail || !currentPassword) {
+			return fail(400, { action: 'email', error: 'Alle Felder sind erforderlich.' });
+		}
+
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(newEmail)) {
+			return fail(400, { action: 'email', error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' });
+		}
+
+		const [customer] = await db
+			.select({ id: customerTable.id, email: customerTable.email, firstName: customerTable.firstName })
+			.from(customerTable)
+			.where(eq(customerTable.id, locals.user.id));
+
+		if (newEmail === customer.email) {
+			return fail(400, { action: 'email', error: 'Die neue E-Mail-Adresse ist identisch mit der aktuellen.' });
+		}
+
+		const [existing] = await db
+			.select({ id: customerTable.id })
+			.from(customerTable)
+			.where(eq(customerTable.email, newEmail));
+
+		if (existing) {
+			return fail(400, { action: 'email', error: 'Diese E-Mail-Adresse ist bereits vergeben.' });
+		}
+
+		const [credentials] = await db
+			.select()
+			.from(authCredentialsTable)
+			.where(eq(authCredentialsTable.customerId, locals.user.id));
+
+		const valid = await auth.verifyPassword(currentPassword, credentials.passwordHash);
+		if (!valid) {
+			return fail(401, { action: 'email', error: 'Das aktuelle Passwort ist falsch.' });
+		}
+
+		await sendEmailChangeConfirmation(customer.id, newEmail, customer.firstName);
+
+		return { action: 'email', success: true };
 	}
 };
