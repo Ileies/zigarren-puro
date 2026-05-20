@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import db from '$lib/server/db';
 import { addToCart } from '$lib/server/cart';
@@ -9,9 +9,11 @@ import {
 	cigarilloDetailsTable,
 	beverageDetailsTable,
 	toolDetailsTable,
-	wishlistTable
+	wishlistTable,
+	productReviewTable,
+	customerTable
 } from '$lib/server/db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, avg, count, desc, eq, sql } from 'drizzle-orm';
 import { ProductType } from '$lib/types';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -59,7 +61,42 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		isWishlisted = !!wish;
 	}
 
-	return { product, details, isWishlisted };
+	const reviews = await db
+		.select({
+			id: productReviewTable.id,
+			rating: productReviewTable.rating,
+			title: productReviewTable.title,
+			body: productReviewTable.body,
+			createdAt: productReviewTable.createdAt,
+			customerId: productReviewTable.customerId,
+			reviewerName: sql<string>`${customerTable.firstName} || ' ' || LEFT(${customerTable.lastName}, 1) || '.'`
+		})
+		.from(productReviewTable)
+		.leftJoin(customerTable, eq(productReviewTable.customerId, customerTable.id))
+		.where(eq(productReviewTable.productId, params.id))
+		.orderBy(desc(productReviewTable.createdAt));
+
+	const [{ avgRating, reviewCount }] = await db
+		.select({
+			avgRating: avg(productReviewTable.rating),
+			reviewCount: count()
+		})
+		.from(productReviewTable)
+		.where(eq(productReviewTable.productId, params.id));
+
+	const userReview = locals.user
+		? (reviews.find((r) => r.customerId === locals.user!.id) ?? null)
+		: null;
+
+	return {
+		product,
+		details,
+		isWishlisted,
+		reviews,
+		avgRating: avgRating ? parseFloat(avgRating) : null,
+		reviewCount: reviewCount ?? 0,
+		userReview
+	};
 };
 
 export const actions: Actions = {
@@ -85,5 +122,38 @@ export const actions: Actions = {
 			await db.insert(wishlistTable).values({ customerId: locals.user.id, productId: params.id });
 			return { wishlisted: true };
 		}
+	},
+
+	submitReview: async ({ locals, params, request }) => {
+		if (!locals.user) redirect(302, '/login');
+
+		const data = await request.formData();
+		const rating = parseInt(data.get('rating') as string);
+		const title = (data.get('title') as string)?.trim() || null;
+		const body = (data.get('body') as string)?.trim() || null;
+
+		if (!rating || rating < 1 || rating > 5) {
+			return fail(400, { reviewError: 'Bitte wählen Sie eine Bewertung zwischen 1 und 5 Sternen.' });
+		}
+
+		await db
+			.insert(productReviewTable)
+			.values({ productId: params.id, customerId: locals.user.id, rating, title, body })
+			.onConflictDoUpdate({
+				target: [productReviewTable.productId, productReviewTable.customerId],
+				set: { rating, title, body }
+			});
+
+		return { reviewSuccess: true };
+	},
+
+	deleteReview: async ({ locals, params }) => {
+		if (!locals.user) redirect(302, '/login');
+
+		await db
+			.delete(productReviewTable)
+			.where(and(eq(productReviewTable.productId, params.id), eq(productReviewTable.customerId, locals.user.id)));
+
+		return { reviewDeleted: true };
 	}
 };

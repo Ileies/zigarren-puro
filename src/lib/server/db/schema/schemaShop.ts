@@ -1,4 +1,4 @@
-import { boolean, date, decimal, integer, jsonb, pgTable, primaryKey, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, date, decimal, integer, jsonb, pgTable, primaryKey, text, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 import { productTable } from './schemaProducts';
 import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
@@ -64,6 +64,18 @@ export const orderItemTable = pgTable('order_items', {
 	metadata: jsonb('metadata')  // For storing product-specific details at time of order
 });
 
+export const productReviewTable = pgTable('product_reviews', {
+	id: uuid('id').defaultRandom().primaryKey(),
+	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
+	customerId: uuid('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
+	rating: integer('rating').notNull(), // 1–5
+	title: varchar('title'),
+	body: text('body'),
+	createdAt: timestamp('created_at').defaultNow().notNull()
+}, (table) => [
+	unique('product_review_per_user').on(table.productId, table.customerId)
+]);
+
 export const wishlistTable = pgTable('wishlists', {
 	customerId: uuid('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
 	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
@@ -125,6 +137,17 @@ export const wishlistRelations = relations(wishlistTable, ({ one }) => ({
 	}),
 	product: one(productTable, {
 		fields: [wishlistTable.productId],
+		references: [productTable.id]
+	})
+}));
+
+export const productReviewRelations = relations(productReviewTable, ({ one }) => ({
+	customer: one(customerTable, {
+		fields: [productReviewTable.customerId],
+		references: [customerTable.id]
+	}),
+	product: one(productTable, {
+		fields: [productReviewTable.productId],
 		references: [productTable.id]
 	})
 }));
