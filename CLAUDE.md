@@ -1,10 +1,8 @@
-# Zigarren Puro — CLAUDE.md
+# Zigarren Puro -- CLAUDE.md
 
-Onlineshop für Premiumzigarren und Spirituosen. SvelteKit 5 + Drizzle ORM + PostgreSQL (Supabase). Mehrsprachig (DE/EN/AR/CN/RU). Gehostet auf eigenem Server mit `@sveltejs/adapter-node`.
+Premium-Webshop für Zigarren und Spirituosen. SvelteKit 5 + Drizzle ORM + PostgreSQL (Supabase). Gehostet auf eigenem Server mit `@sveltejs/adapter-node`.
 
-## Offene Aufgaben
-
-Alle offenen und erledigten Features sind in [`TODO.md`](./TODO.md) gepflegt. Vor Beginn neuer Features dort nachschauen.
+Offene Tasks: [`TODO.md`](./TODO.md)
 
 ---
 
@@ -22,81 +20,87 @@ Alle offenen und erledigten Features sind in [`TODO.md`](./TODO.md) gepflegt. Vo
 | Validierung | Zod 4 |
 | Analytics | PostHog |
 
-Kein `bunx` — immer `bun x` verwenden.
+Kein `bunx` -- immer `bun x` verwenden.
 
 ---
 
-## Verzeichnisstruktur
+## Projektstruktur
 
 ```
 src/
-├── app.d.ts                    # Locals-Interface (user, dbOffline, device, locale, dir)
-├── hooks.ts                    # reroute-Hook
-├── hooks.server.ts             # Middleware-Kette: handleAdmin → handleChecks → handleAuth → handleLocale
-├── lib/
-│   ├── config.ts               # Domain, Kontaktdaten, Social-Links
-│   ├── types.ts                # Enums: LogLevel, TokenType, ProductType, OrderStatus, PaymentMethod, …
-│   ├── messages.ts             # AUTO-GENERIERT vom i18n-Plugin — nicht manuell bearbeiten
-│   ├── i18n-plugin.ts          # Vite-Plugin: kompiliert messages/*.json → messages.ts
-│   ├── app.svelte.ts           # Globaler App-State (Svelte 5 runes)
-│   ├── components/
-│   │   ├── Header.svelte
-│   │   ├── Footer.svelte
-│   │   ├── Carousel.svelte
-│   │   ├── LanguageSelector.svelte
-│   │   ├── Map.svelte
-│   │   ├── Picture.svelte
-│   │   ├── Placeholder.svelte
-│   │   └── homepage/           # Nur auf der Startseite verwendete Komponenten
-│   └── server/
-│       ├── auth.ts             # hashPassword, verifyPassword, Session-Management
-│       ├── functions.ts        # E-Mail-Versand, Hilfsfunktionen
-│       ├── Logger.ts           # Strukturiertes Logging (schreibt in DB)
-│       └── db/
-│           ├── index.ts        # Drizzle-Instanz
-│           └── schema/
-│               ├── index.ts    # Re-Export aller Schemas
-│               ├── schemaAuth.ts     # auth_credentials, sessions, tokens
-│               ├── schemaShop.ts     # customers, addresses, orders, order_items
-│               ├── schemaProducts.ts # producers, products, categories, detail-Tabellen
-│               └── schemaLog.ts      # logs
-├── routes/
-│   ├── +layout.svelte          # Haupt-Layout: Header, Footer, Error-Toast
-│   ├── +layout.server.ts       # Lädt: dbOffline, user (für alle Seiten)
-│   ├── +error.svelte
-│   ├── (legal)/                # Routegruppe: /privacy, /terms, /imprint, /cancellation
-│   ├── (static)/               # Routegruppe: /career
-│   ├── admin/                  # Basic-Auth geschützt (ADMIN_PASSWORD)
-│   │   ├── +layout.svelte
-│   │   ├── inventory/[id]/     # Stub — vollständige Bearbeitung fehlt noch
-│   │   └── orders/[id]/
-│   └── …                       # login, register, logout, verify-email, contact, search, cart, …
+  app.d.ts                     # Locals: user, dbOffline, device, locale, dir
+  hooks.ts                     # reroute-Hook
+  hooks.server.ts              # Middleware: handleAdmin > handleChecks > handleAuth > handleLocale
+  lib/
+    config.ts                  # Domain, Kontaktdaten, bankAccount, Social-Links
+    types.ts                   # Enums: LogLevel, TokenType, ProductType, OrderStatus, ...
+    messages.ts                # AUTO-GENERIERT -- nie manuell bearbeiten
+    i18n-plugin.ts             # Vite-Plugin: messages/*.json -> messages.ts
+    app.svelte.ts              # Globaler App-State (Svelte 5 runes)
+    components/
+      Header.svelte
+      Footer.svelte
+      Carousel.svelte
+      LanguageSelector.svelte
+      Map.svelte
+      Picture.svelte
+      homepage/                # Startseite-Komponenten
+    server/
+      auth.ts                  # hashPassword, verifyPassword, Session-Management
+      functions.ts             # E-Mail-Versand, Hilfsfunktionen
+      Logger.ts                # Logging in DB
+      db/
+        index.ts               # Drizzle-Instanz (Alias: $db)
+        schema/
+          index.ts             # Re-Export aller Schemas
+          schemaAuth.ts        # auth_credentials, sessions, tokens
+          schemaShop.ts        # customers, addresses, orders, order_items, wishlists, product_reviews
+          schemaProducts.ts    # products, producers, categories, detail-Tabellen
+          schemaLog.ts         # logs
+  routes/
+    +layout.svelte / +layout.server.ts
+    +page.svelte                         # Homepage
+    (legal)/                             # privacy, terms, imprint, cancellation
+    (static)/                            # career
+    about/
+    account/
+      +page                              # Profil-Dashboard
+      addresses/
+      confirm-email/                     # E-Mail-Änderung bestätigen
+      orders/
+      wishlist/
+    admin/                               # Basic Auth (ADMIN_PASSWORD)
+      +page                              # Dashboard
+      inventory/[id]/                    # Produkt bearbeiten inkl. Bild-Upload
+      orders/ + orders/[id]/
+    cart/
+    checkout/ + checkout/confirmation/
+    contact/
+    faq/
+    forgot-password/ + reset-password/
+    login/ + logout/ + register/ + verify-email/
+    news/ + partners/ + tastings/
+    newsletter/
+    products/[id]/
+    returns/ + shipping/
+    search/ + shop/
+    unsubscribe/
 messages/
-├── de.json                     # Standardsprache
-├── en.json
-├── ar.json
-├── cn.json
-└── ru.json
+  de.json   # Standardsprache
+  en.json / ar.json / cn.json / ru.json
 ```
 
 ---
 
 ## Datenbank
 
-Schema-Dateien liegen unter `src/lib/server/db/schema/`. Alias: `$db` → `src/lib/server/db`.
+Alias `$db` zeigt auf `src/lib/server/db`.
 
-**Schema-Übersicht:**
-
-- `schemaAuth`: `auth_credentials`, `sessions` (30 Tage), `tokens` (einmalige Tokens für Verifikation/Reset/Abmeldung)
-- `schemaShop`: `customers` (inkl. `birthDate` für Altersverifikation), `addresses`, `orders`, `order_items`
-- `schemaProducts`: `products` (Basis), `producers`, `product_categories`, `product_category_mappings`, plus Detailtabellen:
-  - `cigar_details` (Länge, Ringmaß, Stärke, Deckblatt, Herkunft, Reifung)
-  - `cigarillo_details`
-  - `beverage_details` (Volumen, ABV, Typ, Land, Reifung, Geschmacksnotizen)
-  - `tool_details` (Material, Marke, Pflegehinweise)
+- `schemaAuth`: `auth_credentials`, `sessions` (30 Tage), `tokens` (einmalig; `metadata` als JSON-String für Zusatzdaten, z. B. neue E-Mail bei `EMAIL_CHANGE`)
+- `schemaShop`: `customers` (inkl. `birthDate`), `addresses`, `orders`, `order_items`, `wishlists` (Composite PK: customerId + productId), `product_reviews` (rating 1-5, unique pro Nutzer+Produkt)
+- `schemaProducts`: `products`, `producers`, `product_categories`, `product_category_mappings`, `cigar_details`, `cigarillo_details`, `beverage_details`, `tool_details`
 - `schemaLog`: `logs`
 
-**Migrations:**
 ```bash
 bun run db:push    # Schema auf Supabase pushen (kein Migration-File, direktes Push)
 ```
@@ -106,76 +110,71 @@ bun run db:push    # Schema auf Supabase pushen (kein Migration-File, direktes P
 ## Auth
 
 - Passwort-Hashing: `crypto.scrypt` mit 16-Byte-Salt (timing-sicher)
-- Sessions: Cookie `session` (httpOnly, secure), 30-Tage-Ablauf, Auto-Renewal ab 15 Tagen
-- Fehlversuche: 5 Versuche → 15 Minuten Sperre
-- E-Mail-Verifikation: Pflicht nach Registrierung (Token in `tokens`-Tabelle)
-- Admin-Bereich: HTTP Basic Auth, Passwort aus `ADMIN_PASSWORD`-Env
+- Sessions: Cookie `session` (httpOnly, secure), 30 Tage, Auto-Renewal ab 15 Tagen
+- Fehlversuche: 5 Versuche -> 15 Minuten Sperre
+- E-Mail-Verifikation: Pflicht nach Registrierung
+- E-Mail-Änderung: Neue Adresse + Passwort -> `EMAIL_CHANGE`-Token (neue E-Mail in `metadata`) -> Bestätigungs-E-Mail -> `/account/confirm-email` schreibt DB
+- Admin: HTTP Basic Auth via `ADMIN_PASSWORD`
 
-`locals.user` ist im Root-Layout-Server geladen und steht auf allen Seiten zur Verfügung.
+`locals.user` steht auf allen Seiten zur Verfügung (Root-Layout-Server).
 
 ---
 
 ## i18n
 
-**Nicht Paraglide** — eigenes Vite-Plugin (`src/lib/i18n-plugin.ts`).
+Eigenes Vite-Plugin -- kein Paraglide.
 
-- Übersetzungen: `messages/*.json` (Schlüssel-Wert, Parameter mit `{placeholder}`)
-- Standardsprache: `de`
-- `messages.ts` wird **automatisch generiert** — **niemals manuell bearbeiten oder manuell neu generieren**
-- Neue Texte: In alle 5 JSON-Dateien eintragen, dann `bun run dev` neu starten
-- `messages.ts` regenerieren: **immer** über `bun run dev` oder `bun run build` — nie per Script oder Bash-Einzeiler
-- Sprachauswahl: Cookie `LOCALE` (Browser oder LanguageSelector-Komponente)
-- RTL: Arabisch wird automatisch erkannt, `locals.dir` = `"rtl"`
-- Zugriff auf dem Server: `locals.locale`, `locals.dir`
-- Zugriff im Client: importierte Funktionen aus `$lib/messages`
+- Übersetzungen in `messages/*.json` (Key-Value, Parameter als `{placeholder}`)
+- `messages.ts` wird automatisch generiert -- **niemals manuell bearbeiten**
+- `messages.ts` regenerieren: ausschließlich über `bun run dev` oder `bun run build`
+- Neue Texte: in alle 5 JSON-Dateien eintragen, dann Dev-Server neu starten
+- RTL: Arabisch automatisch erkannt, `locals.dir = "rtl"`
+- Server: `locals.locale`, `locals.dir` -- Client: Imports aus `$lib/messages`
 
 ---
 
 ## Middleware (hooks.server.ts)
 
-Reihenfolge der Handle-Kette:
-
-1. **handleAdmin** — `/admin/*`-Routen mit Basic Auth absichern
-2. **handleChecks** — DB-Erreichbarkeit prüfen (`locals.dbOffline`), User-Agent auswerten (`locals.device`)
-3. **handleAuth** — Session-Cookie validieren, `locals.user` setzen
-4. **handleLocale** — `locals.locale` und `locals.dir` aus Cookie/Accept-Language auflösen
+1. **handleAdmin** -- `/admin/*` mit Basic Auth absichern
+2. **handleChecks** -- DB-Erreichbarkeit (`locals.dbOffline`), User-Agent (`locals.device`)
+3. **handleAuth** -- Session validieren, `locals.user` setzen
+4. **handleLocale** -- `locals.locale` und `locals.dir` aus Cookie/Accept-Language
 
 ---
 
-## Umgebungsvariablen (`.env`)
+## Konventionen
+
+- Kein `+server.ts` -- alle Server-Logik in `+page.server.ts` (Form Actions + Load)
+- Svelte 5 Runes (`$state`, `$derived`, `$effect`, `$props`) -- kein Legacy-Store-API
+- Tailwind 4 -- kein `tailwind.config.js`, Konfiguration direkt im CSS
+- Formulare mit `use:enhance` (Progressive Enhancement)
+- Logging über `Logger`-Klasse (`src/lib/server/Logger.ts`), schreibt in `logs`-Tabelle
+- Alias `$db` zeigt auf `src/lib/server/db`
+
+---
+
+## Umgebungsvariablen
 
 | Variable | Beschreibung |
 |---|---|
 | `DATABASE_URL` | PostgreSQL-Verbindungsstring (Supabase) |
 | `PUBLIC_ORIGIN` | `zigarren-puro.de` |
 | `PUBLIC_APP_NAME` | `Zigarren Puro` |
-| `ADMIN_PASSWORD` | Passwort für `/admin`-Bereich |
+| `ADMIN_PASSWORD` | Passwort für `/admin` |
 | `SECRET` | Base64-Token für Token-Generierung |
 | `FROM_EMAIL` | `info@zigarren-puro.de` |
 | `SMTP_HOST/PORT/USER/PASS` | Netcup-SMTP-Zugangsdaten |
 | `OPENAI_API_KEY` | Konfiguriert (Produktbeschreibungen) |
-| `STRIPE_SECRET_KEY` | Leer — Stripe noch nicht implementiert |
-| `PUBLIC_POSTHOG_KEY` | Leer — Analytics noch nicht aktiv |
-| `GOOGLE_CLIENT_ID/SECRET` | Leer — OAuth nicht implementiert |
+| `STRIPE_SECRET_KEY` | Leer -- noch nicht implementiert |
+| `PUBLIC_POSTHOG_KEY` | Leer -- Analytics noch nicht aktiv |
+| `GOOGLE_CLIENT_ID/SECRET` | Leer -- OAuth nicht implementiert |
 
 ---
 
-## Wichtige Konventionen
-
-- **Kein `+server.ts`** — alle Server-Logik läuft über `+page.server.ts` Form Actions und Load-Funktionen
-- **Svelte 5 Runes** (`$state`, `$derived`, `$effect`) — kein Legacy-Store-API
-- **Tailwind 4** — kein `tailwind.config.js`, Konfiguration direkt im CSS
-- **Keine API-Routes** — REST-ähnliche Logik über SvelteKit Form Actions
-- **Formulare** — Progressive Enhancement mit `use:enhance`
-- **Fehler-Logging** — über `Logger`-Klasse (`src/lib/server/Logger.ts`), schreibt in `logs`-Tabelle
-- **Alias `$db`** → `src/lib/server/db` (Drizzle-Instanz + Schema-Imports)
-
----
-
-## Häufige Befehle
+## Befehle
 
 ```bash
-bun run dev          # Dev-Server starten
+bun run dev          # Dev-Server
 bun run build        # Produktions-Build
 bun run check        # TypeScript + SvelteKit type check
 bun run db:push      # Schema auf DB pushen
