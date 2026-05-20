@@ -18,7 +18,7 @@
 - [x] **Mein Konto / Profil** `/account` — Profil bearbeiten (Name, Telefon, Anrede, Marketing-Einwilligung), Passwort ändern; Adressverwaltung unter `/account/addresses`.
 - [x] **Bestellhistorie** — Bestellungen für eingeloggte Nutzer anzeigen (Admin-Seite existiert, Kundenseite fehlt).
 - [x] **Wunschliste** — Schema (`wishlists`-Tabelle, Composite PK), Heart-Button auf Produktdetailseite, `/account/wishlist`-Seite mit Entfernen & In-den-Warenkorb, Link im Account-Dashboard.
-- [ ] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
+- [x] **Produktbewertungen** — Bewertungsformular auf Produktdetailseite, Anzeige von Durchschnitt und Einzelrezensionen.
 - [x] **E-Mail ändern** — Flow: Nutzer gibt neue E-Mail + aktuelles Passwort ein → Bestätigungs-Link an neue Adresse → Klick aktualisiert E-Mail in DB. Bestätigungsseite unter `/account/confirm-email`.
 
 ### Formulare & Kleinigkeiten
