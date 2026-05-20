@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Truck, Clock, MapPin, Shield, Package, AlertTriangle, CheckCircle, Euro } from 'lucide-svelte';
+	import { Truck, Clock, MapPin, Shield, Package, AlertTriangle, CheckCircle, Euro } from '@lucide/svelte';
 	import { email, phone } from '$lib/config';
 </script>
 

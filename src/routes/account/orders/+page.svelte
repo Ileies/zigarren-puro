@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowLeft, Package } from 'lucide-svelte';
+	import { ArrowLeft, Package } from '@lucide/svelte';
 
 	let { data } = $props();
 

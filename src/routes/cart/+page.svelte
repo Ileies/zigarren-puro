@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { ShoppingCart, ArrowRight, Lock, Truck, Trash2, Plus, Minus, Package } from 'lucide-svelte';
+	import { ShoppingCart, ArrowRight, Lock, Truck, Trash2, Plus, Minus, Package } from '@lucide/svelte';
 	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 
 	let { data } = $props();

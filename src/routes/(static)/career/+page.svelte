@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Mail, Users, Heart, Award, Coffee, Clock, MapPin, Briefcase, Star, Send, Phone } from 'lucide-svelte';
+	import { Mail, Users, Heart, Award, Coffee, Clock, MapPin, Briefcase, Star, Send, Phone } from '@lucide/svelte';
 	import { email, phone, storeAddress } from '$lib/config';
 	import { enhance } from '$app/forms';
 	import * as m from '$lib/messages';

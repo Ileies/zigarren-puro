@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { RefreshCcw, AlertTriangle, CheckCircle, XCircle, Package, Mail, Phone, Clock, CreditCard } from 'lucide-svelte';
+	import { RefreshCcw, AlertTriangle, CheckCircle, XCircle, Package, Mail, Phone, Clock, CreditCard } from '@lucide/svelte';
 	import { email, phone } from '$lib/config';
 	import { resolve } from '$app/paths';
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Mail, MapPin, Phone, Shield, User, Building, FileText, Scale, Store, ArrowRight } from 'lucide-svelte';
+	import { Mail, MapPin, Phone, Shield, User, Building, FileText, Scale, Store, ArrowRight } from '@lucide/svelte';
 	import Map from '$lib/components/Map.svelte';
 	import { phone, email, storeAddress, legalAddress } from '$lib/config';
 	import { resolve } from '$app/paths';

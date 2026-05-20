@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Lock, Truck, ChevronLeft, Package, CreditCard, Building2, AlertCircle } from 'lucide-svelte';
+	import { Lock, Truck, ChevronLeft, Package, CreditCard, Building2, AlertCircle } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 

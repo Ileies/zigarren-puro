@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Scale, ShoppingCart, AlertTriangle, CreditCard, Truck, Shield, Phone, Mail, FileText, Package, RefreshCcw } from 'lucide-svelte';
+	import { Scale, ShoppingCart, AlertTriangle, CreditCard, Truck, Shield, Phone, Mail, FileText, Package, RefreshCcw } from '@lucide/svelte';
 	import { phone, email, legalAddress, storeAddress } from '$lib/config';
 	import { resolve } from '$app/paths';
 </script>

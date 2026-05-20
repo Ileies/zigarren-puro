@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Calendar, Tag, ArrowRight, Mail } from 'lucide-svelte';
+	import { Calendar, Tag, ArrowRight, Mail } from '@lucide/svelte';
 
 	const articles = [
 		{

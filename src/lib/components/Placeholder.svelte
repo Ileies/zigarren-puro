@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Construction, ArrowLeft, Home, Phone, Mail, MapPin, Flame, Users } from 'lucide-svelte';
+	import { Construction, ArrowLeft, Home, Phone, Mail, MapPin, Flame, Users } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import { facebook, instagram, phone, email } from '$lib/config';
 

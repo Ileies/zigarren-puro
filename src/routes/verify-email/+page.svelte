@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
-	import { CheckCircle, MailOpen, XCircle, RefreshCw } from 'lucide-svelte';
+	import { CheckCircle, MailOpen, XCircle, RefreshCw } from '@lucide/svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 

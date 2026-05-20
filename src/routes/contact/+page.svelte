@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { MapPin, Mail, Phone, Clock, Send, Car, Train } from 'lucide-svelte';
+	import { MapPin, Mail, Phone, Clock, Send, Car, Train } from '@lucide/svelte';
 	import Map from '$lib/components/Map.svelte';
 	export let form: any;
 

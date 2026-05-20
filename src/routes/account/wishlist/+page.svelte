@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Heart, ShoppingCart, Trash2, Package, ArrowLeft } from 'lucide-svelte';
+	import { Heart, ShoppingCart, Trash2, Package, ArrowLeft } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();

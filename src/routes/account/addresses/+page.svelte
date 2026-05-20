@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
-	import { ArrowLeft, MapPin, Plus, Star, Trash2 } from 'lucide-svelte';
+	import { ArrowLeft, MapPin, Plus, Star, Trash2 } from '@lucide/svelte';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 

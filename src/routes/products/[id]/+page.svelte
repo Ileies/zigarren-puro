@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { Package, ShoppingCart, ArrowLeft, MapPin, Award, Check, Heart } from 'lucide-svelte';
+	import { Package, ShoppingCart, ArrowLeft, MapPin, Award, Check, Heart } from '@lucide/svelte';
 	import { ProductType, CigarStrength } from '$lib/types';
 	import type { ActionData } from './$types';
 

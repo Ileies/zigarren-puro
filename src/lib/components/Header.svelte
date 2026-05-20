@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BadgePercent, CircleUser, Menu, Search, ShoppingCart, Truck, X } from 'lucide-svelte';
+	import { BadgePercent, CircleUser, Menu, Search, ShoppingCart, Truck, X } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import LanguageSelector from './LanguageSelector.svelte';
 	import { facebook, instagram } from '$lib/config';

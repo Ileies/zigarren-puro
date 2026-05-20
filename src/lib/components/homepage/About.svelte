@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Picture from '../Picture.svelte';
-	import { Users, Award, Clock } from 'lucide-svelte';
+	import { Users, Award, Clock } from '@lucide/svelte';
 </script>
 
 <!-- About Section -->

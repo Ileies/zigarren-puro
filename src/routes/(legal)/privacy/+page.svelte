@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Shield, Mail, Server, BarChart2, CreditCard, Bell, Cookie, User, Scale, AlertTriangle, Eye } from 'lucide-svelte';
+	import { Shield, Mail, Server, BarChart2, CreditCard, Bell, Cookie, User, Scale, AlertTriangle, Eye } from '@lucide/svelte';
 	import { phone, email, legalAddress } from '$lib/config';
 	import { resolve } from '$app/paths';
 </script>

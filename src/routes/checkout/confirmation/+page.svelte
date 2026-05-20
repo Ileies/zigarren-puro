@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CheckCircle, Package, Building2, Truck, ArrowRight } from 'lucide-svelte';
+	import { CheckCircle, Package, Building2, Truck, ArrowRight } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { bankAccount } from '$lib/config';
 

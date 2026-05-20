@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Cigarette, Wine } from 'lucide-svelte';
+	import { Cigarette, Wine } from '@lucide/svelte';
 </script>
 
 <section class="py-12 lg:py-16 bg-base-200">

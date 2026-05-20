@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CheckCircle, XCircle, AlertCircle, Mail } from 'lucide-svelte';
+	import { CheckCircle, XCircle, AlertCircle, Mail } from '@lucide/svelte';
 	import type { PageData } from './$types';
 
 	export let data: PageData;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { Search, SlidersHorizontal, Package, ShoppingCart } from 'lucide-svelte';
+	import { Search, SlidersHorizontal, Package, ShoppingCart } from '@lucide/svelte';
 	import { ProductType } from '$lib/types';
 
 	let { data } = $props();

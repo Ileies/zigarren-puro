@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
-	import { Package, ShoppingCart, SlidersHorizontal, Check } from 'lucide-svelte';
+	import { Package, ShoppingCart, SlidersHorizontal, Check } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { ProductType } from '$lib/types';
 

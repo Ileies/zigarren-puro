@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Globe, Award, Mail, ArrowRight } from 'lucide-svelte';
+	import { Globe, Award, Mail, ArrowRight } from '@lucide/svelte';
 	import { email } from '$lib/config';
 
 	const brands = [

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Wine, Cigarette, Calendar, Users, Clock, MapPin } from 'lucide-svelte';
+	import { Wine, Cigarette, Calendar, Users, Clock, MapPin } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 
 	// Sample tasting events data - this could come from a database or API

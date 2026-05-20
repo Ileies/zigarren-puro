@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ArrowLeft, MapPin, Package, Truck } from 'lucide-svelte';
+	import { ArrowLeft, MapPin, Package, Truck } from '@lucide/svelte';
 
 	let { data } = $props();
 
