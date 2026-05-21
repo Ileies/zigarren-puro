@@ -48,9 +48,10 @@ export const orderTable = pgTable('orders', {
 	taxAmount: decimal('tax_amount', { precision: 10, scale: 2 }).notNull(),
 	totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
 	notes: text('notes'),
+	stripeSessionId: varchar('stripe_session_id'),
 	createdAt: timestamp('created_at').defaultNow().notNull(),
 	updatedAt: timestamp('updated_at').defaultNow().notNull(),
-	placedAt: timestamp('placed_at'),  // When the order was actually placed/paid
+	placedAt: timestamp('placed_at'),
 	cancelledAt: timestamp('cancelled_at')
 });
 
