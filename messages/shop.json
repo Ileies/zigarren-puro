@@ -734,6 +734,48 @@
 		"送达至",
 		"Доставка по адресу"
 	],
+	"checkoutCreditCard": [
+		"Kreditkarte",
+		"Credit Card",
+		"بطاقة الائتمان",
+		"信用卡",
+		"Кредитная карта"
+	],
+	"checkoutCreditCardDesc": [
+		"Visa, Mastercard, American Express",
+		"Visa, Mastercard, American Express",
+		"Visa, Mastercard, American Express",
+		"Visa, Mastercard, American Express",
+		"Visa, Mastercard, American Express"
+	],
+	"checkoutStep3": [
+		"Kartenzahlung",
+		"Card Payment",
+		"الدفع بالبطاقة",
+		"刷卡支付",
+		"Оплата картой"
+	],
+	"checkoutPayNow": [
+		"Jetzt bezahlen",
+		"Pay Now",
+		"ادفع الآن",
+		"立即支付",
+		"Оплатить сейчас"
+	],
+	"checkoutPaying": [
+		"Wird verarbeitet...",
+		"Processing...",
+		"جاري المعالجة...",
+		"处理中...",
+		"Обработка..."
+	],
+	"checkoutPayError": [
+		"Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+		"Payment failed. Please try again.",
+		"فشل الدفع. يرجى المحاولة مرة أخرى.",
+		"支付失败，请重试。",
+		"Ошибка оплаты. Пожалуйста, попробуйте снова."
+	],
 	"checkoutSelectState": [
 		"Bundesland wählen",
 		"Select state",

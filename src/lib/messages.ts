@@ -44,9 +44,9 @@ export async function runWithLocale<T>(locale: string, fn: () => T | Promise<T>)
 const _li: Record<string, number> = {"de":0,"en":1,"ar":2,"cn":3,"ru":4};
 
 function _t(tr: string[], p?: Record<string, string | number>): string {
-  const text = tr[_li[getLocale()] ?? 0] ?? tr[0] ?? '';
+  const text = tr[_li[getLocale()] ?? 0] ?? tr[0] ?? "";
   if (!p) return text;
-  return text.replace(/\{(\w+)\}/g, (_, k) => String(p[k] ?? '{' + k + '}'));
+  return text.replace(/\{(\w+)\}/g, (_, k) => String(p[k] ?? "{" + k + "}"));
 }
 
 export function benefit1(p?: Record<string, string | number>): string { return _t(["3% Rabatt auf Kistenbestellungen","3% discount on box orders","3% خصم على طلبات الصناديق","3% 折扣","3% скидка на заказы в коробках"], p); }
@@ -154,6 +154,12 @@ export function checkoutBankDetails(p?: Record<string, string | number>): string
 export function checkoutBankPaymentNote(p?: Record<string, string | number>): string { return _t(["Bitte überweisen Sie den Betrag innerhalb von 7 Tagen und geben Sie Ihre Bestellnummer als Verwendungszweck an.","Please transfer the amount within 7 days and include your order number as the payment reference.","يرجى تحويل المبلغ خلال 7 أيام مع الإشارة إلى رقم طلبك.","请在7天内完成转账，并在备注中注明您的订单号。","Пожалуйста, переведите сумму в течение 7 дней, указав номер заказа."], p); }
 export function checkoutContinueShopping(p?: Record<string, string | number>): string { return _t(["Weiter einkaufen","Continue Shopping","مواصلة التسوق","继续购物","Продолжить покупки"], p); }
 export function checkoutDeliveryTo(p?: Record<string, string | number>): string { return _t(["Lieferung an","Delivering to","التوصيل إلى","送达至","Доставка по адресу"], p); }
+export function checkoutCreditCard(p?: Record<string, string | number>): string { return _t(["Kreditkarte","Credit Card","بطاقة الائتمان","信用卡","Кредитная карта"], p); }
+export function checkoutCreditCardDesc(p?: Record<string, string | number>): string { return _t(["Visa, Mastercard, American Express","Visa, Mastercard, American Express","Visa, Mastercard, American Express","Visa, Mastercard, American Express","Visa, Mastercard, American Express"], p); }
+export function checkoutStep3(p?: Record<string, string | number>): string { return _t(["Kartenzahlung","Card Payment","الدفع بالبطاقة","刷卡支付","Оплата картой"], p); }
+export function checkoutPayNow(p?: Record<string, string | number>): string { return _t(["Jetzt bezahlen","Pay Now","ادفع الآن","立即支付","Оплатить сейчас"], p); }
+export function checkoutPaying(p?: Record<string, string | number>): string { return _t(["Wird verarbeitet...","Processing...","جاري المعالجة...","处理中...","Обработка..."], p); }
+export function checkoutPayError(p?: Record<string, string | number>): string { return _t(["Zahlung fehlgeschlagen. Bitte versuchen Sie es erneut.","Payment failed. Please try again.","فشل الدفع. يرجى المحاولة مرة أخرى.","支付失败，请重试。","Ошибка оплаты. Пожалуйста, попробуйте снова."], p); }
 export function checkoutSelectState(p?: Record<string, string | number>): string { return _t(["Bundesland wählen","Select state","اختر الولاية","选择省/州","Выберите регион"], p); }
 export function newsletterSuccess(p?: Record<string, string | number>): string { return _t(["Vielen Dank! Sie erhalten in Kürze eine Bestätigung per E-Mail.","Thank you! You will receive a confirmation email shortly.","شكراً! ستتلقى رسالة تأكيد عبر البريد الإلكتروني قريباً.","谢谢！您将很快收到一封确认邮件。","Спасибо! Вы скоро получите письмо с подтверждением."], p); }
 export function careerMessageSent(p?: Record<string, string | number>): string { return _t(["Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns so bald wie möglich bei Ihnen.","Your message has been sent successfully. We will get back to you as soon as possible.","تم إرسال رسالتك بنجاح. سنتواصل معك في أقرب وقت ممكن.","您的消息已成功发送。我们将尽快与您联系。","Ваше сообщение успешно отправлено. Мы свяжемся с вами как можно скорее."], p); }
