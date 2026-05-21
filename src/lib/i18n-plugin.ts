@@ -32,7 +32,10 @@ function generateCode(msgs: Record<string, string[]>): string {
 	code += `export function getLocales() { return locales; }\n\n`;
 
 	code += `export function setLocale(locale: string): void {\n`;
-	code += `  if (typeof document !== 'undefined' && (locales as readonly string[]).includes(locale)) document.documentElement.lang = locale;\n`;
+	code += `  if (typeof document !== 'undefined' && (locales as readonly string[]).includes(locale)) {\n`;
+	code += `    document.documentElement.lang = locale;\n`;
+	code += `    document.cookie = cookieName + '=' + locale + '; path=/; max-age=' + cookieMaxAge + '; SameSite=Lax';\n`;
+	code += `  }\n`;
 	code += `}\n\n`;
 
 	code += `export function getTextDirection(locale: string): string {\n`;

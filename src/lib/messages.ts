@@ -14,7 +14,10 @@ export function getLocale(): string {
 export function getLocales() { return locales; }
 
 export function setLocale(locale: string): void {
-  if (typeof document !== 'undefined' && (locales as readonly string[]).includes(locale)) document.documentElement.lang = locale;
+  if (typeof document !== 'undefined' && (locales as readonly string[]).includes(locale)) {
+    document.documentElement.lang = locale;
+    document.cookie = cookieName + '=' + locale + '; path=/; max-age=' + cookieMaxAge + '; SameSite=Lax';
+  }
 }
 
 export function getTextDirection(locale: string): string {

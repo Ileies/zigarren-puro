@@ -20,6 +20,7 @@
 		setLocale(locale);
 		currentLocale = locale;
 		isOpen = false;
+		location.reload();
 	}
 
 	function toggleDropdown(event: MouseEvent) {
