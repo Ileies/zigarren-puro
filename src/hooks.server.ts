@@ -39,7 +39,20 @@ const handleAdmin: Handle = async ({ event, resolve }) => {
 	});
 };
 
+const CSRF_EXEMPT = ['/api/stripe/webhook'];
+
 const handleChecks: Handle = async ({ event, resolve }) => {
+	const { method, headers } = event.request;
+	const { pathname, origin } = event.url;
+	if (
+		(method === 'POST' || method === 'PUT' || method === 'PATCH' || method === 'DELETE') &&
+		!CSRF_EXEMPT.includes(pathname)
+	) {
+		const requestOrigin = headers.get('origin');
+		if (requestOrigin && requestOrigin !== origin) {
+			return new Response('Forbidden', { status: 403 });
+		}
+	}
 	console.log(new Date().toISOString(), event.url.href);
 
 	try {
