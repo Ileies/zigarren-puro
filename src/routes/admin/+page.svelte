@@ -61,7 +61,7 @@
 								</a>
 							</td>
 							<td class="px-4 py-2 text-zinc-700">
-								{order.customerFirstName ?? '—'} {order.customerLastName ?? ''}
+								{order.customerFirstName ?? '-'} {order.customerLastName ?? ''}
 							</td>
 							<td class="px-4 py-2 font-medium text-zinc-900">
 								{Number(order.totalAmount).toFixed(2)} &euro;

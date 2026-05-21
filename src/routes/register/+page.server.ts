@@ -112,7 +112,7 @@ export const actions: Actions = {
 		const session = await auth.createSession(token, customer.id);
 		auth.setSessionTokenCookie(event, token, session.expiresAt);
 
-		// Fire-and-forget — registration still succeeds if email fails
+		// Fire-and-forget - registration still succeeds if email fails
 		sendVerificationEmail(customer.id, email, firstName).catch(console.error);
 
 		redirect(302, '/verify-email');

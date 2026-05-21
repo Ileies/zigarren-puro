@@ -42,7 +42,7 @@
 				{#each data.products as product}
 					<tr class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50">
 						<td class="px-4 py-3 font-medium text-zinc-900">{product.name}</td>
-						<td class="px-4 py-3 text-zinc-500">{product.producerName ?? '—'}</td>
+						<td class="px-4 py-3 text-zinc-500">{product.producerName ?? '-'}</td>
 						<td class="px-4 py-3 text-zinc-500">{typeLabels[product.productType] ?? product.productType}</td>
 						<td class="px-4 py-3 font-mono text-xs text-zinc-400">{product.sku}</td>
 						<td class="px-4 py-3 text-right font-medium text-zinc-800">{Number(product.price).toFixed(2)} &euro;</td>

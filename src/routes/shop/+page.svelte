@@ -98,7 +98,7 @@
 			<Package class="w-14 h-14" />
 			<div>
 				<p class="text-lg font-medium text-base-content/60">{m.noProductsFound()}</p>
-				<p class="text-sm mt-1">Produkte werden derzeit erfasst — schauen Sie bald wieder vorbei.</p>
+				<p class="text-sm mt-1">Produkte werden derzeit erfasst - schauen Sie bald wieder vorbei.</p>
 			</div>
 			<a href="/shop" class="btn btn-secondary btn-sm mt-2">{m.allProducts()}</a>
 		</div>

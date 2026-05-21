@@ -84,7 +84,7 @@
 						</td>
 						<td class="px-4 py-3">
 							<div class="font-medium text-zinc-800">
-								{order.customerFirstName ?? '—'} {order.customerLastName ?? ''}
+								{order.customerFirstName ?? '-'} {order.customerLastName ?? ''}
 							</div>
 							<div class="text-xs text-zinc-400">{order.customerEmail ?? ''}</div>
 						</td>
