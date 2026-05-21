@@ -3,6 +3,8 @@
 	import { Lock, Truck, ChevronLeft, Package, CreditCard, Building2, AlertCircle } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { freeShippingThreshold, shippingCosts } from '$lib/config';
+	import { loadStripe, type StripeEmbeddedCheckout } from '@stripe/stripe-js';
+	import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
 
 	let { data, form } = $props();
 
@@ -13,12 +15,10 @@
 		'Sachsen-Anhalt', 'Schleswig-Holstein', 'Thüringen'
 	];
 
-
 	const savedShipping = data.addresses.filter((a) => a.type === 'shipping');
 	const savedBilling = data.addresses.filter((a) => a.type === 'billing');
 
-	// ── Step 1 state ──────────────────────────────────────────────────────────
-
+	// Step 1 state
 	let shippingMode = $state<'saved' | 'new'>(savedShipping.length > 0 ? 'saved' : 'new');
 	let selectedShippingId = $state<string>(
 		savedShipping.find((a) => a.isDefault)?.id ?? savedShipping[0]?.id ?? ''
@@ -32,14 +32,12 @@
 	);
 	let newBilling = $state({ street: '', city: '', postalCode: '', state: '' });
 
-	// ── Navigation ────────────────────────────────────────────────────────────
-
-	let step = $state<1 | 2>(1);
+	// Navigation
+	let step = $state<1 | 2 | 3>(1);
 	let step1Errors = $state<Record<string, string>>({});
 	let submitting = $state(false);
 
-	// ── Step 2 state (captured from step 1 on "Weiter") ──────────────────────
-
+	// Step 2 state (captured from step 1)
 	let capturedShippingId = $state('');
 	let capturedShippingStreet = $state('');
 	let capturedShippingCity = $state('');
@@ -52,13 +50,17 @@
 	let capturedBillingPostalCode = $state('');
 	let capturedBillingState = $state('');
 
-	// Address displayed in step 2 summary
 	let displayShippingAddress = $state<{ street: string; city: string; postalCode: string; state: string } | null>(null);
 
 	let shippingMethod = $state<'standard' | 'express'>('standard');
+	let paymentMethod = $state<'bank_transfer' | 'credit_card'>('bank_transfer');
 
-	// ── Totals ────────────────────────────────────────────────────────────────
+	// Stripe state
+	let stripePaymentElement: HTMLDivElement | undefined = $state();
+	let stripeError = $state('');
+	let stripeCheckout: StripeEmbeddedCheckout | null = $state(null);
 
+	// Totals
 	const subtotal = $derived(
 		data.items.reduce((sum, item) => sum + parseFloat(item.price) * item.qty, 0)
 	);
@@ -71,8 +73,7 @@
 		return n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 
-	// ── Step 1 validation & navigation ───────────────────────────────────────
-
+	// Step 1 validation
 	function validateStep1() {
 		const errors: Record<string, string> = {};
 		if (shippingMode === 'new') {
@@ -96,7 +97,6 @@
 		step1Errors = validateStep1();
 		if (Object.keys(step1Errors).length > 0) return;
 
-		// Capture step 1 data for form submission
 		capturedShippingId = shippingMode === 'saved' ? selectedShippingId : '';
 		capturedShippingStreet = shippingMode === 'new' ? newShipping.street : '';
 		capturedShippingCity = shippingMode === 'new' ? newShipping.city : '';
@@ -110,7 +110,6 @@
 		capturedBillingPostalCode = !billingSameAsShipping && billingMode === 'new' ? newBilling.postalCode : '';
 		capturedBillingState = !billingSameAsShipping && billingMode === 'new' ? newBilling.state : '';
 
-		// Build display address for summary
 		if (shippingMode === 'saved') {
 			const a = savedShipping.find((a) => a.id === selectedShippingId);
 			if (a) displayShippingAddress = { street: a.street, city: a.city, postalCode: a.postalCode, state: a.state };
@@ -120,10 +119,34 @@
 
 		step = 2;
 	}
+
+	// When the server returns a clientSecret, mount the Stripe embedded checkout
+	$effect(() => {
+		if (form && 'clientSecret' in form && form.clientSecret && stripePaymentElement) {
+			step = 3;
+			mountStripeElement(form.clientSecret as string);
+		}
+	});
+
+	async function mountStripeElement(clientSecret: string) {
+		const stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
+		if (!stripe) {
+			stripeError = 'Stripe konnte nicht geladen werden.';
+			return;
+		}
+		stripeCheckout = await stripe.createEmbeddedCheckoutPage({ clientSecret });
+		stripeCheckout.mount('#stripe-payment-element');
+	}
+
+	$effect(() => {
+		return () => {
+			stripeCheckout?.destroy();
+		};
+	});
 </script>
 
 <svelte:head>
-	<title>{m.checkoutTitle()} – Zigarren Puro</title>
+	<title>{m.checkoutTitle()} - Zigarren Puro</title>
 </svelte:head>
 
 <div class="container mx-auto max-w-5xl px-4 py-10">
@@ -141,11 +164,21 @@
 		<div class="h-px flex-1 bg-base-300"></div>
 		<div class="flex items-center gap-2">
 			<div class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold
-				{step === 2 ? 'bg-secondary text-secondary-content' : 'bg-base-300 text-base-content/40'}">
+				{step === 2 ? 'bg-secondary text-secondary-content' : step > 2 ? 'bg-secondary/20 text-secondary' : 'bg-base-300 text-base-content/40'}">
 				2
 			</div>
-			<span class="text-sm {step === 2 ? 'font-medium' : 'text-base-content/40'}">{m.checkoutStep2()}</span>
+			<span class="text-sm {step >= 2 ? 'font-medium' : 'text-base-content/40'}">{m.checkoutStep2()}</span>
 		</div>
+		{#if paymentMethod === 'credit_card' || step === 3}
+			<div class="h-px flex-1 bg-base-300"></div>
+			<div class="flex items-center gap-2">
+				<div class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold
+					{step === 3 ? 'bg-secondary text-secondary-content' : 'bg-base-300 text-base-content/40'}">
+					3
+				</div>
+				<span class="text-sm {step === 3 ? 'font-medium' : 'text-base-content/40'}">{m.checkoutStep3()}</span>
+			</div>
+		{/if}
 	</div>
 
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -153,7 +186,7 @@
 		<!-- Left column: steps -->
 		<div class="lg:col-span-2">
 
-			<!-- ── STEP 1: Addresses ── -->
+			<!-- STEP 1: Addresses -->
 			{#if step === 1}
 				<div class="space-y-6">
 
@@ -365,8 +398,8 @@
 					</button>
 				</div>
 
-			<!-- ── STEP 2: Payment & Review ── -->
-			{:else}
+			<!-- STEP 2: Shipping, Payment method, Review -->
+			{:else if step === 2}
 				<form
 					method="POST"
 					action="?/placeOrder"
@@ -391,6 +424,7 @@
 					<input type="hidden" name="billingCity" value={capturedBillingCity} />
 					<input type="hidden" name="billingPostalCode" value={capturedBillingPostalCode} />
 					<input type="hidden" name="billingState" value={capturedBillingState} />
+					<input type="hidden" name="paymentMethod" value={paymentMethod} />
 
 					<!-- Delivery address summary -->
 					{#if displayShippingAddress}
@@ -443,16 +477,41 @@
 						</div>
 					</div>
 
-					<!-- Payment method -->
+					<!-- Payment method selection -->
 					<div class="card bg-base-100 border border-base-200 shadow-sm">
 						<div class="card-body">
 							<h2 class="card-title text-base">{m.checkoutPaymentMethod()}</h2>
-							<div class="rounded-lg border border-secondary bg-secondary/5 p-4 flex items-start gap-3">
-								<Building2 class="w-5 h-5 text-secondary shrink-0 mt-0.5" />
-								<div>
-									<p class="text-sm font-semibold">{m.checkoutBankTransfer()}</p>
-									<p class="text-xs text-base-content/60 mt-1">{m.checkoutBankTransferDesc()}</p>
-								</div>
+							<div class="space-y-2">
+								<label class="flex cursor-pointer items-start gap-3 rounded-lg border border-base-200 p-4 hover:border-secondary transition-colors {paymentMethod === 'bank_transfer' ? 'border-secondary bg-secondary/5' : ''}">
+									<input
+										type="radio"
+										class="radio radio-secondary radio-sm mt-0.5 shrink-0"
+										bind:group={paymentMethod}
+										value="bank_transfer"
+									/>
+									<div class="flex items-start gap-3">
+										<Building2 class="w-5 h-5 text-base-content/50 shrink-0 mt-0.5" />
+										<div>
+											<p class="text-sm font-semibold">{m.checkoutBankTransfer()}</p>
+											<p class="text-xs text-base-content/60 mt-0.5">{m.checkoutBankTransferDesc()}</p>
+										</div>
+									</div>
+								</label>
+								<label class="flex cursor-pointer items-start gap-3 rounded-lg border border-base-200 p-4 hover:border-secondary transition-colors {paymentMethod === 'credit_card' ? 'border-secondary bg-secondary/5' : ''}">
+									<input
+										type="radio"
+										class="radio radio-secondary radio-sm mt-0.5 shrink-0"
+										bind:group={paymentMethod}
+										value="credit_card"
+									/>
+									<div class="flex items-start gap-3">
+										<CreditCard class="w-5 h-5 text-base-content/50 shrink-0 mt-0.5" />
+										<div>
+											<p class="text-sm font-semibold">{m.checkoutCreditCard()}</p>
+											<p class="text-xs text-base-content/60 mt-0.5">{m.checkoutCreditCardDesc()}</p>
+										</div>
+									</div>
+								</label>
 							</div>
 						</div>
 					</div>
@@ -490,11 +549,30 @@
 						{:else}
 							<Lock class="w-4 h-4" />
 						{/if}
-						{m.checkoutPlaceOrder()} – {formatPrice(total)}
+						{m.checkoutPlaceOrder()} - {formatPrice(total)}
 					</button>
 
 					<p class="text-center text-xs text-base-content/40">{m.checkoutVatNote()}</p>
 				</form>
+
+			<!-- STEP 3: Stripe Payment Element -->
+			{:else if step === 3}
+				<div class="space-y-6">
+					<!-- Stripe embedded checkout container -->
+					{#if stripeError}
+						<div class="alert alert-error">
+							<AlertCircle class="w-4 h-4 shrink-0" />
+							<span class="text-sm">{stripeError}</span>
+						</div>
+					{/if}
+					<div bind:this={stripePaymentElement}>
+						<div id="stripe-payment-element" class="min-h-40">
+							<div class="flex items-center justify-center py-12">
+								<span class="loading loading-spinner loading-md text-secondary"></span>
+							</div>
+						</div>
+					</div>
+				</div>
 			{/if}
 		</div>
 
@@ -515,7 +593,7 @@
 										<p class="text-xs text-base-content/40 truncate">{item.producerName}</p>
 									{/if}
 									<p class="text-sm font-medium line-clamp-2 leading-tight">{item.name}</p>
-									<p class="text-xs text-base-content/50 mt-0.5">× {item.qty}</p>
+									<p class="text-xs text-base-content/50 mt-0.5">x {item.qty}</p>
 								</div>
 								<p class="text-sm font-semibold shrink-0">{formatPrice(parseFloat(item.price) * item.qty)}</p>
 							</div>

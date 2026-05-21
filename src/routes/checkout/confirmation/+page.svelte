@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { CheckCircle, Package, Building2, Truck, ArrowRight } from '@lucide/svelte';
+	import { CheckCircle, Package, Building2, CreditCard, Truck, ArrowRight } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { bankAccount } from '$lib/config';
 
 	let { data } = $props();
 
 	const orderShort = data.order.id.slice(0, 8).toUpperCase();
+	const isCreditCard = data.order.paymentMethod === 'credit_card';
 
 	function formatPrice(n: string | number) {
 		return parseFloat(String(n)).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
@@ -13,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>Bestellung bestätigt – Zigarren Puro</title>
+	<title>Bestellung bestätigt - Zigarren Puro</title>
 </svelte:head>
 
 <div class="container mx-auto max-w-2xl px-4 py-16">
@@ -43,39 +44,53 @@
 		</div>
 	</div>
 
-	<!-- Bank transfer info -->
-	<div class="card bg-base-100 border border-warning/30 shadow-sm mb-6">
-		<div class="card-body">
-			<div class="flex items-center gap-2 mb-4">
-				<Building2 class="w-5 h-5 text-warning" />
-				<h2 class="font-semibold">{m.checkoutBankDetails()}</h2>
+	<!-- Payment info: bank transfer or credit card -->
+	{#if isCreditCard}
+		<div class="card bg-base-100 border border-success/30 shadow-sm mb-6">
+			<div class="card-body">
+				<div class="flex items-center gap-2 mb-2">
+					<CreditCard class="w-5 h-5 text-success" />
+					<h2 class="font-semibold">Zahlung erfolgreich</h2>
+				</div>
+				<p class="text-sm text-base-content/70">
+					Ihre Kartenzahlung wurde erfolgreich verarbeitet. Wir bereiten Ihre Bestellung nun für den Versand vor.
+				</p>
 			</div>
-			<p class="text-sm text-base-content/70 mb-4">{m.checkoutBankPaymentNote()}</p>
-			<div class="bg-base-200 rounded-lg p-4 space-y-2 text-sm font-mono">
-				<div class="flex justify-between gap-4">
-					<span class="text-base-content/50 shrink-0">Kontoinhaber</span>
-					<span class="font-semibold text-right">{bankAccount.accountHolder}</span>
+		</div>
+	{:else}
+		<div class="card bg-base-100 border border-warning/30 shadow-sm mb-6">
+			<div class="card-body">
+				<div class="flex items-center gap-2 mb-4">
+					<Building2 class="w-5 h-5 text-warning" />
+					<h2 class="font-semibold">{m.checkoutBankDetails()}</h2>
 				</div>
-				<div class="flex justify-between gap-4">
-					<span class="text-base-content/50 shrink-0">IBAN</span>
-					<span class="font-semibold text-right">{bankAccount.iban}</span>
-				</div>
-				<div class="flex justify-between gap-4">
-					<span class="text-base-content/50 shrink-0">BIC</span>
-					<span class="font-semibold">{bankAccount.bic}</span>
-				</div>
-				<div class="divider my-1"></div>
-				<div class="flex justify-between gap-4">
-					<span class="text-base-content/50 shrink-0">Betrag</span>
-					<span class="font-bold text-secondary">{formatPrice(data.order.totalAmount)}</span>
-				</div>
-				<div class="flex justify-between gap-4">
-					<span class="text-base-content/50 shrink-0">Verwendungszweck</span>
-					<span class="font-bold">#{orderShort}</span>
+				<p class="text-sm text-base-content/70 mb-4">{m.checkoutBankPaymentNote()}</p>
+				<div class="bg-base-200 rounded-lg p-4 space-y-2 text-sm font-mono">
+					<div class="flex justify-between gap-4">
+						<span class="text-base-content/50 shrink-0">Kontoinhaber</span>
+						<span class="font-semibold text-right">{bankAccount.accountHolder}</span>
+					</div>
+					<div class="flex justify-between gap-4">
+						<span class="text-base-content/50 shrink-0">IBAN</span>
+						<span class="font-semibold text-right">{bankAccount.iban}</span>
+					</div>
+					<div class="flex justify-between gap-4">
+						<span class="text-base-content/50 shrink-0">BIC</span>
+						<span class="font-semibold">{bankAccount.bic}</span>
+					</div>
+					<div class="divider my-1"></div>
+					<div class="flex justify-between gap-4">
+						<span class="text-base-content/50 shrink-0">Betrag</span>
+						<span class="font-bold text-secondary">{formatPrice(data.order.totalAmount)}</span>
+					</div>
+					<div class="flex justify-between gap-4">
+						<span class="text-base-content/50 shrink-0">Verwendungszweck</span>
+						<span class="font-bold">#{orderShort}</span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
 
 	<!-- Order items -->
 	<div class="card bg-base-100 border border-base-200 shadow-sm mb-6">
@@ -89,7 +104,7 @@
 					<div class="flex items-center justify-between gap-4 text-sm">
 						<span class="flex-1 min-w-0">
 							<span class="font-medium">{item.productName ?? 'Produkt'}</span>
-							<span class="text-base-content/50 ml-1">×{item.quantity}</span>
+							<span class="text-base-content/50 ml-1">x{item.quantity}</span>
 						</span>
 						<span class="font-semibold shrink-0">{formatPrice(item.subtotal ?? '0')}</span>
 					</div>

@@ -14,6 +14,9 @@ import { getCart, setCart } from '$lib/server/cart';
 import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '$lib/types';
 import { sendOrderConfirmationEmail } from '$lib/server/functions';
 import { freeShippingThreshold, shippingCosts } from '$lib/config';
+import Stripe from 'stripe';
+import { STRIPE_SECRET_KEY } from '$env/static/private';
+import { PUBLIC_ORIGIN } from '$env/static/public';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	if (!locals.user) redirect(302, '/login?redirect=/checkout');
@@ -83,12 +86,17 @@ export const actions: Actions = {
 		const billingState = data.get('billingState')?.toString().trim() ?? '';
 
 		const shippingMethodRaw = data.get('shippingMethod')?.toString();
+		const paymentMethodRaw = data.get('paymentMethod')?.toString() ?? 'bank_transfer';
 		const notes = data.get('notes')?.toString().trim() || null;
 
 		if (!shippingMethodRaw || !['standard', 'express'].includes(shippingMethodRaw)) {
 			return fail(400, { error: 'Ungültige Versandart.' });
 		}
+		if (!['bank_transfer', 'credit_card'].includes(paymentMethodRaw)) {
+			return fail(400, { error: 'Ungültige Zahlungsart.' });
+		}
 		const shippingMethodKey = shippingMethodRaw as 'standard' | 'express';
+		const useStripe = paymentMethodRaw === 'credit_card';
 
 		// Age verification
 		const [customer] = await db
@@ -197,7 +205,7 @@ export const actions: Actions = {
 				customerId: locals.user.id,
 				orderStatus: OrderStatus.PENDING,
 				paymentStatus: PaymentStatus.PENDING,
-				paymentMethod: PaymentMethod.BANK_TRANSFER,
+				paymentMethod: useStripe ? PaymentMethod.CREDIT_CARD : PaymentMethod.BANK_TRANSFER,
 				shippingMethod: shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
 				shippingAddressId: resolvedShippingId,
 				billingAddressId: resolvedBillingId,
@@ -206,7 +214,8 @@ export const actions: Actions = {
 				taxAmount: '0.00',
 				totalAmount: total.toFixed(2),
 				notes,
-				placedAt: new Date()
+				// placedAt is set by webhook for Stripe; immediately for bank transfer
+				placedAt: useStripe ? null : new Date()
 			})
 			.returning({ id: orderTable.id });
 
@@ -227,6 +236,51 @@ export const actions: Actions = {
 
 		setCart(cookies, []);
 
+		if (useStripe) {
+			// Create Stripe Checkout Session
+			const stripe = new Stripe(STRIPE_SECRET_KEY);
+
+			const lineItems = cartItems.map((cartItem) => {
+				const p = products.find((p) => p.id === cartItem.id)!;
+				return {
+					price_data: {
+						currency: 'eur',
+						product_data: { name: p.name },
+						unit_amount: Math.round(parseFloat(p.price) * 100)
+					},
+					quantity: cartItem.qty
+				};
+			});
+
+			if (shippingCost > 0) {
+				lineItems.push({
+					price_data: {
+						currency: 'eur',
+						product_data: { name: 'Versandkosten' },
+						unit_amount: Math.round(shippingCost * 100)
+					},
+					quantity: 1
+				});
+			}
+
+			const session = await stripe.checkout.sessions.create({
+				mode: 'payment',
+				ui_mode: 'embedded_page',
+				line_items: lineItems,
+				customer_email: locals.user.email,
+				metadata: { orderId: order.id },
+				return_url: `https://${PUBLIC_ORIGIN}/checkout/confirmation?id=${order.id}`
+			});
+
+			await db
+				.update(orderTable)
+				.set({ stripeSessionId: session.id })
+				.where(eq(orderTable.id, order.id));
+
+			return { clientSecret: session.client_secret!, orderId: order.id };
+		}
+
+		// Bank transfer: send confirmation email and redirect
 		try {
 			await sendOrderConfirmationEmail(
 				locals.user.id,
@@ -239,7 +293,8 @@ export const actions: Actions = {
 				}),
 				subtotal,
 				shippingCost,
-				total
+				total,
+				'bank_transfer'
 			);
 		} catch {
 			// Don't block order on email failure
