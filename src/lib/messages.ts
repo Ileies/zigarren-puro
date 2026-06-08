@@ -44,9 +44,9 @@ export async function runWithLocale<T>(locale: string, fn: () => T | Promise<T>)
 const _li: Record<string, number> = {"de":0,"en":1,"ar":2,"cn":3,"ru":4};
 
 function _t(tr: string[], p?: Record<string, string | number>): string {
-  const text = tr[_li[getLocale()] ?? 0] ?? tr[0] ?? "";
+  const text = tr[_li[getLocale()] ?? 0] ?? tr[0] ?? '';
   if (!p) return text;
-  return text.replace(/\{(\w+)\}/g, (_, k) => String(p[k] ?? "{" + k + "}"));
+  return text.replace(/\{(\w+)\}/g, (_, k) => String(p[k] ?? '{' + k + '}'));
 }
 
 export function benefit1(p?: Record<string, string | number>): string { return _t(["3% Rabatt auf Kistenbestellungen","3% discount on box orders","3% خصم على طلبات الصناديق","3% 折扣","3% скидка на заказы в коробках"], p); }
