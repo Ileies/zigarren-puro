@@ -8,7 +8,7 @@
 		"build": "npx vite build",
 		"preview": "bun vite preview",
 		"prepare": "svelte-kit sync || echo ''",
-		"deploy": "bun run deploy.ts",
+		"deploy": "bun run scripts/deploy.ts",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
