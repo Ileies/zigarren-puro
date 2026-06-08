@@ -59,8 +59,12 @@ const handleChecks: Handle = async ({ event, resolve }) => {
 		await db.execute('select 1');
 		event.locals.dbOffline = false;
 	} catch {
-		await Logger.error('Database is offline.');
 		event.locals.dbOffline = true;
+		try {
+			await Logger.error('Database is offline.');
+		} catch {
+			console.error('Database is offline (logger also unavailable).');
+		}
 	}
 
 	const userAgent = event.request.headers.get('user-agent') || '';
