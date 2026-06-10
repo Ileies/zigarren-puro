@@ -133,7 +133,7 @@ export const actions: Actions = {
 
 		const subtotal = cartItems.reduce((sum, item) => {
 			const p = products.find((p) => p.id === item.id)!;
-			return sum + parseFloat(p.price) * item.qty;
+			return sum + p.price * item.qty;
 		}, 0);
 		const shippingCost = subtotal >= freeShippingThreshold ? 0 : shippingCosts[shippingMethodKey];
 		const total = subtotal + shippingCost;
@@ -209,10 +209,10 @@ export const actions: Actions = {
 				shippingMethod: shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
 				shippingAddressId: resolvedShippingId,
 				billingAddressId: resolvedBillingId,
-				subtotalAmount: subtotal.toFixed(2),
-				shippingAmount: shippingCost.toFixed(2),
-				taxAmount: '0.00',
-				totalAmount: total.toFixed(2),
+				subtotalAmount: subtotal,
+				shippingAmount: shippingCost,
+				taxAmount: 0,
+				totalAmount: total,
 				notes,
 				// placedAt is set by webhook for Stripe; immediately for bank transfer
 				placedAt: useStripe ? null : new Date()
@@ -223,13 +223,12 @@ export const actions: Actions = {
 		await db.insert(orderItemTable).values(
 			cartItems.map((cartItem) => {
 				const p = products.find((p) => p.id === cartItem.id)!;
-				const unitPrice = parseFloat(p.price);
 				return {
 					orderId: order.id,
 					productId: cartItem.id,
 					quantity: cartItem.qty,
-					unitPrice: unitPrice.toFixed(2),
-					subtotal: (unitPrice * cartItem.qty).toFixed(2)
+					unitPrice: p.price,
+					subtotal: p.price * cartItem.qty
 				};
 			})
 		);
@@ -246,7 +245,7 @@ export const actions: Actions = {
 					price_data: {
 						currency: 'eur',
 						product_data: { name: p.name },
-						unit_amount: Math.round(parseFloat(p.price) * 100)
+						unit_amount: Math.round(p.price * 100)
 					},
 					quantity: cartItem.qty
 				};
@@ -289,7 +288,7 @@ export const actions: Actions = {
 				order.id,
 				cartItems.map((item) => {
 					const p = products.find((p) => p.id === item.id)!;
-					return { name: p.name, qty: item.qty, unitPrice: parseFloat(p.price) };
+					return { name: p.name, qty: item.qty, unitPrice: p.price };
 				}),
 				subtotal,
 				shippingCost,

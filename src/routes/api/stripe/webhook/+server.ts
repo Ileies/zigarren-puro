@@ -69,11 +69,11 @@ export const POST: RequestHandler = async ({ request }) => {
 							items.map((i) => ({
 								name: i.productName ?? 'Produkt',
 								qty: i.quantity,
-								unitPrice: parseFloat(i.unitPrice)
+								unitPrice: i.unitPrice
 							})),
-							parseFloat(order.subtotalAmount),
-							parseFloat(order.shippingAmount),
-							parseFloat(order.totalAmount),
+							order.subtotalAmount,
+							order.shippingAmount,
+							order.totalAmount,
 							'credit_card'
 						);
 					}

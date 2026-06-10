@@ -1,86 +1,86 @@
-import { boolean, date, decimal, integer, jsonb, pgTable, primaryKey, text, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { integer, sqliteTable, primaryKey, text, real, unique } from 'drizzle-orm/sqlite-core';
 import { productTable } from './schemaProducts';
 import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
 import type { Gender, OrderStatus, PaymentMethod, PaymentStatus, ShippingMethod } from '$lib/types';
 
-export const customerTable = pgTable('customers', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	email: varchar('email').notNull().unique(),
-	firstName: varchar('first_name').notNull(),
-	lastName: varchar('last_name').notNull(),
-	birthDate: date('birth_date').notNull(), // Important for age verification
-	gender: varchar('gender').$type<Gender>(),
-	phone: varchar('phone'),
-	preferredLanguage: varchar('preferred_language'),
-	marketingConsent: boolean('marketing_consent').default(false).notNull(),
-	isVerified: boolean('is_verified').default(false).notNull(),
-	createdAt: timestamp('created_at').defaultNow().notNull(),
-	updatedAt: timestamp('updated_at').defaultNow().notNull(),
-	metadata: jsonb('metadata') // For any additional customer data
+export const customerTable = sqliteTable('customers', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	email: text('email').notNull().unique(),
+	firstName: text('first_name').notNull(),
+	lastName: text('last_name').notNull(),
+	birthDate: text('birth_date').notNull(), // Important for age verification, stored as 'YYYY-MM-DD'
+	gender: text('gender').$type<Gender>(),
+	phone: text('phone'),
+	preferredLanguage: text('preferred_language'),
+	marketingConsent: integer('marketing_consent', { mode: 'boolean' }).default(false).notNull(),
+	isVerified: integer('is_verified', { mode: 'boolean' }).default(false).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	metadata: text('metadata', { mode: 'json' }) // For any additional customer data
 });
 
 export type Customer = typeof customerTable.$inferSelect;
 
-export const addressTable = pgTable('addresses', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	customerId: uuid('customer_id').references(() => customerTable.id).notNull(),
-	type: varchar('type').notNull().$type<'shipping' | 'billing'>(),
-	street: varchar('street').notNull(),
-	city: varchar('city').notNull(),
-	state: varchar('state').notNull(),
-	country: varchar('country').notNull(),
-	postalCode: varchar('postal_code').notNull(),
-	isDefault: boolean('is_default').default(false).notNull()
+export const addressTable = sqliteTable('addresses', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	customerId: text('customer_id').references(() => customerTable.id).notNull(),
+	type: text('type').notNull().$type<'shipping' | 'billing'>(),
+	street: text('street').notNull(),
+	city: text('city').notNull(),
+	state: text('state').notNull(),
+	country: text('country').notNull(),
+	postalCode: text('postal_code').notNull(),
+	isDefault: integer('is_default', { mode: 'boolean' }).default(false).notNull()
 });
 
-export const orderTable = pgTable('orders', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	customerId: uuid('customer_id').references(() => customerTable.id).notNull(),
-	orderStatus: varchar('order_status').notNull().$type<OrderStatus>(),
-	paymentStatus: varchar('payment_status').notNull().$type<PaymentStatus>(),
-	paymentMethod: varchar('payment_method').notNull().$type<PaymentMethod>(),
-	shippingMethod: varchar('shipping_method').notNull().$type<ShippingMethod>(),
-	shippingAddressId: uuid('shipping_address_id').references(() => addressTable.id).notNull(),
-	billingAddressId: uuid('billing_address_id').references(() => addressTable.id).notNull(),
-	subtotalAmount: decimal('subtotal_amount', { precision: 10, scale: 2 }).notNull(),
-	shippingAmount: decimal('shipping_amount', { precision: 10, scale: 2 }).notNull(),
-	taxAmount: decimal('tax_amount', { precision: 10, scale: 2 }).notNull(),
-	totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
+export const orderTable = sqliteTable('orders', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	customerId: text('customer_id').references(() => customerTable.id).notNull(),
+	orderStatus: text('order_status').notNull().$type<OrderStatus>(),
+	paymentStatus: text('payment_status').notNull().$type<PaymentStatus>(),
+	paymentMethod: text('payment_method').notNull().$type<PaymentMethod>(),
+	shippingMethod: text('shipping_method').notNull().$type<ShippingMethod>(),
+	shippingAddressId: text('shipping_address_id').references(() => addressTable.id).notNull(),
+	billingAddressId: text('billing_address_id').references(() => addressTable.id).notNull(),
+	subtotalAmount: real('subtotal_amount').notNull(),
+	shippingAmount: real('shipping_amount').notNull(),
+	taxAmount: real('tax_amount').notNull(),
+	totalAmount: real('total_amount').notNull(),
 	notes: text('notes'),
-	stripeSessionId: varchar('stripe_session_id'),
-	createdAt: timestamp('created_at').defaultNow().notNull(),
-	updatedAt: timestamp('updated_at').defaultNow().notNull(),
-	placedAt: timestamp('placed_at'),
-	cancelledAt: timestamp('cancelled_at')
+	stripeSessionId: text('stripe_session_id'),
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	placedAt: integer('placed_at', { mode: 'timestamp' }),
+	cancelledAt: integer('cancelled_at', { mode: 'timestamp' })
 });
 
-export const orderItemTable = pgTable('order_items', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	orderId: uuid('order_id').references(() => orderTable.id, { onDelete: 'cascade' }).notNull(),
-	productId: uuid('product_id').references(() => productTable.id).notNull(),
+export const orderItemTable = sqliteTable('order_items', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	orderId: text('order_id').references(() => orderTable.id, { onDelete: 'cascade' }).notNull(),
+	productId: text('product_id').references(() => productTable.id).notNull(),
 	quantity: integer('quantity').notNull(),
-	unitPrice: decimal('unit_price', { precision: 10, scale: 2 }).notNull(),
-	subtotal: decimal('subtotal', { precision: 10, scale: 2 }).notNull(),
-	metadata: jsonb('metadata')  // For storing product-specific details at time of order
+	unitPrice: real('unit_price').notNull(),
+	subtotal: real('subtotal').notNull(),
+	metadata: text('metadata', { mode: 'json' }) // For storing product-specific details at time of order
 });
 
-export const productReviewTable = pgTable('product_reviews', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	customerId: uuid('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
-	rating: integer('rating').notNull(), // 1–5
-	title: varchar('title'),
+export const productReviewTable = sqliteTable('product_reviews', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
+	customerId: text('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
+	rating: integer('rating').notNull(), // 1-5
+	title: text('title'),
 	body: text('body'),
-	createdAt: timestamp('created_at').defaultNow().notNull()
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
 }, (table) => [
 	unique('product_review_per_user').on(table.productId, table.customerId)
 ]);
 
-export const wishlistTable = pgTable('wishlists', {
-	customerId: uuid('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	createdAt: timestamp('created_at').defaultNow().notNull()
+export const wishlistTable = sqliteTable('wishlists', {
+	customerId: text('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
 }, (table) => [
 	primaryKey({ columns: [table.customerId, table.productId] })
 ]);

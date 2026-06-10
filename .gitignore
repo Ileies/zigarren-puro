@@ -16,3 +16,4 @@ node_modules
 /build
 src/lib/paraglide
 /_resources
+*.db

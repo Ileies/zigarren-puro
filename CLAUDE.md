@@ -1,6 +1,6 @@
 # Zigarren Puro -- CLAUDE.md
 
-Premium-Webshop für Zigarren und Spirituosen. SvelteKit 5 + Drizzle ORM + PostgreSQL (Supabase). Gehostet auf eigenem Server mit `@sveltejs/adapter-node`.
+Premium-Webshop für Zigarren und Spirituosen. SvelteKit 5 + Drizzle ORM + SQLite (better-sqlite3). Gehostet auf eigenem Server mit `@sveltejs/adapter-node`.
 
 Offene Tasks: [`TODO.md`](./TODO.md)
 
@@ -12,15 +12,15 @@ Offene Tasks: [`TODO.md`](./TODO.md)
 |---|---|
 | Framework | SvelteKit 2 + Svelte 5 |
 | Styling | Tailwind CSS 4 + DaisyUI 5 |
-| Datenbank | PostgreSQL via Supabase |
+| Datenbank | SQLite via better-sqlite3 |
 | ORM | Drizzle ORM |
 | E-Mail | Nodemailer (SMTP via netcup) |
-| Laufzeit | Bun |
+| Laufzeit | Node.js (Bun nur als Package Manager) |
 | Icons | Lucide Svelte |
 | Validierung | Zod 4 |
 | Analytics | PostHog |
 
-Kein `bunx` -- immer `bun x` verwenden.
+Bun wird nur als Package Manager genutzt (`bun install`, `bun run <script>`). Die App läuft mit Node.js (kein `bun:sqlite`, kein `bun:*`-Imports).
 
 ---
 
@@ -102,7 +102,7 @@ Alias `$db` zeigt auf `src/lib/server/db`.
 - `schemaLog`: `logs`
 
 ```bash
-bun run db:push    # Schema auf Supabase pushen (kein Migration-File, direktes Push)
+bun run db:push    # Schema auf SQLite pushen (kein Migration-File, direktes Push)
 ```
 
 ---
@@ -157,7 +157,7 @@ Eigenes Vite-Plugin -- kein Paraglide.
 
 | Variable | Beschreibung |
 |---|---|
-| `DATABASE_URL` | PostgreSQL-Verbindungsstring (Supabase) |
+| `DATABASE_PATH` | Pfad zur SQLite-Datei (z.B. `./local.db`) |
 | `PUBLIC_ORIGIN` | `zigarren-puro.de` |
 | `PUBLIC_APP_NAME` | `Zigarren Puro` |
 | `ADMIN_PASSWORD` | Passwort für `/admin` |

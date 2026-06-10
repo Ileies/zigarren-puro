@@ -1,76 +1,76 @@
-import { decimal, integer, pgTable, primaryKey, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { integer, sqliteTable, primaryKey, text, real } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
 import type { BeverageType, CigarStrength, FilterType, ProductType } from '$lib/types';
 
-export const producerTable = pgTable('producers', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	name: varchar('name').notNull(),
+export const producerTable = sqliteTable('producers', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	name: text('name').notNull(),
 	description: text('description'),
-	country: varchar('country').notNull(),
+	country: text('country').notNull(),
 	contactInfo: text('contact_info'),
-	createdAt: timestamp('created_at').defaultNow().notNull()
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
 });
 
-export const productTable = pgTable('products', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	producerId: uuid('producer_id').references(() => producerTable.id, { onDelete: 'cascade' }).notNull(),
-	name: varchar('name').notNull(),
+export const productTable = sqliteTable('products', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	producerId: text('producer_id').references(() => producerTable.id, { onDelete: 'cascade' }).notNull(),
+	name: text('name').notNull(),
 	description: text('description'),
-	imageUrl: varchar('image_url'),
-	price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+	imageUrl: text('image_url'),
+	price: real('price').notNull(),
 	stock: integer('stock').notNull().default(0),
-	sku: varchar('sku').notNull().unique(),
-	productType: varchar('product_type').notNull().$type<ProductType>(),
-	createdAt: timestamp('created_at').defaultNow().notNull(),
-	updatedAt: timestamp('updated_at').defaultNow().notNull()
+	sku: text('sku').notNull().unique(),
+	productType: text('product_type').notNull().$type<ProductType>(),
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull()
 });
 
-export const categoryTable = pgTable('product_categories', {
-	id: uuid('id').defaultRandom().primaryKey(),
-	name: varchar('name').notNull(),
+export const categoryTable = sqliteTable('product_categories', {
+	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	name: text('name').notNull(),
 	description: text('description')
 });
 
-export const categoryMappingTable = pgTable('product_category_mappings', {
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	categoryId: uuid('category_id').references(() => categoryTable.id, { onDelete: 'cascade' }).notNull()
+export const categoryMappingTable = sqliteTable('product_category_mappings', {
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
+	categoryId: text('category_id').references(() => categoryTable.id, { onDelete: 'cascade' }).notNull()
 }, (table) => [
 	primaryKey({ columns: [table.productId, table.categoryId] })
 ]);
 
-export const cigarDetailsTable = pgTable('cigar_details', {
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
-	lengthMm: decimal('length_mm').notNull(),
-	ringGauge: decimal('ring_gauge').notNull(),
-	strength: varchar('strength').notNull().$type<CigarStrength>(),
-	wrapperType: varchar('wrapper_type').notNull(),
-	countryOfOrigin: varchar('country_of_origin').notNull(),
+export const cigarDetailsTable = sqliteTable('cigar_details', {
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
+	lengthMm: real('length_mm').notNull(),
+	ringGauge: real('ring_gauge').notNull(),
+	strength: text('strength').notNull().$type<CigarStrength>(),
+	wrapperType: text('wrapper_type').notNull(),
+	countryOfOrigin: text('country_of_origin').notNull(),
 	agingTimeMonths: integer('aging_time_months')
 });
 
-export const cigarilloDetailsTable = pgTable('cigarillo_details', {
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
-	lengthMm: decimal('length_mm').notNull(),
-	ringGauge: decimal('ring_gauge').notNull(),
-	filterType: varchar('filter_type').notNull().$type<FilterType>(),
-	wrapperType: varchar('wrapper_type').notNull()
+export const cigarilloDetailsTable = sqliteTable('cigarillo_details', {
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
+	lengthMm: real('length_mm').notNull(),
+	ringGauge: real('ring_gauge').notNull(),
+	filterType: text('filter_type').notNull().$type<FilterType>(),
+	wrapperType: text('wrapper_type').notNull()
 });
 
-export const beverageDetailsTable = pgTable('beverage_details', {
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
-	volumeMl: decimal('volume_ml').notNull(),
-	alcoholPercentage: decimal('alcohol_percentage', { precision: 4, scale: 2 }).notNull(),
-	type: varchar('type').notNull().$type<BeverageType>(),
-	countryOfOrigin: varchar('country_of_origin').notNull(),
+export const beverageDetailsTable = sqliteTable('beverage_details', {
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
+	volumeMl: real('volume_ml').notNull(),
+	alcoholPercentage: real('alcohol_percentage').notNull(),
+	type: text('type').notNull().$type<BeverageType>(),
+	countryOfOrigin: text('country_of_origin').notNull(),
 	agingYears: integer('aging_years'),
 	tastingNotes: text('tasting_notes')
 });
 
-export const toolDetailsTable = pgTable('tool_details', {
-	productId: uuid('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
-	material: varchar('material').notNull(),
+export const toolDetailsTable = sqliteTable('tool_details', {
+	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
+	material: text('material').notNull(),
 	specifications: text('specifications'),
-	brand: varchar('brand').notNull(),
+	brand: text('brand').notNull(),
 	careInstructions: text('care_instructions')
 });
 

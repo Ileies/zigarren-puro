@@ -10,7 +10,7 @@
 	}
 
 	const subtotal = $derived(
-		data.items.reduce((sum, item) => sum + parseFloat(item.price) * item.qty, 0)
+		data.items.reduce((sum, item) => sum + item.price * item.qty, 0)
 	);
 	const shippingCost = $derived(subtotal >= freeShippingThreshold ? 0 : shippingCosts.standard);
 	const total = $derived(subtotal + shippingCost);
@@ -57,7 +57,7 @@
 								>
 									{item.name}
 								</a>
-								<p class="text-sm text-secondary font-bold mt-0.5">{formatPrice(parseFloat(item.price))}</p>
+								<p class="text-sm text-secondary font-bold mt-0.5">{formatPrice(item.price)}</p>
 
 								<div class="flex items-center justify-between mt-3">
 									<div class="flex items-center gap-1">
@@ -88,7 +88,7 @@
 
 									<div class="flex items-center gap-3">
 										<span class="font-semibold text-sm">
-											{formatPrice(parseFloat(item.price) * item.qty)}
+											{formatPrice(item.price * item.qty)}
 										</span>
 										<form method="POST" action="?/remove" use:enhance>
 											<input type="hidden" name="id" value={item.id} />

@@ -44,8 +44,8 @@
 		return `/shop?${u.toString()}`;
 	}
 
-	function formatPrice(price: string) {
-		return parseFloat(price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+	function formatPrice(price: number) {
+		return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 </script>
 

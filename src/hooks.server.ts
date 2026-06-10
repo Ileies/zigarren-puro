@@ -4,6 +4,7 @@ import { type Handle } from '@sveltejs/kit';
 import { cookieName, getTextDirection, locales, runWithLocale } from '$lib/messages';
 import Logger from '$lib/server/Logger';
 import db from '$lib/server/db';
+import { sql } from 'drizzle-orm';
 import { env } from '$env/dynamic/private';
 
 const handleAdmin: Handle = async ({ event, resolve }) => {
@@ -56,7 +57,7 @@ const handleChecks: Handle = async ({ event, resolve }) => {
 	console.log(new Date().toISOString(), event.url.href);
 
 	try {
-		await db.execute('select 1');
+		db.run(sql`select 1`);
 		event.locals.dbOffline = false;
 	} catch {
 		event.locals.dbOffline = true;

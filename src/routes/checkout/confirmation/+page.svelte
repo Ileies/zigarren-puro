@@ -116,7 +116,7 @@
 				</div>
 				<div class="flex justify-between text-sm text-base-content/60">
 					<span>Versand</span>
-					{#if parseFloat(data.order.shippingAmount) === 0}
+					{#if data.order.shippingAmount === 0}
 						<span class="text-success">Kostenlos</span>
 					{:else}
 						<span>{formatPrice(data.order.shippingAmount)}</span>

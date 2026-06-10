@@ -5,8 +5,8 @@
 
 	let { data }: { data: PageData } = $props();
 
-	function formatPrice(price: string) {
-		return parseFloat(price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+	function formatPrice(price: number) {
+		return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 
 	let addedIds = $state<Set<string>>(new Set());

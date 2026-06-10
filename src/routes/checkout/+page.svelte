@@ -62,7 +62,7 @@
 
 	// Totals
 	const subtotal = $derived(
-		data.items.reduce((sum, item) => sum + parseFloat(item.price) * item.qty, 0)
+		data.items.reduce((sum, item) => sum + item.price * item.qty, 0)
 	);
 	const shippingCost = $derived(
 		subtotal >= freeShippingThreshold ? 0 : shippingCosts[shippingMethod]
@@ -595,7 +595,7 @@
 									<p class="text-sm font-medium line-clamp-2 leading-tight">{item.name}</p>
 									<p class="text-xs text-base-content/50 mt-0.5">x {item.qty}</p>
 								</div>
-								<p class="text-sm font-semibold shrink-0">{formatPrice(parseFloat(item.price) * item.qty)}</p>
+								<p class="text-sm font-semibold shrink-0">{formatPrice(item.price * item.qty)}</p>
 							</div>
 						{/each}
 					</div>
