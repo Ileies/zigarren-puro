@@ -157,7 +157,6 @@ Eigenes Vite-Plugin -- kein Paraglide.
 
 | Variable | Beschreibung |
 |---|---|
-| `DATABASE_PATH` | Pfad zur SQLite-Datei (z.B. `./local.db`) |
 | `PUBLIC_ORIGIN` | `zigarren-puro.de` |
 | `PUBLIC_APP_NAME` | `Zigarren Puro` |
 | `ADMIN_PASSWORD` | Passwort für `/admin` |
