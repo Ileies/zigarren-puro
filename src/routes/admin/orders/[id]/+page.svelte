@@ -207,7 +207,7 @@
 			<div class="grid grid-cols-2 gap-4">
 				<div>
 					<label class="block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1" for="orderStatus">
-						Bestellstatus
+						Bestellstatus <span class="text-red-500">*</span>
 					</label>
 					<select
 						id="orderStatus"
@@ -221,7 +221,7 @@
 				</div>
 				<div>
 					<label class="block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1" for="paymentStatus">
-						Zahlungsstatus
+						Zahlungsstatus <span class="text-red-500">*</span>
 					</label>
 					<select
 						id="paymentStatus"

@@ -6,15 +6,6 @@
 	let editingId = $state<string | null>(null);
 	let showCreateForm = $state(false);
 
-	function startEdit(id: string) {
-		editingId = id;
-		showCreateForm = false;
-	}
-
-	function cancelEdit() {
-		editingId = null;
-	}
-
 	$effect(() => {
 		if (form?.success) {
 			editingId = null;
@@ -50,11 +41,11 @@
 				<h2 class="font-semibold text-zinc-800 mb-3">Neuer Hersteller</h2>
 				<form method="POST" action="?/create" use:enhance class="grid grid-cols-2 gap-3">
 					<div class="form-control">
-						<label for="create-name" class="label py-0.5"><span class="label-text text-xs">Name *</span></label>
+						<label for="create-name" class="label py-0.5"><span class="label-text text-xs">Name <span class="text-red-500">*</span></span></label>
 						<input id="create-name" name="name" class="input input-sm input-bordered" required />
 					</div>
 					<div class="form-control">
-						<label for="create-country" class="label py-0.5"><span class="label-text text-xs">Land *</span></label>
+						<label for="create-country" class="label py-0.5"><span class="label-text text-xs">Land <span class="text-red-500">*</span></span></label>
 						<input id="create-country" name="country" class="input input-sm input-bordered" required />
 					</div>
 					<div class="form-control col-span-2">
@@ -79,14 +70,54 @@
 			<div class="card bg-base-100 shadow-sm border border-zinc-200">
 				{#if editingId === producer.id}
 					<div class="card-body p-5">
+						<!-- Logo-Upload -->
+						<div class="flex items-center gap-4 mb-4 pb-4 border-b border-zinc-100">
+							<div class="w-16 h-16 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden shrink-0">
+								{#if producer.imageUrl}
+									<img src={producer.imageUrl} alt={producer.name} class="w-full h-full object-contain p-1" />
+								{:else}
+									<span class="text-xs text-zinc-400">Logo</span>
+								{/if}
+							</div>
+							<div class="flex flex-col gap-2 flex-1">
+								{#if form?.uploadError && form.uploadId === producer.id}
+									<p class="text-xs text-red-600">{form.uploadError}</p>
+								{/if}
+								{#if form?.uploadSuccess && form.uploadId === producer.id}
+									<p class="text-xs text-green-600">Logo hochgeladen.</p>
+								{/if}
+								{#if form?.removeSuccess && form.uploadId === producer.id}
+									<p class="text-xs text-zinc-500">Logo entfernt.</p>
+								{/if}
+								<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance class="flex items-center gap-2">
+									<input type="hidden" name="id" value={producer.id} />
+									<input
+										type="file"
+										name="image"
+										accept="image/jpeg,image/png,image/webp"
+										required
+										class="text-xs text-zinc-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200 cursor-pointer"
+									/>
+									<button type="submit" class="btn btn-xs btn-ghost shrink-0">Hochladen</button>
+								</form>
+								{#if producer.imageUrl}
+									<form method="POST" action="?/removeImage" use:enhance>
+										<input type="hidden" name="id" value={producer.id} />
+										<button type="submit" class="text-xs text-red-500 hover:text-red-700 underline underline-offset-2">Logo entfernen</button>
+									</form>
+								{/if}
+							</div>
+						</div>
+
+						<!-- Stammdaten -->
 						<form method="POST" action="?/update" use:enhance class="grid grid-cols-2 gap-3">
 							<input type="hidden" name="id" value={producer.id} />
 							<div class="form-control">
-								<label for="edit-name-{producer.id}" class="label py-0.5"><span class="label-text text-xs">Name *</span></label>
+								<label for="edit-name-{producer.id}" class="label py-0.5"><span class="label-text text-xs">Name <span class="text-red-500">*</span></span></label>
 								<input id="edit-name-{producer.id}" name="name" value={producer.name} class="input input-sm input-bordered" required />
 							</div>
 							<div class="form-control">
-								<label for="edit-country-{producer.id}" class="label py-0.5"><span class="label-text text-xs">Land *</span></label>
+								<label for="edit-country-{producer.id}" class="label py-0.5"><span class="label-text text-xs">Land <span class="text-red-500">*</span></span></label>
 								<input id="edit-country-{producer.id}" name="country" value={producer.country} class="input input-sm input-bordered" required />
 							</div>
 							<div class="form-control col-span-2">
@@ -98,19 +129,28 @@
 								<input id="edit-contact-{producer.id}" name="contactInfo" value={producer.contactInfo ?? ''} class="input input-sm input-bordered" />
 							</div>
 							<div class="col-span-2 flex gap-2 justify-end">
-								<button type="button" onclick={cancelEdit} class="btn btn-sm btn-ghost">Abbrechen</button>
+								<button type="button" onclick={() => (editingId = null)} class="btn btn-sm btn-ghost">Abbrechen</button>
 								<button type="submit" class="btn btn-sm btn-primary">Speichern</button>
 							</div>
 						</form>
 					</div>
 				{:else}
-					<div class="card-body p-4 flex-row items-center justify-between">
-						<div>
-							<div class="font-medium text-zinc-900">{producer.name}</div>
-							<div class="text-xs text-zinc-500">{producer.country}{producer.description ? ` - ${producer.description}` : ''}</div>
+					<div class="card-body p-4 flex-row items-center justify-between gap-4">
+						<div class="flex items-center gap-3">
+							<div class="w-10 h-10 rounded bg-zinc-100 border border-zinc-200 flex items-center justify-center overflow-hidden shrink-0">
+								{#if producer.imageUrl}
+									<img src={producer.imageUrl} alt={producer.name} class="w-full h-full object-contain p-0.5" />
+								{:else}
+									<span class="text-xs text-zinc-300">-</span>
+								{/if}
+							</div>
+							<div>
+								<div class="font-medium text-zinc-900">{producer.name}</div>
+								<div class="text-xs text-zinc-500">{producer.country}{producer.description ? ` - ${producer.description}` : ''}</div>
+							</div>
 						</div>
 						<div class="flex gap-2 shrink-0">
-							<button onclick={() => startEdit(producer.id)} class="btn btn-xs btn-ghost">Bearbeiten</button>
+							<button onclick={() => { editingId = producer.id; showCreateForm = false; }} class="btn btn-xs btn-ghost">Bearbeiten</button>
 							<form method="POST" action="?/delete" use:enhance onsubmit={(e) => { if (!confirm(`"${producer.name}" wirklich löschen?`)) e.preventDefault(); }}>
 								<input type="hidden" name="id" value={producer.id} />
 								<button type="submit" class="btn btn-xs btn-error btn-outline">Löschen</button>
