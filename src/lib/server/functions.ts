@@ -32,7 +32,10 @@ export async function generateVerificationToken(customerId: string): Promise<str
 	return token;
 }
 
-export async function generateEmailChangeToken(customerId: string, newEmail: string): Promise<string> {
+export async function generateEmailChangeToken(
+	customerId: string,
+	newEmail: string
+): Promise<string> {
 	await db
 		.update(tokenTable)
 		.set({ revokedAt: new Date() })
@@ -121,7 +124,11 @@ function baseLayout(content: string, footer: string): string {
 </html>`;
 }
 
-function verificationEmailHtml(firstName: string, verifyUrl: string, unsubscribeUrl: string): string {
+function verificationEmailHtml(
+	firstName: string,
+	verifyUrl: string,
+	unsubscribeUrl: string
+): string {
 	const content = `
       <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
         E-Mail-Adresse bestätigen
@@ -304,7 +311,9 @@ function orderConfirmationEmailHtml(
         </tfoot>
       </table>
 
-      ${paymentMethod === 'bank_transfer' ? `
+      ${
+				paymentMethod === 'bank_transfer'
+					? `
       <div style="background:#fffbf0;border:1px solid #d4af37;border-radius:4px;padding:20px;margin-bottom:28px">
         <p style="margin:0 0 12px;color:#1a1a1a;font-size:14px;font-weight:bold">Bankverbindung für die Überweisung</p>
         <p style="margin:0 0 6px;color:#444;font-size:13px;line-height:1.8">
@@ -316,14 +325,16 @@ function orderConfirmationEmailHtml(
           <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>${bankAccount.bic}</strong></td></tr>
           <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>#${orderShort}</strong></td></tr>
         </table>
-      </div>` : `
+      </div>`
+					: `
       <div style="background:#f0faf4;border:1px solid #4caf50;border-radius:4px;padding:20px;margin-bottom:28px">
         <p style="margin:0;color:#2e7d32;font-size:14px;font-weight:bold">Zahlung erfolgreich</p>
         <p style="margin:8px 0 0;color:#444;font-size:13px;line-height:1.8">
           Ihre Kartenzahlung über <strong>${fmt(total)}</strong> wurde erfolgreich verarbeitet.
           Wir bereiten Ihre Bestellung nun vor.
         </p>
-      </div>`}
+      </div>`
+			}
 
       <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
         Nach Zahlungseingang wird Ihre Bestellung umgehend bearbeitet und versendet.
@@ -369,9 +380,10 @@ export async function sendOrderConfirmationEmail(
 				unsubscribeUrl,
 				paymentMethod
 			),
-			text: paymentMethod === 'credit_card'
-				? `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nIhre Kartenzahlung wurde erfolgreich verarbeitet.\n\nZigarren Puro`
-				: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck #${orderShort}.\n\nZigarren Puro`
+			text:
+				paymentMethod === 'credit_card'
+					? `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nIhre Kartenzahlung wurde erfolgreich verarbeitet.\n\nZigarren Puro`
+					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck #${orderShort}.\n\nZigarren Puro`
 		},
 		customerId
 	);

@@ -27,34 +27,10 @@
 		"搜索雪茄...",
 		"Поиск по сигарам..."
 	],
-	"categories": [
-		"Kategorien",
-		"Categories",
-		"الفئات",
-		"类别",
-		"Категории"
-	],
-	"followUs": [
-		"Folgen Sie uns",
-		"Follow us",
-		"تابعنا",
-		"关注我们",
-		"Следите за нами"
-	],
-	"cigars": [
-		"Zigarren",
-		"Cigars",
-		"السجائر",
-		"雪茄",
-		"Сигары"
-	],
-	"zigarillos": [
-		"Zigarillos",
-		"Zigarillos",
-		"السجائر الصغيرة",
-		"小雪茄",
-		"Сигарillos"
-	],
+	"categories": ["Kategorien", "Categories", "الفئات", "类别", "Категории"],
+	"followUs": ["Folgen Sie uns", "Follow us", "تابعنا", "关注我们", "Следите за нами"],
+	"cigars": ["Zigarren", "Cigars", "السجائر", "雪茄", "Сигары"],
+	"zigarillos": ["Zigarillos", "Zigarillos", "السجائر الصغيرة", "小雪茄", "Сигарillos"],
 	"pipestobacco": [
 		"Pfeifen & Tabak",
 		"Pipes & Tobacco",
@@ -62,34 +38,10 @@
 		"烟斗与烟草",
 		"Сигарные трубки и табак"
 	],
-	"accessories": [
-		"Zubehör",
-		"Accessories",
-		"الإكسسوارات",
-		"配件",
-		"Аксессуары"
-	],
-	"spirits": [
-		"Spirituosen",
-		"Spirits",
-		"المشروبات الكحولية",
-		"烈酒",
-		"Спиртные напитки"
-	],
-	"gifts": [
-		"Geschenkideen",
-		"Gifts",
-		"الهدايا",
-		"礼品",
-		"Подарочные идеи"
-	],
-	"sale": [
-		"Sale %",
-		"Sale %",
-		"الخصم %",
-		"特价",
-		"Скидки %"
-	],
+	"accessories": ["Zubehör", "Accessories", "الإكسسوارات", "配件", "Аксессуары"],
+	"spirits": ["Spirituosen", "Spirits", "المشروبات الكحولية", "烈酒", "Спиртные напитки"],
+	"gifts": ["Geschenkideen", "Gifts", "الهدايا", "礼品", "Подарочные идеи"],
+	"sale": ["Sale %", "Sale %", "الخصم %", "特价", "Скидки %"],
 	"news": [
 		"News & Infos",
 		"News & Infos",
@@ -104,48 +56,12 @@
 		"客户服务",
 		"Служба поддержки"
 	],
-	"aboutUs": [
-		"Über uns",
-		"About Us",
-		"من نحن",
-		"关于我们",
-		"О нас"
-	],
-	"contact": [
-		"Kontakt",
-		"Contact",
-		"اتصل بنا",
-		"联系我们",
-		"Контакты"
-	],
-	"shipping": [
-		"Versand",
-		"Shipping",
-		"الشحن",
-		"配送",
-		"Доставка"
-	],
-	"returns": [
-		"Rückgabe",
-		"Returns",
-		"الإرجاع",
-		"退货",
-		"Возврат"
-	],
-	"faq": [
-		"FAQ",
-		"FAQ",
-		"الأسئلة الشائعة",
-		"常见问题",
-		"Часто задаваемые вопросы"
-	],
-	"legal": [
-		"Rechtliches",
-		"Legal",
-		"قانوني",
-		"法律条款",
-		"Правовая информация"
-	],
+	"aboutUs": ["Über uns", "About Us", "من نحن", "关于我们", "О нас"],
+	"contact": ["Kontakt", "Contact", "اتصل بنا", "联系我们", "Контакты"],
+	"shipping": ["Versand", "Shipping", "الشحن", "配送", "Доставка"],
+	"returns": ["Rückgabe", "Returns", "الإرجاع", "退货", "Возврат"],
+	"faq": ["FAQ", "FAQ", "الأسئلة الشائعة", "常见问题", "Часто задаваемые вопросы"],
+	"legal": ["Rechtliches", "Legal", "قانوني", "法律条款", "Правовая информация"],
 	"privacy": [
 		"Datenschutz",
 		"Privacy Policy",
@@ -153,27 +69,9 @@
 		"隐私政策",
 		"Политика конфиденциальности"
 	],
-	"terms": [
-		"AGB",
-		"Terms & Conditions",
-		"الشروط والأحكام",
-		"条款与条件",
-		"Условия использования"
-	],
-	"imprint": [
-		"Impressum",
-		"Imprint",
-		"البيانات القانونية",
-		"法律声明",
-		"Выходные данные"
-	],
-	"newsletter": [
-		"Newsletter",
-		"Newsletter",
-		"النشرة الإخبارية",
-		"邮件订阅",
-		"Рассылка"
-	],
+	"terms": ["AGB", "Terms & Conditions", "الشروط والأحكام", "条款与条件", "Условия использования"],
+	"imprint": ["Impressum", "Imprint", "البيانات القانونية", "法律声明", "Выходные данные"],
+	"newsletter": ["Newsletter", "Newsletter", "النشرة الإخبارية", "邮件订阅", "Рассылка"],
 	"newsletterDesc": [
 		"Abonnieren Sie unseren Newsletter für exklusive Angebote und Neuheiten",
 		"Subscribe to our newsletter for exclusive offers and new arrivals",
@@ -181,13 +79,7 @@
 		"订阅我们的邮件以获取独家优惠和新品信息",
 		"Подпишитесь на нашу рассылку для получения эксклюзивных предложений и новинок"
 	],
-	"subscribe": [
-		"Abonnieren",
-		"Subscribe",
-		"اشتراك",
-		"订阅",
-		"Подписаться"
-	],
+	"subscribe": ["Abonnieren", "Subscribe", "اشتراك", "订阅", "Подписаться"],
 	"yourEmail": [
 		"Ihre E-Mail-Adresse",
 		"Your email address",
@@ -195,13 +87,7 @@
 		"您的邮箱地址",
 		"Ваш адрес электронной почты"
 	],
-	"company": [
-		"Unternehmen",
-		"Company",
-		"الشركة",
-		"公司",
-		"Компания"
-	],
+	"company": ["Unternehmen", "Company", "الشركة", "公司", "Компания"],
 	"paymentMethods": [
 		"Zahlungsmethoden",
 		"Payment Methods",
@@ -258,20 +144,8 @@
 		"全球配送",
 		"Доставка по всему миру"
 	],
-	"careers": [
-		"Karriere",
-		"Careers",
-		"الوظائف",
-		"招聘",
-		"Карьера"
-	],
-	"partners": [
-		"Partner",
-		"Partners",
-		"الشركاء",
-		"合作伙伴",
-		"Партнеры"
-	],
+	"careers": ["Karriere", "Careers", "الوظائف", "招聘", "Карьера"],
+	"partners": ["Partner", "Partners", "الشركاء", "合作伙伴", "Партнеры"],
 	"cancellationRight": [
 		"Widerrufsrecht",
 		"Right of Withdrawal",
@@ -300,13 +174,7 @@
 		"德国制造",
 		"Сделано в Германии"
 	],
-	"sslSecure": [
-		"SSL Secure",
-		"SSL Secure",
-		"آمن SSL",
-		"SSL安全",
-		"SSL Безопасность"
-	],
+	"sslSecure": ["SSL Secure", "SSL Secure", "آمن SSL", "SSL安全", "SSL Безопасность"],
 	"companyDescription": [
 		"Premium Zigarren, Zigarillos und Spirituosen für Kenner und Genießer.",
 		"Premium cigars, cigarillos and spirits for connoisseurs and enthusiasts.",
@@ -314,13 +182,7 @@
 		"为鉴赏家和爱好者提供优质雪茄、小雪茄和烈酒。",
 		"Премиальные сигары, сигариллы и спиртные напитки для ценителей и энтузиастов."
 	],
-	"awards": [
-		"Auszeichnungen",
-		"Awards",
-		"الجوائز",
-		"奖项",
-		"Награды"
-	],
+	"awards": ["Auszeichnungen", "Awards", "الجوائز", "奖项", "Награды"],
 	"tastingEvents": [
 		"Verkostungsevents",
 		"Tasting Events",
@@ -370,55 +232,13 @@
 		"即将举行的活动",
 		"Предстоящие события"
 	],
-	"bookNow": [
-		"Jetzt buchen",
-		"Book Now",
-		"احجز الآن",
-		"立即预订",
-		"Забронировать"
-	],
-	"learnMore": [
-		"Mehr erfahren",
-		"Learn More",
-		"تعلم المزيد",
-		"了解更多",
-		"Узнать больше"
-	],
-	"shopTitle": [
-		"Unser Shop",
-		"Our Shop",
-		"متجرنا",
-		"我们的商店",
-		"Наш магазин"
-	],
-	"allProducts": [
-		"Alle Produkte",
-		"All Products",
-		"جميع المنتجات",
-		"所有产品",
-		"Все товары"
-	],
-	"sortBy": [
-		"Sortierung",
-		"Sort by",
-		"ترتيب حسب",
-		"排序",
-		"Сортировка"
-	],
-	"sortNameAsc": [
-		"Name A–Z",
-		"Name A–Z",
-		"الاسم أ–ي",
-		"名称 A–Z",
-		"Имя A–Z"
-	],
-	"sortNameDesc": [
-		"Name Z–A",
-		"Name Z–A",
-		"الاسم ي–أ",
-		"名称 Z–A",
-		"Имя Z–A"
-	],
+	"bookNow": ["Jetzt buchen", "Book Now", "احجز الآن", "立即预订", "Забронировать"],
+	"learnMore": ["Mehr erfahren", "Learn More", "تعلم المزيد", "了解更多", "Узнать больше"],
+	"shopTitle": ["Unser Shop", "Our Shop", "متجرنا", "我们的商店", "Наш магазин"],
+	"allProducts": ["Alle Produkte", "All Products", "جميع المنتجات", "所有产品", "Все товары"],
+	"sortBy": ["Sortierung", "Sort by", "ترتيب حسب", "排序", "Сортировка"],
+	"sortNameAsc": ["Name A–Z", "Name A–Z", "الاسم أ–ي", "名称 A–Z", "Имя A–Z"],
+	"sortNameDesc": ["Name Z–A", "Name Z–A", "الاسم ي–أ", "名称 Z–A", "Имя Z–A"],
 	"sortPriceAsc": [
 		"Preis aufsteigend",
 		"Price Ascending",
@@ -433,27 +253,9 @@
 		"价格降序",
 		"Цена по убыванию"
 	],
-	"inStock": [
-		"Auf Lager",
-		"In Stock",
-		"متوفر",
-		"有库存",
-		"В наличии"
-	],
-	"outOfStock": [
-		"Ausverkauft",
-		"Out of Stock",
-		"نفد المخزون",
-		"缺货",
-		"Нет в наличии"
-	],
-	"addToCart": [
-		"In den Warenkorb",
-		"Add to Cart",
-		"أضف إلى السلة",
-		"加入购物车",
-		"В корзину"
-	],
+	"inStock": ["Auf Lager", "In Stock", "متوفر", "有库存", "В наличии"],
+	"outOfStock": ["Ausverkauft", "Out of Stock", "نفد المخزون", "缺货", "Нет в наличии"],
+	"addToCart": ["In den Warenkorb", "Add to Cart", "أضف إلى السلة", "加入购物车", "В корзину"],
 	"noProductsFound": [
 		"Keine Produkte gefunden",
 		"No products found",
@@ -461,27 +263,9 @@
 		"未找到产品",
 		"Товары не найдены"
 	],
-	"tools": [
-		"Zubehör",
-		"Accessories",
-		"الإكسسوارات",
-		"配件",
-		"Аксессуары"
-	],
-	"products": [
-		"Produkte",
-		"Products",
-		"المنتجات",
-		"产品",
-		"Товары"
-	],
-	"checkoutTitle": [
-		"Zur Kasse",
-		"Checkout",
-		"إتمام الشراء",
-		"收银台",
-		"Оформление заказа"
-	],
+	"tools": ["Zubehör", "Accessories", "الإكسسوارات", "配件", "Аксессуары"],
+	"products": ["Produkte", "Products", "المنتجات", "产品", "Товары"],
+	"checkoutTitle": ["Zur Kasse", "Checkout", "إتمام الشراء", "收银台", "Оформление заказа"],
 	"checkoutStep1": [
 		"Lieferadresse",
 		"Shipping Address",
@@ -545,34 +329,10 @@
 		"邮政编码",
 		"Почтовый индекс"
 	],
-	"checkoutCity": [
-		"Stadt",
-		"City",
-		"المدينة",
-		"城市",
-		"Город"
-	],
-	"checkoutState": [
-		"Bundesland",
-		"State",
-		"الولاية",
-		"省/州",
-		"Регион"
-	],
-	"checkoutContinue": [
-		"Weiter",
-		"Continue",
-		"متابعة",
-		"继续",
-		"Продолжить"
-	],
-	"checkoutBack": [
-		"Zurück",
-		"Back",
-		"رجوع",
-		"返回",
-		"Назад"
-	],
+	"checkoutCity": ["Stadt", "City", "المدينة", "城市", "Город"],
+	"checkoutState": ["Bundesland", "State", "الولاية", "省/州", "Регион"],
+	"checkoutContinue": ["Weiter", "Continue", "متابعة", "继续", "Продолжить"],
+	"checkoutBack": ["Zurück", "Back", "رجوع", "返回", "Назад"],
 	"checkoutShippingMethod": [
 		"Versandart",
 		"Shipping Method",
@@ -636,27 +396,9 @@
 		"订单摘要",
 		"Сводка заказа"
 	],
-	"checkoutSubtotal": [
-		"Zwischensumme",
-		"Subtotal",
-		"المجموع الفرعي",
-		"小计",
-		"Промежуточный итог"
-	],
-	"checkoutFreeShipping": [
-		"Kostenlos",
-		"Free",
-		"مجاني",
-		"免费",
-		"Бесплатно"
-	],
-	"checkoutTotal": [
-		"Gesamt",
-		"Total",
-		"الإجمالي",
-		"总计",
-		"Итого"
-	],
+	"checkoutSubtotal": ["Zwischensumme", "Subtotal", "المجموع الفرعي", "小计", "Промежуточный итог"],
+	"checkoutFreeShipping": ["Kostenlos", "Free", "مجاني", "免费", "Бесплатно"],
+	"checkoutTotal": ["Gesamt", "Total", "الإجمالي", "总计", "Итого"],
 	"checkoutVatNote": [
 		"inkl. MwSt. und Tabaksteuer",
 		"incl. VAT and tobacco tax",
@@ -692,13 +434,7 @@
 		"订单提交成功！",
 		"Заказ успешно оформлен!"
 	],
-	"checkoutOrderNumber": [
-		"Bestellnummer",
-		"Order Number",
-		"رقم الطلب",
-		"订单号",
-		"Номер заказа"
-	],
+	"checkoutOrderNumber": ["Bestellnummer", "Order Number", "رقم الطلب", "订单号", "Номер заказа"],
 	"checkoutEmailSent": [
 		"Eine Bestätigungs-E-Mail wurde an Ihre Adresse gesendet.",
 		"A confirmation email has been sent to your address.",
@@ -748,20 +484,8 @@
 		"Visa, Mastercard, American Express",
 		"Visa, Mastercard, American Express"
 	],
-	"checkoutStep3": [
-		"Kartenzahlung",
-		"Card Payment",
-		"الدفع بالبطاقة",
-		"刷卡支付",
-		"Оплата картой"
-	],
-	"checkoutPayNow": [
-		"Jetzt bezahlen",
-		"Pay Now",
-		"ادفع الآن",
-		"立即支付",
-		"Оплатить сейчас"
-	],
+	"checkoutStep3": ["Kartenzahlung", "Card Payment", "الدفع بالبطاقة", "刷卡支付", "Оплата картой"],
+	"checkoutPayNow": ["Jetzt bezahlen", "Pay Now", "ادفع الآن", "立即支付", "Оплатить сейчас"],
 	"checkoutPaying": [
 		"Wird verarbeitet...",
 		"Processing...",
@@ -811,11 +535,5 @@
 		"真正鉴赏家的专属享受",
 		"Эксклюзивное удовольствие для истинных ценителей"
 	],
-	"heroCtaButton": [
-		"Jetzt entdecken",
-		"Discover Now",
-		"اكتشف الآن",
-		"立即探索",
-		"Открыть для себя"
-	]
+	"heroCtaButton": ["Jetzt entdecken", "Discover Now", "اكتشف الآن", "立即探索", "Открыть для себя"]
 }

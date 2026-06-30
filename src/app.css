@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
-@plugin "daisyui" {
+@plugin 'daisyui' {
 	themes: autumn --default;
 }
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
 	name: shoptheme;
 	default: true;
 

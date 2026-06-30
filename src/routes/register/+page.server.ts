@@ -101,10 +101,12 @@ export const actions: Actions = {
 				.returning({ id: customerTable.id })
 				.all();
 
-			tx.insert(authCredentialsTable).values({
-				customerId: newCustomer.id,
-				passwordHash
-			}).run();
+			tx.insert(authCredentialsTable)
+				.values({
+					customerId: newCustomer.id,
+					passwordHash
+				})
+				.run();
 
 			return newCustomer;
 		});

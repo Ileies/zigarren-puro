@@ -14,7 +14,10 @@
 
 <svelte:head>
 	<title>Zigarren Puro - Premium Zigarren & Tabakwaren</title>
-	<meta name="description" content="Entdecken Sie unsere exklusive Auswahl an Premium-Zigarren von weltbekannten Marken." />
+	<meta
+		name="description"
+		content="Entdecken Sie unsere exklusive Auswahl an Premium-Zigarren von weltbekannten Marken."
+	/>
 </svelte:head>
 
 <Hero

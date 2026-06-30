@@ -8,15 +8,16 @@
 	// Dynamic flag generation from locale code
 	const getFlagEmoji = (locale: string): string => {
 		if (locale === 'en') locale = 'us';
-		return locale.toUpperCase()
+		return locale
+			.toUpperCase()
 			.split('')
-			.map(char => String.fromCodePoint(0x1F1E6 + char.charCodeAt(0) - 65))
+			.map((char) => String.fromCodePoint(0x1f1e6 + char.charCodeAt(0) - 65))
 			.join('');
 	};
 
 	const supportedLanguages = locales;
 
-	function handleLanguageChange(locale: typeof locales[number]) {
+	function handleLanguageChange(locale: (typeof locales)[number]) {
 		setLocale(locale);
 		currentLocale = locale;
 		isOpen = false;
@@ -46,22 +47,25 @@
 
 <div class="language-selector relative">
 	<button
-		class="btn btn-ghost btn-sm lg:btn-xs hover:bg-white/10 transition-colors flex items-center gap-1 lg:gap-0.5 min-h-0 h-8 lg:h-5 px-3 lg:px-1"
+		class="btn flex h-8 min-h-0 items-center gap-1 px-3 btn-ghost transition-colors btn-sm hover:bg-white/10 lg:h-5 lg:gap-0.5 lg:px-1 lg:btn-xs"
 		onclick={toggleDropdown}
 		aria-label="Select language"
 	>
 		<span class="text-lg lg:text-sm">{getFlagEmoji(currentLocale)}</span>
-		<ChevronDown class="w-4 h-4 lg:w-2.5 lg:h-2.5 transition-transform {isOpen ? 'rotate-180' : ''}" />
+		<ChevronDown
+			class="h-4 w-4 transition-transform lg:h-2.5 lg:w-2.5 {isOpen ? 'rotate-180' : ''}"
+		/>
 	</button>
 
 	{#if isOpen}
 		<div
-			class="absolute top-full right-0 mt-1 bg-base-100 border border-base-300 rounded-lg shadow-lg z-[9999] min-w-28">
+			class="absolute top-full right-0 z-[9999] mt-1 min-w-28 rounded-lg border border-base-300 bg-base-100 shadow-lg"
+		>
 			<ul class="py-1">
 				{#each supportedLanguages as locale (locale)}
 					<li>
 						<button
-							class="w-full px-3 py-2 text-left hover:bg-base-200 transition-colors flex items-center gap-2 text-sm text-base-content"
+							class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-base-content transition-colors hover:bg-base-200"
 							onclick={() => handleLanguageChange(locale)}
 							class:bg-base-200={locale === currentLocale}
 						>
@@ -73,4 +77,4 @@
 			</ul>
 		</div>
 	{/if}
-</div> 
+</div>

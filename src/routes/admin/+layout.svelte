@@ -17,33 +17,35 @@
 	}
 </script>
 
-<div class="min-h-screen flex bg-zinc-50">
-	<aside class="w-52 shrink-0 bg-zinc-900 text-zinc-100 flex flex-col min-h-screen sticky top-0">
-		<div class="px-4 py-5 border-b border-zinc-700">
-			<div class="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-1">Administration</div>
-			<div class="font-bold text-white text-sm">Zigarren Puro</div>
+<div class="flex min-h-screen bg-zinc-50">
+	<aside class="sticky top-0 flex min-h-screen w-52 shrink-0 flex-col bg-zinc-900 text-zinc-100">
+		<div class="border-b border-zinc-700 px-4 py-5">
+			<div class="mb-1 text-xs font-semibold tracking-widest text-zinc-500 uppercase">
+				Administration
+			</div>
+			<div class="text-sm font-bold text-white">Zigarren Puro</div>
 		</div>
-		<nav class="flex-1 p-3 space-y-0.5">
+		<nav class="flex-1 space-y-0.5 p-3">
 			{#each nav as item}
 				<a
 					href={item.href}
-					class="flex items-center px-3 py-2 rounded text-sm font-medium transition-colors
+					class="flex items-center rounded px-3 py-2 text-sm font-medium transition-colors
 					       {isActive(item.href, item.exact)
-					           ? 'bg-zinc-700 text-white'
-					           : 'text-zinc-400 hover:text-white hover:bg-zinc-800'}"
+						? 'bg-zinc-700 text-white'
+						: 'text-zinc-400 hover:bg-zinc-800 hover:text-white'}"
 				>
 					{item.label}
 				</a>
 			{/each}
 		</nav>
-		<div class="p-4 border-t border-zinc-700">
-			<a href="/" class="text-xs text-zinc-500 hover:text-zinc-300 transition-colors">
+		<div class="border-t border-zinc-700 p-4">
+			<a href="/" class="text-xs text-zinc-500 transition-colors hover:text-zinc-300">
 				&larr; Zur Website
 			</a>
 		</div>
 	</aside>
 
-	<div class="flex-1 min-w-0">
+	<div class="min-w-0 flex-1">
 		{@render children()}
 	</div>
 </div>

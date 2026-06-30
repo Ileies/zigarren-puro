@@ -44,7 +44,14 @@ export const actions: Actions = {
 
 		await db
 			.update(customerTable)
-			.set({ firstName, lastName, phone, gender: gender ?? undefined, marketingConsent, updatedAt: new Date() })
+			.set({
+				firstName,
+				lastName,
+				phone,
+				gender: gender ?? undefined,
+				marketingConsent,
+				updatedAt: new Date()
+			})
 			.where(eq(customerTable.id, locals.user.id));
 
 		return { action: 'profile', success: true };
@@ -105,16 +112,26 @@ export const actions: Actions = {
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(newEmail)) {
-			return fail(400, { action: 'email', error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' });
+			return fail(400, {
+				action: 'email',
+				error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
+			});
 		}
 
 		const [customer] = await db
-			.select({ id: customerTable.id, email: customerTable.email, firstName: customerTable.firstName })
+			.select({
+				id: customerTable.id,
+				email: customerTable.email,
+				firstName: customerTable.firstName
+			})
 			.from(customerTable)
 			.where(eq(customerTable.id, locals.user.id));
 
 		if (newEmail === customer.email) {
-			return fail(400, { action: 'email', error: 'Die neue E-Mail-Adresse ist identisch mit der aktuellen.' });
+			return fail(400, {
+				action: 'email',
+				error: 'Die neue E-Mail-Adresse ist identisch mit der aktuellen.'
+			});
 		}
 
 		const [existing] = await db

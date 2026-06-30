@@ -18,8 +18,8 @@
 	const labelClass = 'block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1';
 </script>
 
-<div class="p-6 max-w-2xl">
-	<div class="flex items-center gap-3 mb-6">
+<div class="max-w-2xl p-6">
+	<div class="mb-6 flex items-center gap-3">
 		<a href="/admin/inventory" class="text-sm text-zinc-400 hover:text-zinc-700">&larr; Inventar</a>
 		<span class="text-zinc-300">/</span>
 		<span class="text-sm text-zinc-600">Neues Produkt</span>
@@ -30,22 +30,25 @@
 	</div>
 
 	{#if form?.error}
-		<div class="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
+		<div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
 			{form.error}
 		</div>
 	{/if}
 
 	<form method="POST" action="?/create" use:enhance class="space-y-6">
 		<!-- Produkttyp Auswahl -->
-		<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-			<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Produkttyp</h2>
+		<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+			<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Produkttyp</h2>
 			<div class="grid grid-cols-4 gap-3">
 				{#each Object.entries(ProductType) as [key, value]}
-					<label class="relative flex items-center gap-2 p-3 border border-zinc-200 rounded-md cursor-pointer hover:bg-zinc-50" class:border-zinc-900={productType === value}>
+					<label
+						class="relative flex cursor-pointer items-center gap-2 rounded-md border border-zinc-200 p-3 hover:bg-zinc-50"
+						class:border-zinc-900={productType === value}
+					>
 						<input
 							type="radio"
 							name="productType"
-							value={value}
+							{value}
 							bind:group={productType}
 							class="cursor-pointer"
 						/>
@@ -56,8 +59,8 @@
 		</div>
 
 		<!-- Base fields -->
-		<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-			<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Basisfelder</h2>
+		<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+			<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Basisfelder</h2>
 
 			<div>
 				<label class={labelClass} for="name">Name <span class="text-red-500">*</span></label>
@@ -66,11 +69,14 @@
 
 			<div>
 				<label class={labelClass} for="description">Beschreibung</label>
-				<textarea id="description" name="description" rows="4" class="{inputClass} resize-y"></textarea>
+				<textarea id="description" name="description" rows="4" class="{inputClass} resize-y"
+				></textarea>
 			</div>
 
 			<div>
-				<label class={labelClass} for="producerId">Hersteller <span class="text-red-500">*</span></label>
+				<label class={labelClass} for="producerId"
+					>Hersteller <span class="text-red-500">*</span></label
+				>
 				<select id="producerId" name="producerId" required class={inputClass}>
 					<option value="">Bitte wählen...</option>
 					{#each data.producers as producer}
@@ -81,7 +87,8 @@
 
 			<div class="grid grid-cols-3 gap-4">
 				<div>
-					<label class={labelClass} for="price">Preis (€) <span class="text-red-500">*</span></label>
+					<label class={labelClass} for="price">Preis (€) <span class="text-red-500">*</span></label
+					>
 					<input
 						id="price"
 						name="price"
@@ -93,7 +100,9 @@
 					/>
 				</div>
 				<div>
-					<label class={labelClass} for="stock">Lagerbestand <span class="text-red-500">*</span></label>
+					<label class={labelClass} for="stock"
+						>Lagerbestand <span class="text-red-500">*</span></label
+					>
 					<input
 						id="stock"
 						name="stock"
@@ -113,12 +122,16 @@
 
 		<!-- Cigar details -->
 		{#if productType === 'cigar'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zigarren-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Zigarren-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="lengthMm"
+							>Länge (mm) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -130,7 +143,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="ringGauge"
+							>Ringmaß <span class="text-red-500">*</span></label
+						>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -145,7 +160,9 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="strength">Stärke <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="strength"
+							>Stärke <span class="text-red-500">*</span></label
+						>
 						<select id="strength" name="strength" required class={inputClass}>
 							<option value="">Bitte wählen...</option>
 							<option value="mild">Mild</option>
@@ -154,20 +171,18 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
-						<input
-							id="wrapperType"
-							name="wrapperType"
-							type="text"
-							required
-							class={inputClass}
-						/>
+						<label class={labelClass} for="wrapperType"
+							>Deckblatt <span class="text-red-500">*</span></label
+						>
+						<input id="wrapperType" name="wrapperType" type="text" required class={inputClass} />
 					</div>
 				</div>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="countryOfOrigin"
+							>Herkunft <span class="text-red-500">*</span></label
+						>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -192,12 +207,16 @@
 
 		<!-- Cigarillo details -->
 		{#if productType === 'cigarillo'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zigarillo-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Zigarillo-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="lengthMm"
+							>Länge (mm) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -209,7 +228,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="ringGauge"
+							>Ringmaß <span class="text-red-500">*</span></label
+						>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -224,7 +245,9 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="filterType">Filter <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="filterType"
+							>Filter <span class="text-red-500">*</span></label
+						>
 						<select id="filterType" name="filterType" required class={inputClass}>
 							<option value="">Bitte wählen...</option>
 							<option value="none">Ohne Filter</option>
@@ -233,14 +256,10 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
-						<input
-							id="wrapperType"
-							name="wrapperType"
-							type="text"
-							required
-							class={inputClass}
-						/>
+						<label class={labelClass} for="wrapperType"
+							>Deckblatt <span class="text-red-500">*</span></label
+						>
+						<input id="wrapperType" name="wrapperType" type="text" required class={inputClass} />
 					</div>
 				</div>
 			</div>
@@ -248,12 +267,16 @@
 
 		<!-- Beverage details -->
 		{#if productType === 'beverage'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Getränke-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Getränke-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="beverageType">Typ <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="beverageType"
+							>Typ <span class="text-red-500">*</span></label
+						>
 						<select id="beverageType" name="beverageType" required class={inputClass}>
 							<option value="">Bitte wählen...</option>
 							<option value="wine">Wein</option>
@@ -264,7 +287,9 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="countryOfOrigin"
+							>Herkunft <span class="text-red-500">*</span></label
+						>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -277,7 +302,9 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="volumeMl">Volumen (ml) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="volumeMl"
+							>Volumen (ml) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="volumeMl"
 							name="volumeMl"
@@ -289,7 +316,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="alcoholPercentage">Alkohol (%) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="alcoholPercentage"
+							>Alkohol (%) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="alcoholPercentage"
 							name="alcoholPercentage"
@@ -306,59 +335,50 @@
 				<div class="grid grid-cols-2 gap-4">
 					<div>
 						<label class={labelClass} for="agingYears">Reifung (Jahre)</label>
-						<input
-							id="agingYears"
-							name="agingYears"
-							type="number"
-							min="0"
-							class={inputClass}
-						/>
+						<input id="agingYears" name="agingYears" type="number" min="0" class={inputClass} />
 					</div>
 				</div>
 
 				<div>
 					<label class={labelClass} for="tastingNotes">Geschmacksnotizen</label>
-					<textarea id="tastingNotes" name="tastingNotes" rows="3" class="{inputClass} resize-y"></textarea>
+					<textarea id="tastingNotes" name="tastingNotes" rows="3" class="{inputClass} resize-y"
+					></textarea>
 				</div>
 			</div>
 		{/if}
 
 		<!-- Tool details -->
 		{#if productType === 'tool'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zubehör-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Zubehör-Details</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
 						<label class={labelClass} for="brand">Marke <span class="text-red-500">*</span></label>
-						<input
-							id="brand"
-							name="brand"
-							type="text"
-							required
-							class={inputClass}
-						/>
+						<input id="brand" name="brand" type="text" required class={inputClass} />
 					</div>
 					<div>
-						<label class={labelClass} for="material">Material <span class="text-red-500">*</span></label>
-						<input
-							id="material"
-							name="material"
-							type="text"
-							required
-							class={inputClass}
-						/>
+						<label class={labelClass} for="material"
+							>Material <span class="text-red-500">*</span></label
+						>
+						<input id="material" name="material" type="text" required class={inputClass} />
 					</div>
 				</div>
 
 				<div>
 					<label class={labelClass} for="specifications">Spezifikationen</label>
-					<textarea id="specifications" name="specifications" rows="2" class="{inputClass} resize-y"></textarea>
+					<textarea id="specifications" name="specifications" rows="2" class="{inputClass} resize-y"
+					></textarea>
 				</div>
 
 				<div>
 					<label class={labelClass} for="careInstructions">Pflegehinweise</label>
-					<textarea id="careInstructions" name="careInstructions" rows="2" class="{inputClass} resize-y"></textarea>
+					<textarea
+						id="careInstructions"
+						name="careInstructions"
+						rows="2"
+						class="{inputClass} resize-y"
+					></textarea>
 				</div>
 			</div>
 		{/if}
@@ -366,13 +386,13 @@
 		<div class="flex gap-3">
 			<button
 				type="submit"
-				class="bg-zinc-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-700 transition-colors"
+				class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 			>
 				Produkt erstellen
 			</button>
 			<a
 				href="/admin/inventory"
-				class="border border-zinc-300 text-zinc-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-50 transition-colors"
+				class="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
 			>
 				Abbrechen
 			</a>

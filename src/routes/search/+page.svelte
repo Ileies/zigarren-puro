@@ -24,17 +24,19 @@
 	const pageTitle = $derived(
 		data.q
 			? `Suche: „${data.q}"`
-			: typeFilters.find(f => f.type === data.activeType)?.label ?? 'Alle Produkte'
+			: (typeFilters.find((f) => f.type === data.activeType)?.label ?? 'Alle Produkte')
 	);
 
 	function buildUrl(params: { type?: string | null; sort?: string; q?: string }) {
 		const u = new URLSearchParams(page.url.searchParams);
 		if ('type' in params) {
-			if (params.type) u.set('type', params.type); else u.delete('type');
+			if (params.type) u.set('type', params.type);
+			else u.delete('type');
 		}
 		if ('sort' in params && params.sort) u.set('sort', params.sort);
 		if ('q' in params && params.q !== undefined) {
-			if (params.q) u.set('q', params.q); else u.delete('q');
+			if (params.q) u.set('q', params.q);
+			else u.delete('q');
 		}
 		return `/search?${u.toString()}`;
 	}
@@ -46,14 +48,17 @@
 
 <svelte:head>
 	<title>{pageTitle} – Zigarren Puro</title>
-	<meta name="description" content="Durchsuchen Sie unsere exklusive Auswahl an Premiumzigarren, Spirituosen und Zubehör." />
+	<meta
+		name="description"
+		content="Durchsuchen Sie unsere exklusive Auswahl an Premiumzigarren, Spirituosen und Zubehör."
+	/>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-7xl">
+<div class="container mx-auto max-w-7xl px-4 py-8">
 	<!-- Search bar -->
 	<form action="/search" method="GET" class="mb-6">
-		<label class="input input-bordered flex items-center gap-2 max-w-xl mx-auto">
-			<Search class="w-4 h-4 text-base-content/40" />
+		<label class="input-bordered input mx-auto flex max-w-xl items-center gap-2">
+			<Search class="h-4 w-4 text-base-content/40" />
 			<input
 				type="text"
 				name="q"
@@ -61,23 +66,23 @@
 				placeholder="Marke, Stärke, Herkunft …"
 				class="grow"
 			/>
-			<button type="submit" class="btn btn-sm btn-secondary -mr-2">Suchen</button>
+			<button type="submit" class="btn -mr-2 btn-sm btn-secondary">Suchen</button>
 		</label>
 	</form>
 
 	<!-- Page header -->
-	<div class="flex items-center justify-between mb-4">
+	<div class="mb-4 flex items-center justify-between">
 		<div>
 			<h1 class="text-2xl font-bold">{pageTitle}</h1>
-			<p class="text-sm text-base-content/60 mt-0.5">{data.products.length} Produkte</p>
+			<p class="mt-0.5 text-sm text-base-content/60">{data.products.length} Produkte</p>
 		</div>
 
 		<!-- Sort -->
 		<label class="flex items-center gap-2 text-sm">
-			<SlidersHorizontal class="w-4 h-4 text-base-content/50" />
-			<span class="hidden sm:inline text-base-content/70">Sortierung</span>
+			<SlidersHorizontal class="h-4 w-4 text-base-content/50" />
+			<span class="hidden text-base-content/70 sm:inline">Sortierung</span>
 			<select
-				class="select select-bordered select-sm"
+				class="select-bordered select select-sm"
 				value={data.sort}
 				onchange={(e) => goto(buildUrl({ sort: (e.target as HTMLSelectElement).value }))}
 			>
@@ -89,11 +94,13 @@
 	</div>
 
 	<!-- Category chips -->
-	<div class="flex flex-wrap gap-2 mb-8">
+	<div class="mb-8 flex flex-wrap gap-2">
 		{#each typeFilters as f}
 			<a
 				href={buildUrl({ type: f.type })}
-				class="btn btn-sm {data.activeType === f.type ? 'btn-secondary' : 'btn-ghost border border-base-300'}"
+				class="btn btn-sm {data.activeType === f.type
+					? 'btn-secondary'
+					: 'border border-base-300 btn-ghost'}"
 			>
 				{f.label}
 			</a>
@@ -102,11 +109,13 @@
 
 	<!-- Results -->
 	{#if data.products.length === 0}
-		<div class="flex flex-col items-center justify-center py-24 text-center gap-4 text-base-content/40">
-			<Package class="w-14 h-14" />
+		<div
+			class="flex flex-col items-center justify-center gap-4 py-24 text-center text-base-content/40"
+		>
+			<Package class="h-14 w-14" />
 			<div>
 				<p class="text-lg font-medium text-base-content/60">Keine Produkte gefunden</p>
-				<p class="text-sm mt-1">
+				<p class="mt-1 text-sm">
 					{#if data.q}
 						Für „{data.q}" gibt es keine Treffer.
 					{:else}
@@ -114,48 +123,52 @@
 					{/if}
 				</p>
 			</div>
-			<a href="/search" class="btn btn-secondary btn-sm mt-2">Alle Produkte</a>
+			<a href="/search" class="btn mt-2 btn-sm btn-secondary">Alle Produkte</a>
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{#each data.products as product (product.id)}
 				<a
 					href="/products/{product.id}"
-					class="card bg-base-100 border border-base-300 hover:border-secondary hover:shadow-md transition-all duration-200 group"
+					class="group card border border-base-300 bg-base-100 transition-all duration-200 hover:border-secondary hover:shadow-md"
 				>
-					<figure class="aspect-square bg-base-200 flex items-center justify-center rounded-t-box overflow-hidden">
-						<Package class="w-16 h-16 text-base-content/20 group-hover:text-base-content/30 transition-colors" />
+					<figure
+						class="flex aspect-square items-center justify-center overflow-hidden rounded-t-box bg-base-200"
+					>
+						<Package
+							class="h-16 w-16 text-base-content/20 transition-colors group-hover:text-base-content/30"
+						/>
 					</figure>
 
-					<div class="card-body p-4 gap-1">
+					<div class="card-body gap-1 p-4">
 						{#if product.producerName}
-							<p class="text-xs text-base-content/50 font-medium uppercase tracking-wide truncate">
+							<p class="truncate text-xs font-medium tracking-wide text-base-content/50 uppercase">
 								{product.producerName}
 							</p>
 						{/if}
 
-						<h2 class="font-semibold text-sm leading-snug line-clamp-2">
+						<h2 class="line-clamp-2 text-sm leading-snug font-semibold">
 							{product.name}
 						</h2>
 
-						<div class="flex items-center justify-between mt-2">
+						<div class="mt-2 flex items-center justify-between">
 							<span class="text-lg font-bold text-secondary">
 								{formatPrice(product.price)}
 							</span>
 
 							{#if product.stock > 0}
-								<span class="badge badge-success badge-sm">Verfügbar</span>
+								<span class="badge badge-sm badge-success">Verfügbar</span>
 							{:else}
-								<span class="badge badge-error badge-sm">Vergriffen</span>
+								<span class="badge badge-sm badge-error">Vergriffen</span>
 							{/if}
 						</div>
 
 						<button
-							class="btn btn-secondary btn-sm w-full mt-3 gap-2"
+							class="btn mt-3 w-full gap-2 btn-sm btn-secondary"
 							onclick={(e) => e.preventDefault()}
 							disabled={product.stock === 0}
 						>
-							<ShoppingCart class="w-4 h-4" />
+							<ShoppingCart class="h-4 w-4" />
 							In den Warenkorb
 						</button>
 					</div>

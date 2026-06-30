@@ -54,7 +54,7 @@
 						required
 						autocomplete="email"
 						placeholder="ihre@email.de"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 					/>
 				</label>
 
@@ -71,17 +71,13 @@
 						required
 						autocomplete="current-password"
 						placeholder="••••••••"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 					/>
 				</label>
 
-				<button
-					type="submit"
-					disabled={loading}
-					class="btn btn-primary mt-2 w-full"
-				>
+				<button type="submit" disabled={loading} class="btn mt-2 w-full btn-primary">
 					{#if loading}
-						<span class="loading loading-spinner loading-sm"></span>
+						<span class="loading loading-sm loading-spinner"></span>
 					{:else}
 						Anmelden
 					{/if}

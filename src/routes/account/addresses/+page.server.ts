@@ -88,9 +88,7 @@ export const actions: Actions = {
 		await db
 			.update(addressTable)
 			.set({ isDefault: false })
-			.where(
-				and(eq(addressTable.customerId, locals.user.id), eq(addressTable.type, type))
-			);
+			.where(and(eq(addressTable.customerId, locals.user.id), eq(addressTable.type, type)));
 
 		await db
 			.update(addressTable)

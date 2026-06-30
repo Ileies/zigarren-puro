@@ -48,10 +48,7 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 			.set({ email: newEmail, updatedAt: new Date() })
 			.where(eq(customerTable.id, row.customerId))
 			.run();
-		tx.update(tokenTable)
-			.set({ usedAt: new Date() })
-			.where(eq(tokenTable.token, token))
-			.run();
+		tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
 	});
 
 	return { status: 'success' as const, newEmail };

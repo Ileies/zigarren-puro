@@ -27,7 +27,7 @@
 <div class="min-h-screen bg-base-200">
 	<div class="mx-auto max-w-3xl px-4 py-10">
 		<div class="mb-6 flex items-center gap-3">
-			<a href="/account" class="btn btn-ghost btn-sm gap-1 -ml-2">
+			<a href="/account" class="btn -ml-2 gap-1 btn-ghost btn-sm">
 				<ArrowLeft class="h-4 w-4" />
 				Mein Konto
 			</a>
@@ -45,12 +45,14 @@
 			<div class="rounded-2xl bg-base-100 p-12 text-center shadow-sm ring-1 ring-base-300">
 				<Heart class="mx-auto mb-4 h-12 w-12 text-base-content/20" />
 				<p class="font-medium text-base-content/60">Ihre Wunschliste ist leer.</p>
-				<a href="/shop" class="btn btn-primary mt-6">Zum Shop</a>
+				<a href="/shop" class="btn mt-6 btn-primary">Zum Shop</a>
 			</div>
 		{:else}
 			<div class="flex flex-col gap-3">
 				{#each data.items as item (item.productId)}
-					<div class="flex items-center gap-4 rounded-2xl bg-base-100 p-4 shadow-sm ring-1 ring-base-300">
+					<div
+						class="flex items-center gap-4 rounded-2xl bg-base-100 p-4 shadow-sm ring-1 ring-base-300"
+					>
 						<!-- Placeholder image -->
 						<div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-base-200">
 							<Package class="h-7 w-7 text-base-content/20" />
@@ -59,11 +61,13 @@
 						<!-- Info -->
 						<div class="min-w-0 flex-1">
 							{#if item.producerName}
-								<p class="text-xs text-base-content/50 uppercase tracking-wide">{item.producerName}</p>
+								<p class="text-xs tracking-wide text-base-content/50 uppercase">
+									{item.producerName}
+								</p>
 							{/if}
 							<a
 								href="/products/{item.productId}"
-								class="font-medium text-base-content hover:text-primary transition-colors line-clamp-1"
+								class="line-clamp-1 font-medium text-base-content transition-colors hover:text-primary"
 							>
 								{item.name}
 							</a>
@@ -75,15 +79,16 @@
 							<form
 								method="POST"
 								action="?/addToCart"
-								use:enhance={() => ({ update }) => {
-									update({ reset: false });
-									markAdded(item.productId);
-								}}
+								use:enhance={() =>
+									({ update }) => {
+										update({ reset: false });
+										markAdded(item.productId);
+									}}
 							>
 								<input type="hidden" name="productId" value={item.productId} />
 								<button
 									type="submit"
-									class="btn btn-sm btn-secondary gap-1.5 transition-all"
+									class="btn gap-1.5 transition-all btn-sm btn-secondary"
 									class:btn-success={addedIds.has(item.productId)}
 									disabled={item.stock === 0}
 									title={item.stock === 0 ? 'Vergriffen' : 'In den Warenkorb'}
@@ -102,10 +107,12 @@
 							<form
 								method="POST"
 								action="?/remove"
-								use:enhance={() => ({ update }) => update()}
+								use:enhance={() =>
+									({ update }) =>
+										update()}
 							>
 								<input type="hidden" name="productId" value={item.productId} />
-								<button type="submit" class="btn btn-sm btn-ghost text-error" title="Entfernen">
+								<button type="submit" class="btn text-error btn-ghost btn-sm" title="Entfernen">
 									<Trash2 class="h-4 w-4" />
 								</button>
 							</form>

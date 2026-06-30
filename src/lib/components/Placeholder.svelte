@@ -10,90 +10,133 @@
 	export let customMessage = '';
 
 	const navigationLinks = [
-		{ href: '/', icon: Home, title: 'Startseite', description: 'Premium-Zigarren entdecken', color: 'text-primary' },
-		{ href: '/about', icon: Users, title: 'Über uns', description: 'Unsere Geschichte', color: 'text-secondary' },
-		{ href: '/contact', icon: Phone, title: 'Kontakt', description: 'Persönliche Beratung', color: 'text-accent' },
-		{ href: '/tastings', icon: Flame, title: 'Tastings', description: 'Verkostungsevents', color: 'text-primary' },
-		{ href: '/(legal)/imprint', icon: MapPin, title: 'Impressum', description: 'Rechtliche Informationen', color: 'text-secondary' }
+		{
+			href: '/',
+			icon: Home,
+			title: 'Startseite',
+			description: 'Premium-Zigarren entdecken',
+			color: 'text-primary'
+		},
+		{
+			href: '/about',
+			icon: Users,
+			title: 'Über uns',
+			description: 'Unsere Geschichte',
+			color: 'text-secondary'
+		},
+		{
+			href: '/contact',
+			icon: Phone,
+			title: 'Kontakt',
+			description: 'Persönliche Beratung',
+			color: 'text-accent'
+		},
+		{
+			href: '/tastings',
+			icon: Flame,
+			title: 'Tastings',
+			description: 'Verkostungsevents',
+			color: 'text-primary'
+		},
+		{
+			href: '/(legal)/imprint',
+			icon: MapPin,
+			title: 'Impressum',
+			description: 'Rechtliche Informationen',
+			color: 'text-secondary'
+		}
 	];
 </script>
 
-<div class="min-h-screen bg-base-100 flex items-center justify-center px-4 py-8">
-	<div class="max-w-4xl w-full text-center">
-		<Construction class="w-12 h-12 text-primary mx-auto mb-3" />
+<div class="flex min-h-screen items-center justify-center bg-base-100 px-4 py-8">
+	<div class="w-full max-w-4xl text-center">
+		<Construction class="mx-auto mb-3 h-12 w-12 text-primary" />
 
 		<!-- Title -->
-		<h1 class="text-3xl md:text-4xl font-bold text-base-content mb-4">
+		<h1 class="mb-4 text-3xl font-bold text-base-content md:text-4xl">
 			{title}
 		</h1>
 
 		<!-- Description -->
-		<p class="text-lg text-base-content/70 mb-8 max-w-2xl mx-auto">
+		<p class="mx-auto mb-8 max-w-2xl text-lg text-base-content/70">
 			{customMessage || description}
 		</p>
 
 		<!-- Navigation -->
 		<div class="mb-8">
-			<h2 class="text-xl font-semibold text-base-content mb-6">
+			<h2 class="mb-6 text-xl font-semibold text-base-content">
 				Schauen Sie sich solange diese Seiten an:
 			</h2>
 		</div>
 
 		<!-- Clean navigation grid -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+		<div class="mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 			{#each navigationLinks as link}
-				<a href={link.href} class="bg-base-200 rounded-lg p-6 hover:bg-base-300 transition-colors">
-					<svelte:component this={link.icon} class="w-8 h-8 {link.color} mx-auto mb-3" />
-					<h3 class="font-semibold text-base-content mb-2">{link.title}</h3>
+				<a href={link.href} class="rounded-lg bg-base-200 p-6 transition-colors hover:bg-base-300">
+					<svelte:component this={link.icon} class="h-8 w-8 {link.color} mx-auto mb-3" />
+					<h3 class="mb-2 font-semibold text-base-content">{link.title}</h3>
 					<p class="text-sm text-base-content/60">{link.description}</p>
 				</a>
 			{/each}
 		</div>
 
 		<!-- Contact info -->
-		<div class="bg-base-200 rounded-lg p-6 mb-8 max-w-2xl mx-auto">
-			<h3 class="font-semibold text-base-content mb-4">Haben Sie Fragen?</h3>
-			<div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-				<a href="tel:{phone}" class="flex items-center gap-2 text-base-content hover:text-primary transition-colors">
-					<Phone class="w-4 h-4" />
+		<div class="mx-auto mb-8 max-w-2xl rounded-lg bg-base-200 p-6">
+			<h3 class="mb-4 font-semibold text-base-content">Haben Sie Fragen?</h3>
+			<div class="mb-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
+				<a
+					href="tel:{phone}"
+					class="flex items-center gap-2 text-base-content transition-colors hover:text-primary"
+				>
+					<Phone class="h-4 w-4" />
 					{phone}
 				</a>
-				<a href="mailto:{email}" class="flex items-center gap-2 text-base-content hover:text-primary transition-colors">
-					<Mail class="w-4 h-4" />
+				<a
+					href="mailto:{email}"
+					class="flex items-center gap-2 text-base-content transition-colors hover:text-primary"
+				>
+					<Mail class="h-4 w-4" />
 					{email}
 				</a>
 			</div>
-			
+
 			<!-- Social Media Links -->
-			<div class="flex justify-center items-center gap-4">
+			<div class="flex items-center justify-center gap-4">
 				<span class="text-sm text-base-content/60">Folgen Sie uns:</span>
-				<a href={facebook} target="_blank" rel="noopener noreferrer" class="text-base-content hover:text-primary transition-colors">
+				<a
+					href={facebook}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-base-content transition-colors hover:text-primary"
+				>
 					<SiFacebook size={20} />
 				</a>
-				<a href={instagram} target="_blank" rel="noopener noreferrer" class="text-base-content hover:text-primary transition-colors">
+				<a
+					href={instagram}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="text-base-content transition-colors hover:text-primary"
+				>
 					<SiInstagram size={20} />
 				</a>
 			</div>
 		</div>
 
 		<!-- Action buttons -->
-		<div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+		<div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
 			{#if showBackButton}
-				<button 
-					onclick={() => history.back()} 
-					class="btn btn-outline btn-lg gap-2 hover:btn-primary transition-colors"
+				<button
+					onclick={() => history.back()}
+					class="btn gap-2 transition-colors btn-outline btn-lg hover:btn-primary"
 				>
-					<ArrowLeft class="w-5 h-5" />
+					<ArrowLeft class="h-5 w-5" />
 					Zurück
 				</button>
 			{/if}
 
 			{#if showHomeButton}
-				<a 
-					href="/" 
-					class="btn btn-primary btn-lg gap-2 hover:btn-secondary transition-colors"
-				>
-					<Home class="w-5 h-5" />
+				<a href="/" class="btn gap-2 transition-colors btn-lg btn-primary hover:btn-secondary">
+					<Home class="h-5 w-5" />
 					Zur Startseite
 				</a>
 			{/if}

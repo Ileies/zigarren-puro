@@ -34,7 +34,8 @@
 		<div class="mb-8">
 			<h1 class="text-2xl font-semibold text-base-content">Mein Konto</h1>
 			<p class="mt-1 text-sm text-base-content/60">
-				Hallo, {data.customer.firstName} {data.customer.lastName}
+				Hallo, {data.customer.firstName}
+				{data.customer.lastName}
 			</p>
 		</div>
 
@@ -155,7 +156,7 @@
 									value={data.customer.firstName}
 									required
 									autocomplete="given-name"
-									class="input input-bordered w-full focus:input-primary"
+									class="input-bordered input w-full focus:input-primary"
 								/>
 							</label>
 							<label class="flex flex-col gap-1.5">
@@ -166,7 +167,7 @@
 									value={data.customer.lastName}
 									required
 									autocomplete="family-name"
-									class="input input-bordered w-full focus:input-primary"
+									class="input-bordered input w-full focus:input-primary"
 								/>
 							</label>
 						</div>
@@ -178,16 +179,16 @@
 								type="email"
 								value={data.customer.email}
 								disabled
-								class="input input-bordered w-full opacity-60"
+								class="input-bordered input w-full opacity-60"
 							/>
 							<p class="text-xs text-base-content/50">
-							E-Mail-Adresse ändern unter
-							<button
-								type="button"
-								onclick={() => (activeTab = 'email')}
-								class="text-primary underline underline-offset-2"
-							>E-Mail ändern</button>.
-						</p>
+								E-Mail-Adresse ändern unter
+								<button
+									type="button"
+									onclick={() => (activeTab = 'email')}
+									class="text-primary underline underline-offset-2">E-Mail ändern</button
+								>.
+							</p>
 						</label>
 
 						<!-- Phone + Gender -->
@@ -202,15 +203,12 @@
 									value={data.customer.phone ?? ''}
 									autocomplete="tel"
 									placeholder="+49 123 456789"
-									class="input input-bordered w-full focus:input-primary"
+									class="input-bordered input w-full focus:input-primary"
 								/>
 							</label>
 							<label class="flex flex-col gap-1.5">
 								<span class="text-sm font-medium">Anrede</span>
-								<select
-									name="gender"
-									class="select select-bordered w-full focus:select-primary"
-								>
+								<select name="gender" class="select-bordered select w-full focus:select-primary">
 									<option value="" selected={!data.customer.gender}>Keine Angabe</option>
 									<option value="male" selected={data.customer.gender === 'male'}>Herr</option>
 									<option value="female" selected={data.customer.gender === 'female'}>Frau</option>
@@ -225,7 +223,7 @@
 								type="checkbox"
 								name="marketingConsent"
 								checked={data.customer.marketingConsent}
-								class="checkbox checkbox-primary mt-0.5 shrink-0"
+								class="checkbox mt-0.5 shrink-0 checkbox-primary"
 							/>
 							<span class="text-sm text-base-content/80">
 								Ich möchte Angebote, Neuigkeiten und exklusive Empfehlungen per E-Mail erhalten.
@@ -235,7 +233,7 @@
 						<div class="flex justify-end">
 							<button type="submit" disabled={profileLoading} class="btn btn-primary">
 								{#if profileLoading}
-									<span class="loading loading-spinner loading-sm"></span>
+									<span class="loading loading-sm loading-spinner"></span>
 								{:else}
 									Speichern
 								{/if}
@@ -243,7 +241,7 @@
 						</div>
 					</form>
 
-				<!-- Password Tab -->
+					<!-- Password Tab -->
 				{:else if activeTab === 'password'}
 					{#if form?.action === 'password' && form.success}
 						<div class="mb-5 rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
@@ -271,19 +269,23 @@
 						class="flex flex-col gap-5"
 					>
 						<label class="flex flex-col gap-1.5">
-							<span class="text-sm font-medium">Aktuelles Passwort <span class="text-error">*</span></span>
+							<span class="text-sm font-medium"
+								>Aktuelles Passwort <span class="text-error">*</span></span
+							>
 							<input
 								type="password"
 								name="currentPassword"
 								required
 								autocomplete="current-password"
 								placeholder="••••••••"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 							/>
 						</label>
 
 						<label class="flex flex-col gap-1.5">
-							<span class="text-sm font-medium">Neues Passwort <span class="text-error">*</span></span>
+							<span class="text-sm font-medium"
+								>Neues Passwort <span class="text-error">*</span></span
+							>
 							<input
 								type="password"
 								name="newPassword"
@@ -292,7 +294,7 @@
 								minlength="8"
 								autocomplete="new-password"
 								placeholder="Mindestens 8 Zeichen"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 								class:input-error={passwordTooShort}
 							/>
 							{#if passwordTooShort}
@@ -301,7 +303,9 @@
 						</label>
 
 						<label class="flex flex-col gap-1.5">
-							<span class="text-sm font-medium">Neues Passwort bestätigen <span class="text-error">*</span></span>
+							<span class="text-sm font-medium"
+								>Neues Passwort bestätigen <span class="text-error">*</span></span
+							>
 							<input
 								type="password"
 								name="confirmPassword"
@@ -309,7 +313,7 @@
 								required
 								autocomplete="new-password"
 								placeholder="Passwort wiederholen"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 								class:input-error={passwordMismatch}
 							/>
 							{#if passwordMismatch}
@@ -324,7 +328,7 @@
 								class="btn btn-primary"
 							>
 								{#if passwordLoading}
-									<span class="loading loading-spinner loading-sm"></span>
+									<span class="loading loading-sm loading-spinner"></span>
 								{:else}
 									Passwort ändern
 								{/if}
@@ -332,11 +336,12 @@
 						</div>
 					</form>
 
-				<!-- Email Tab -->
+					<!-- Email Tab -->
 				{:else if activeTab === 'email'}
 					{#if form?.action === 'email' && form.success}
 						<div class="rounded-lg bg-success/10 px-4 py-3 text-sm text-success">
-							Bestätigungslink gesendet. Bitte prüfen Sie Ihren Posteingang und klicken Sie auf den Link, um die neue E-Mail-Adresse zu aktivieren.
+							Bestätigungslink gesendet. Bitte prüfen Sie Ihren Posteingang und klicken Sie auf den
+							Link, um die neue E-Mail-Adresse zu aktivieren.
 						</div>
 					{:else}
 						{#if form?.action === 'email' && form.error}
@@ -346,7 +351,9 @@
 						{/if}
 
 						<p class="mb-5 text-sm text-base-content/60">
-							Aktuelle E-Mail-Adresse: <span class="font-medium text-base-content">{data.customer.email}</span>
+							Aktuelle E-Mail-Adresse: <span class="font-medium text-base-content"
+								>{data.customer.email}</span
+							>
 						</p>
 
 						<form
@@ -362,37 +369,42 @@
 							class="flex flex-col gap-5"
 						>
 							<label class="flex flex-col gap-1.5">
-								<span class="text-sm font-medium">Neue E-Mail-Adresse <span class="text-error">*</span></span>
+								<span class="text-sm font-medium"
+									>Neue E-Mail-Adresse <span class="text-error">*</span></span
+								>
 								<input
 									type="email"
 									name="newEmail"
 									required
 									autocomplete="email"
 									placeholder="neue@email.de"
-									class="input input-bordered w-full focus:input-primary"
+									class="input-bordered input w-full focus:input-primary"
 								/>
 							</label>
 
 							<label class="flex flex-col gap-1.5">
-								<span class="text-sm font-medium">Aktuelles Passwort <span class="text-error">*</span></span>
+								<span class="text-sm font-medium"
+									>Aktuelles Passwort <span class="text-error">*</span></span
+								>
 								<input
 									type="password"
 									name="currentPassword"
 									required
 									autocomplete="current-password"
 									placeholder="••••••••"
-									class="input input-bordered w-full focus:input-primary"
+									class="input-bordered input w-full focus:input-primary"
 								/>
 							</label>
 
 							<p class="text-xs text-base-content/50">
-								Sie erhalten einen Bestätigungslink an die neue E-Mail-Adresse. Die Änderung wird erst nach Klick auf diesen Link wirksam.
+								Sie erhalten einen Bestätigungslink an die neue E-Mail-Adresse. Die Änderung wird
+								erst nach Klick auf diesen Link wirksam.
 							</p>
 
 							<div class="flex justify-end">
 								<button type="submit" disabled={emailLoading} class="btn btn-primary">
 									{#if emailLoading}
-										<span class="loading loading-spinner loading-sm"></span>
+										<span class="loading loading-sm loading-spinner"></span>
 									{:else}
 										Bestätigungslink senden
 									{/if}
@@ -406,19 +418,23 @@
 
 		<!-- Abmelden -->
 		<div class="mt-8 border-t border-base-300 pt-6">
-			<button onclick={() => (logoutModalOpen = true)} class="btn btn-outline btn-error btn-sm">Abmelden</button>
+			<button onclick={() => (logoutModalOpen = true)} class="btn btn-outline btn-sm btn-error"
+				>Abmelden</button
+			>
 		</div>
 
 		<!-- Abmelden-Bestätigung -->
 		{#if logoutModalOpen}
-			<div class="modal modal-open">
+			<div class="modal-open modal">
 				<div class="modal-box max-w-sm">
 					<h3 class="text-lg font-semibold">Wirklich abmelden?</h3>
 					<p class="mt-2 text-sm text-base-content/60">Sie werden aus Ihrem Konto abgemeldet.</p>
 					<div class="modal-action">
-						<button onclick={() => (logoutModalOpen = false)} class="btn btn-ghost btn-sm">Abbrechen</button>
+						<button onclick={() => (logoutModalOpen = false)} class="btn btn-ghost btn-sm"
+							>Abbrechen</button
+						>
 						<form method="POST" action="/logout">
-							<button type="submit" class="btn btn-error btn-sm">Abmelden</button>
+							<button type="submit" class="btn btn-sm btn-error">Abmelden</button>
 						</form>
 					</div>
 				</div>

@@ -19,7 +19,7 @@ export const email = 'info@zigarren-puro.de';
 export const freeShippingThreshold = 150; // EUR
 export const shippingCosts = {
 	standard: 5.99, // EUR
-	express: 12.99  // EUR
+	express: 12.99 // EUR
 };
 
 // ─── Bankverbindung ───────────────────────────────────────────────────────────
@@ -27,6 +27,6 @@ export const shippingCosts = {
 export const bankAccount = {
 	accountHolder: companyName,
 	iban: 'DE00 0000 0000 0000 0000 00', // TODO: echte IBAN eintragen
-	bic: 'XXXXXXXX',                      // TODO: echten BIC eintragen
+	bic: 'XXXXXXXX', // TODO: echten BIC eintragen
 	paymentDeadlineDays: 7
 };

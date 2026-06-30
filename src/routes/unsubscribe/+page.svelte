@@ -10,11 +10,11 @@
 	<meta name="description" content="Newsletter-Abonnement verwalten" />
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center px-4 py-16">
-	<div class="max-w-md w-full text-center space-y-6">
+<div class="flex min-h-screen items-center justify-center px-4 py-16">
+	<div class="w-full max-w-md space-y-6 text-center">
 		{#if data.status === 'success'}
 			<div class="flex justify-center">
-				<CheckCircle class="w-16 h-16 text-success" />
+				<CheckCircle class="h-16 w-16 text-success" />
 			</div>
 			<h1 class="text-2xl font-bold">Erfolgreich abgemeldet</h1>
 			<p class="text-base-content/70">
@@ -23,24 +23,22 @@
 			</p>
 		{:else if data.status === 'already_unsubscribed'}
 			<div class="flex justify-center">
-				<AlertCircle class="w-16 h-16 text-warning" />
+				<AlertCircle class="h-16 w-16 text-warning" />
 			</div>
 			<h1 class="text-2xl font-bold">Bereits abgemeldet</h1>
-			<p class="text-base-content/70">
-				Sie sind bereits von unserem Newsletter abgemeldet.
-			</p>
+			<p class="text-base-content/70">Sie sind bereits von unserem Newsletter abgemeldet.</p>
 		{:else if data.status === 'invalid'}
 			<div class="flex justify-center">
-				<XCircle class="w-16 h-16 text-error" />
+				<XCircle class="h-16 w-16 text-error" />
 			</div>
 			<h1 class="text-2xl font-bold">Ungültiger Link</h1>
 			<p class="text-base-content/70">
-				Dieser Abmeldelink ist abgelaufen oder ungültig. Bitte verwenden Sie den Link aus der
-				E-Mail oder kontaktieren Sie uns direkt.
+				Dieser Abmeldelink ist abgelaufen oder ungültig. Bitte verwenden Sie den Link aus der E-Mail
+				oder kontaktieren Sie uns direkt.
 			</p>
 		{:else}
 			<div class="flex justify-center">
-				<Mail class="w-16 h-16 text-base-content/40" />
+				<Mail class="h-16 w-16 text-base-content/40" />
 			</div>
 			<h1 class="text-2xl font-bold">Newsletter abbestellen</h1>
 			<p class="text-base-content/70">

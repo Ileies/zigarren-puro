@@ -61,10 +61,12 @@
 
 <div class="min-h-screen bg-gradient-to-b from-base-100 to-base-200">
 	<!-- Hero Section -->
-	<section class="py-16 bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20">
+	<section
+		class="bg-gradient-to-r from-amber-50 to-amber-100 py-16 dark:from-amber-900/20 dark:to-amber-800/20"
+	>
 		<div class="container mx-auto px-4 text-center">
-			<h1 class="text-5xl font-bold text-base-content mb-6">{m.tastingEvents()}</h1>
-			<p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+			<h1 class="mb-6 text-5xl font-bold text-base-content">{m.tastingEvents()}</h1>
+			<p class="mx-auto max-w-3xl text-xl text-base-content/70">
 				{m.joinOurTastings()}
 			</p>
 		</div>
@@ -74,17 +76,17 @@
 	<section class="py-16">
 		<div class="container mx-auto px-4">
 			<!-- Main Content with Fancy Divider -->
-			<div class="grid lg:grid-cols-2 gap-8 lg:gap-16 relative">
+			<div class="relative grid gap-8 lg:grid-cols-2 lg:gap-16">
 				<!-- Rum Tastings (Left) -->
 				<div class="space-y-6">
 					<div class="text-center lg:text-left">
-						<div class="flex items-center justify-center lg:justify-start gap-3 mb-4">
-							<div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-full">
-								<Wine class="w-8 h-8 text-amber-600" />
+						<div class="mb-4 flex items-center justify-center gap-3 lg:justify-start">
+							<div class="rounded-full bg-amber-100 p-3 dark:bg-amber-900/30">
+								<Wine class="h-8 w-8 text-amber-600" />
 							</div>
 							<h2 class="text-3xl font-bold text-base-content">{m.rumTastings()}</h2>
 						</div>
-						<p class="text-base-content/70 mb-6 text-lg">
+						<p class="mb-6 text-lg text-base-content/70">
 							{m.rumTastingDesc()}
 						</p>
 					</div>
@@ -92,33 +94,35 @@
 					<!-- Rum Events -->
 					<div class="space-y-6">
 						{#each rumTastings as event}
-							<div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+							<div
+								class="card bg-base-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
+							>
 								<div class="card-body">
 									<h3 class="card-title text-xl">{event.title}</h3>
-									<p class="text-base-content/60 mb-4">{event.description}</p>
-									
+									<p class="mb-4 text-base-content/60">{event.description}</p>
+
 									<div class="grid grid-cols-2 gap-4 text-sm">
 										<div class="flex items-center gap-2">
-											<Calendar class="w-4 h-4 text-primary" />
+											<Calendar class="h-4 w-4 text-primary" />
 											<span>{event.date}</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<Clock class="w-4 h-4 text-primary" />
+											<Clock class="h-4 w-4 text-primary" />
 											<span>{event.time}</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<Users class="w-4 h-4 text-primary" />
+											<Users class="h-4 w-4 text-primary" />
 											<span>{event.participants} Plätze</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<MapPin class="w-4 h-4 text-primary" />
+											<MapPin class="h-4 w-4 text-primary" />
 											<span>{event.location}</span>
 										</div>
 									</div>
 
-									<div class="card-actions justify-end mt-4">
+									<div class="mt-4 card-actions justify-end">
 										<button class="btn btn-outline btn-sm">{m.learnMore()}</button>
-										<button class="btn btn-primary btn-sm">{m.bookNow()}</button>
+										<button class="btn btn-sm btn-primary">{m.bookNow()}</button>
 									</div>
 								</div>
 							</div>
@@ -127,9 +131,13 @@
 				</div>
 
 				<!-- Fancy Divider -->
-				<div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-px transform -translate-x-1/2">
-					<div class="h-full relative">
-						<div class="absolute inset-0 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent"></div>
+				<div
+					class="absolute top-0 bottom-0 left-1/2 hidden w-px -translate-x-1/2 transform lg:block"
+				>
+					<div class="relative h-full">
+						<div
+							class="absolute inset-0 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent"
+						></div>
 					</div>
 				</div>
 
@@ -137,9 +145,9 @@
 				<div class="lg:hidden">
 					<div class="divider divider-primary">
 						<div class="flex items-center gap-4">
-							<Wine class="w-6 h-6 text-amber-600" />
-							<div class="w-3 h-3 bg-primary rounded-full"></div>
-							<Cigarette class="w-6 h-6 text-amber-700" />
+							<Wine class="h-6 w-6 text-amber-600" />
+							<div class="h-3 w-3 rounded-full bg-primary"></div>
+							<Cigarette class="h-6 w-6 text-amber-700" />
 						</div>
 					</div>
 				</div>
@@ -147,13 +155,13 @@
 				<!-- Cigar Tastings (Right) -->
 				<div class="space-y-6">
 					<div class="text-center lg:text-left">
-						<div class="flex items-center justify-center lg:justify-start gap-3 mb-4">
-							<div class="p-3 bg-amber-100 dark:bg-amber-900/30 rounded-full">
-								<Cigarette class="w-8 h-8 text-amber-700" />
+						<div class="mb-4 flex items-center justify-center gap-3 lg:justify-start">
+							<div class="rounded-full bg-amber-100 p-3 dark:bg-amber-900/30">
+								<Cigarette class="h-8 w-8 text-amber-700" />
 							</div>
 							<h2 class="text-3xl font-bold text-base-content">{m.cigarTastings()}</h2>
 						</div>
-						<p class="text-base-content/70 mb-6 text-lg">
+						<p class="mb-6 text-lg text-base-content/70">
 							{m.cigarTastingDesc()}
 						</p>
 					</div>
@@ -161,33 +169,35 @@
 					<!-- Cigar Events -->
 					<div class="space-y-6">
 						{#each cigarTastings as event}
-							<div class="card bg-base-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+							<div
+								class="card bg-base-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
+							>
 								<div class="card-body">
 									<h3 class="card-title text-xl">{event.title}</h3>
-									<p class="text-base-content/60 mb-4">{event.description}</p>
-									
+									<p class="mb-4 text-base-content/60">{event.description}</p>
+
 									<div class="grid grid-cols-2 gap-4 text-sm">
 										<div class="flex items-center gap-2">
-											<Calendar class="w-4 h-4 text-primary" />
+											<Calendar class="h-4 w-4 text-primary" />
 											<span>{event.date}</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<Clock class="w-4 h-4 text-primary" />
+											<Clock class="h-4 w-4 text-primary" />
 											<span>{event.time}</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<Users class="w-4 h-4 text-primary" />
+											<Users class="h-4 w-4 text-primary" />
 											<span>{event.participants} Plätze</span>
 										</div>
 										<div class="flex items-center gap-2">
-											<MapPin class="w-4 h-4 text-primary" />
+											<MapPin class="h-4 w-4 text-primary" />
 											<span>{event.location}</span>
 										</div>
 									</div>
 
-									<div class="card-actions justify-end mt-4">
+									<div class="mt-4 card-actions justify-end">
 										<button class="btn btn-outline btn-sm">{m.learnMore()}</button>
-										<button class="btn btn-primary btn-sm">{m.bookNow()}</button>
+										<button class="btn btn-sm btn-primary">{m.bookNow()}</button>
 									</div>
 								</div>
 							</div>
@@ -197,15 +207,16 @@
 			</div>
 
 			<!-- Call to Action -->
-			<div class="text-center mt-16">
+			<div class="mt-16 text-center">
 				<div class="card bg-gradient-to-r from-primary/10 to-secondary/10 shadow-lg">
 					<div class="card-body">
-						<h3 class="card-title justify-center text-2xl mb-4">{m.upcomingEvents()}</h3>
-						<p class="text-base-content/70 mb-6">
-							Verpassen Sie nicht unsere exklusiven Verkostungsevents. Melden Sie sich für unseren Newsletter an und erhalten Sie als Erste Informationen über neue Termine.
+						<h3 class="mb-4 card-title justify-center text-2xl">{m.upcomingEvents()}</h3>
+						<p class="mb-6 text-base-content/70">
+							Verpassen Sie nicht unsere exklusiven Verkostungsevents. Melden Sie sich für unseren
+							Newsletter an und erhalten Sie als Erste Informationen über neue Termine.
 						</p>
 						<div class="card-actions justify-center">
-							<button class="btn btn-primary btn-lg">
+							<button class="btn btn-lg btn-primary">
 								{m.subscribe()}
 							</button>
 						</div>

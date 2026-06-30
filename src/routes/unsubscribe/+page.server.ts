@@ -4,7 +4,9 @@ import db from '$lib/server/db';
 import { tokenTable, customerTable } from '$lib/server/db/schema';
 import { TokenType } from '$lib/types';
 
-async function processToken(token: string): Promise<'success' | 'already_unsubscribed' | 'invalid'> {
+async function processToken(
+	token: string
+): Promise<'success' | 'already_unsubscribed' | 'invalid'> {
 	const [result] = await db
 		.select({
 			token: tokenTable.token,
@@ -31,10 +33,7 @@ async function processToken(token: string): Promise<'success' | 'already_unsubsc
 			.set({ marketingConsent: false, updatedAt: new Date() })
 			.where(eq(customerTable.id, result.customerId))
 			.run();
-		tx.update(tokenTable)
-			.set({ usedAt: new Date() })
-			.where(eq(tokenTable.token, token))
-			.run();
+		tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
 	});
 
 	return 'success';

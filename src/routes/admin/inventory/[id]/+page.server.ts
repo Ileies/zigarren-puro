@@ -72,13 +72,25 @@ export const actions: Actions = {
 
 		const tagsRaw = (data.get('tags') as string)?.trim() || '';
 		const tags = JSON.stringify(
-			tagsRaw.split(',').map((t) => t.trim()).filter(Boolean)
+			tagsRaw
+				.split(',')
+				.map((t) => t.trim())
+				.filter(Boolean)
 		);
 
 		try {
 			await db
 				.update(productTable)
-				.set({ name, description, price: priceNum, stock, sku, producerId, tags, updatedAt: new Date() })
+				.set({
+					name,
+					description,
+					price: priceNum,
+					stock,
+					sku,
+					producerId,
+					tags,
+					updatedAt: new Date()
+				})
 				.where(eq(productTable.id, params.id));
 		} catch {
 			return { error: 'Fehler beim Speichern. Möglicherweise ist die SKU bereits vergeben.' };
@@ -99,10 +111,25 @@ export const actions: Actions = {
 
 			await db
 				.insert(cigarDetailsTable)
-				.values({ productId: params.id, lengthMm: parseFloat(lengthMm), ringGauge: parseFloat(ringGauge), strength, wrapperType, countryOfOrigin, agingTimeMonths })
+				.values({
+					productId: params.id,
+					lengthMm: parseFloat(lengthMm),
+					ringGauge: parseFloat(ringGauge),
+					strength,
+					wrapperType,
+					countryOfOrigin,
+					agingTimeMonths
+				})
 				.onConflictDoUpdate({
 					target: cigarDetailsTable.productId,
-					set: { lengthMm: parseFloat(lengthMm), ringGauge: parseFloat(ringGauge), strength, wrapperType, countryOfOrigin, agingTimeMonths }
+					set: {
+						lengthMm: parseFloat(lengthMm),
+						ringGauge: parseFloat(ringGauge),
+						strength,
+						wrapperType,
+						countryOfOrigin,
+						agingTimeMonths
+					}
 				});
 		} else if (product.productType === 'cigarillo') {
 			const lengthMm = data.get('lengthMm') as string;
@@ -116,10 +143,21 @@ export const actions: Actions = {
 
 			await db
 				.insert(cigarilloDetailsTable)
-				.values({ productId: params.id, lengthMm: parseFloat(lengthMm), ringGauge: parseFloat(ringGauge), filterType, wrapperType })
+				.values({
+					productId: params.id,
+					lengthMm: parseFloat(lengthMm),
+					ringGauge: parseFloat(ringGauge),
+					filterType,
+					wrapperType
+				})
 				.onConflictDoUpdate({
 					target: cigarilloDetailsTable.productId,
-					set: { lengthMm: parseFloat(lengthMm), ringGauge: parseFloat(ringGauge), filterType, wrapperType }
+					set: {
+						lengthMm: parseFloat(lengthMm),
+						ringGauge: parseFloat(ringGauge),
+						filterType,
+						wrapperType
+					}
 				});
 		} else if (product.productType === 'beverage') {
 			const volumeMl = data.get('volumeMl') as string;
@@ -136,10 +174,25 @@ export const actions: Actions = {
 
 			await db
 				.insert(beverageDetailsTable)
-				.values({ productId: params.id, volumeMl: parseFloat(volumeMl), alcoholPercentage: parseFloat(alcoholPercentage), type, countryOfOrigin, agingYears, tastingNotes })
+				.values({
+					productId: params.id,
+					volumeMl: parseFloat(volumeMl),
+					alcoholPercentage: parseFloat(alcoholPercentage),
+					type,
+					countryOfOrigin,
+					agingYears,
+					tastingNotes
+				})
 				.onConflictDoUpdate({
 					target: beverageDetailsTable.productId,
-					set: { volumeMl: parseFloat(volumeMl), alcoholPercentage: parseFloat(alcoholPercentage), type, countryOfOrigin, agingYears, tastingNotes }
+					set: {
+						volumeMl: parseFloat(volumeMl),
+						alcoholPercentage: parseFloat(alcoholPercentage),
+						type,
+						countryOfOrigin,
+						agingYears,
+						tastingNotes
+					}
 				});
 		} else if (product.productType === 'tool') {
 			const material = (data.get('material') as string)?.trim();

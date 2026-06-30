@@ -42,35 +42,47 @@
 </script>
 
 <div class="p-6">
-	<div class="flex items-center justify-between mb-5">
+	<div class="mb-5 flex items-center justify-between">
 		<h1 class="text-xl font-bold text-zinc-900">Bestellungen</h1>
 		<span class="text-sm text-zinc-400">{data.orders.length} Bestellungen</span>
 	</div>
 
-	<div class="flex flex-wrap gap-1.5 mb-5">
+	<div class="mb-5 flex flex-wrap gap-1.5">
 		{#each filters as f}
 			<a
 				href="/admin/orders{f.value ? '?status=' + f.value : ''}"
-				class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors
+				class="rounded-full px-3 py-1.5 text-xs font-medium transition-colors
 				       {(data.statusFilter ?? '') === f.value
-				           ? 'bg-zinc-900 text-white'
-				           : 'bg-white border border-zinc-200 text-zinc-600 hover:border-zinc-400'}"
+					? 'bg-zinc-900 text-white'
+					: 'border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400'}"
 			>
 				{f.label}
 			</a>
 		{/each}
 	</div>
 
-	<div class="bg-white rounded-lg border border-zinc-200 overflow-hidden">
+	<div class="overflow-hidden rounded-lg border border-zinc-200 bg-white">
 		<table class="w-full text-sm">
 			<thead>
 				<tr class="border-b border-zinc-200 bg-zinc-50">
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Bestellung</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Kunde</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Datum</th>
-					<th class="text-right px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Betrag</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Status</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Zahlung</th>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Bestellung</th
+					>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Kunde</th
+					>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Datum</th
+					>
+					<th class="px-4 py-3 text-right text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Betrag</th
+					>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Status</th
+					>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Zahlung</th
+					>
 					<th class="px-4 py-3"></th>
 				</tr>
 			</thead>
@@ -78,17 +90,21 @@
 				{#each data.orders as order}
 					<tr class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50">
 						<td class="px-4 py-3">
-							<a href="/admin/orders/{order.id}" class="font-mono text-xs text-zinc-500 hover:text-zinc-900">
+							<a
+								href="/admin/orders/{order.id}"
+								class="font-mono text-xs text-zinc-500 hover:text-zinc-900"
+							>
 								{order.id.slice(0, 8)}&hellip;
 							</a>
 						</td>
 						<td class="px-4 py-3">
 							<div class="font-medium text-zinc-800">
-								{order.customerFirstName ?? '-'} {order.customerLastName ?? ''}
+								{order.customerFirstName ?? '-'}
+								{order.customerLastName ?? ''}
 							</div>
 							<div class="text-xs text-zinc-400">{order.customerEmail ?? ''}</div>
 						</td>
-						<td class="px-4 py-3 text-zinc-500 whitespace-nowrap">
+						<td class="px-4 py-3 whitespace-nowrap text-zinc-500">
 							{new Date(order.createdAt).toLocaleDateString('de-DE', {
 								day: '2-digit',
 								month: '2-digit',
@@ -99,7 +115,11 @@
 							{Number(order.totalAmount).toFixed(2)} &euro;
 						</td>
 						<td class="px-4 py-3">
-							<span class="text-xs px-2 py-0.5 rounded-full font-medium {orderStatusColors[order.orderStatus] ?? 'bg-zinc-100 text-zinc-600'}">
+							<span
+								class="rounded-full px-2 py-0.5 text-xs font-medium {orderStatusColors[
+									order.orderStatus
+								] ?? 'bg-zinc-100 text-zinc-600'}"
+							>
 								{orderStatusLabels[order.orderStatus] ?? order.orderStatus}
 							</span>
 						</td>
@@ -109,7 +129,7 @@
 						<td class="px-4 py-3 text-right">
 							<a
 								href="/admin/orders/{order.id}"
-								class="text-xs text-zinc-400 hover:text-zinc-800 underline underline-offset-2"
+								class="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-800"
 							>
 								Details
 							</a>
@@ -117,7 +137,9 @@
 					</tr>
 				{:else}
 					<tr>
-						<td colspan="7" class="px-4 py-10 text-center text-sm text-zinc-400">Keine Bestellungen gefunden</td>
+						<td colspan="7" class="px-4 py-10 text-center text-sm text-zinc-400"
+							>Keine Bestellungen gefunden</td
+						>
 					</tr>
 				{/each}
 			</tbody>

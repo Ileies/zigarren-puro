@@ -9,14 +9,22 @@ const VALID_TYPES = Object.values(ProductType) as string[];
 export const load: PageServerLoad = async ({ url }) => {
 	const typeParam = url.searchParams.get('type');
 	const sort = url.searchParams.get('sort') || 'name_asc';
-	const activeType = typeParam && VALID_TYPES.includes(typeParam) ? (typeParam as ProductType) : null;
+	const activeType =
+		typeParam && VALID_TYPES.includes(typeParam) ? (typeParam as ProductType) : null;
 
 	let orderBy;
 	switch (sort) {
-		case 'name_desc': orderBy = desc(productTable.name); break;
-		case 'price_asc': orderBy = asc(productTable.price); break;
-		case 'price_desc': orderBy = desc(productTable.price); break;
-		default: orderBy = asc(productTable.name);
+		case 'name_desc':
+			orderBy = desc(productTable.name);
+			break;
+		case 'price_asc':
+			orderBy = asc(productTable.price);
+			break;
+		case 'price_desc':
+			orderBy = desc(productTable.price);
+			break;
+		default:
+			orderBy = asc(productTable.name);
 	}
 
 	const products = await db

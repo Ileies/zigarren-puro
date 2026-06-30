@@ -1,6 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { ShoppingCart, ArrowRight, Lock, Truck, Trash2, Plus, Minus, Package } from '@lucide/svelte';
+	import {
+		ShoppingCart,
+		ArrowRight,
+		Lock,
+		Truck,
+		Trash2,
+		Plus,
+		Minus,
+		Package
+	} from '@lucide/svelte';
 	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 
 	let { data } = $props();
@@ -9,9 +18,7 @@
 		return cents.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 
-	const subtotal = $derived(
-		data.items.reduce((sum, item) => sum + item.price * item.qty, 0)
-	);
+	const subtotal = $derived(data.items.reduce((sum, item) => sum + item.price * item.qty, 0));
 	const shippingCost = $derived(subtotal >= freeShippingThreshold ? 0 : shippingCosts.standard);
 	const total = $derived(subtotal + shippingCost);
 </script>
@@ -21,82 +28,90 @@
 	<meta name="description" content="Ihr Warenkorb bei Zigarren Puro" />
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-5xl">
-	<h1 class="text-3xl font-bold mb-8">Warenkorb</h1>
+<div class="container mx-auto max-w-5xl px-4 py-8">
+	<h1 class="mb-8 text-3xl font-bold">Warenkorb</h1>
 
 	{#if data.items.length === 0}
-		<div class="flex flex-col items-center justify-center py-20 text-center gap-4 bg-base-100 rounded-2xl border border-base-200">
-			<ShoppingCart class="w-14 h-14 text-base-content/20" />
+		<div
+			class="flex flex-col items-center justify-center gap-4 rounded-2xl border border-base-200 bg-base-100 py-20 text-center"
+		>
+			<ShoppingCart class="h-14 w-14 text-base-content/20" />
 			<div>
 				<p class="text-lg font-medium text-base-content/60">Ihr Warenkorb ist leer</p>
-				<p class="text-sm text-base-content/40 mt-1">Fügen Sie Produkte hinzu, um hier fortzufahren.</p>
+				<p class="mt-1 text-sm text-base-content/40">
+					Fügen Sie Produkte hinzu, um hier fortzufahren.
+				</p>
 			</div>
-			<a href="/shop" class="btn btn-secondary mt-2">
+			<a href="/shop" class="btn mt-2 btn-secondary">
 				Produkte entdecken
-				<ArrowRight class="w-4 h-4" />
+				<ArrowRight class="h-4 w-4" />
 			</a>
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+		<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
 			<!-- Cart items -->
-			<div class="lg:col-span-2 space-y-4">
+			<div class="space-y-4 lg:col-span-2">
 				{#each data.items as item (item.id)}
-					<div class="card bg-base-100 border border-base-200 shadow-sm">
-						<div class="card-body p-4 flex-row gap-4 items-start">
-							<div class="w-20 h-20 bg-base-200 rounded-lg flex-shrink-0 flex items-center justify-center">
-								<Package class="w-8 h-8 text-base-content/20" />
+					<div class="card border border-base-200 bg-base-100 shadow-sm">
+						<div class="card-body flex-row items-start gap-4 p-4">
+							<div
+								class="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-lg bg-base-200"
+							>
+								<Package class="h-8 w-8 text-base-content/20" />
 							</div>
 
-							<div class="flex-1 min-w-0">
+							<div class="min-w-0 flex-1">
 								{#if item.producerName}
-									<p class="text-xs text-base-content/50 uppercase tracking-wide mb-0.5">{item.producerName}</p>
+									<p class="mb-0.5 text-xs tracking-wide text-base-content/50 uppercase">
+										{item.producerName}
+									</p>
 								{/if}
 								<a
 									href="/products/{item.id}"
-									class="font-semibold hover:text-secondary transition-colors line-clamp-2"
+									class="line-clamp-2 font-semibold transition-colors hover:text-secondary"
 								>
 									{item.name}
 								</a>
-								<p class="text-sm text-secondary font-bold mt-0.5">{formatPrice(item.price)}</p>
+								<p class="mt-0.5 text-sm font-bold text-secondary">{formatPrice(item.price)}</p>
 
-								<div class="flex items-center justify-between mt-3">
+								<div class="mt-3 flex items-center justify-between">
 									<div class="flex items-center gap-1">
 										<form method="POST" action="?/update" use:enhance>
 											<input type="hidden" name="id" value={item.id} />
 											<input type="hidden" name="qty" value={item.qty - 1} />
 											<button
 												type="submit"
-												class="btn btn-ghost btn-xs btn-circle"
+												class="btn btn-circle btn-ghost btn-xs"
 												disabled={item.qty <= 1}
 											>
-												<Minus class="w-3 h-3" />
+												<Minus class="h-3 w-3" />
 											</button>
 										</form>
-										<span class="w-8 text-center font-medium text-sm">{item.qty}</span>
+										<span class="w-8 text-center text-sm font-medium">{item.qty}</span>
 										<form method="POST" action="?/update" use:enhance>
 											<input type="hidden" name="id" value={item.id} />
 											<input type="hidden" name="qty" value={item.qty + 1} />
 											<button
 												type="submit"
-												class="btn btn-ghost btn-xs btn-circle"
+												class="btn btn-circle btn-ghost btn-xs"
 												disabled={item.qty >= 99}
 											>
-												<Plus class="w-3 h-3" />
+												<Plus class="h-3 w-3" />
 											</button>
 										</form>
 									</div>
 
 									<div class="flex items-center gap-3">
-										<span class="font-semibold text-sm">
+										<span class="text-sm font-semibold">
 											{formatPrice(item.price * item.qty)}
 										</span>
 										<form method="POST" action="?/remove" use:enhance>
 											<input type="hidden" name="id" value={item.id} />
 											<button
 												type="submit"
-												class="btn btn-ghost btn-xs btn-circle text-error hover:bg-error/10"
+												class="btn btn-circle text-error btn-ghost btn-xs hover:bg-error/10"
 											>
-												<Trash2 class="w-3.5 h-3.5" />
+												<Trash2 class="h-3.5 w-3.5" />
 											</button>
 										</form>
 									</div>
@@ -108,8 +123,11 @@
 
 				<div class="text-right">
 					<form method="POST" action="?/clear" use:enhance>
-						<button type="submit" class="btn btn-ghost btn-sm text-error/70 hover:text-error gap-1.5">
-							<Trash2 class="w-3.5 h-3.5" />
+						<button
+							type="submit"
+							class="btn gap-1.5 text-error/70 btn-ghost btn-sm hover:text-error"
+						>
+							<Trash2 class="h-3.5 w-3.5" />
 							Warenkorb leeren
 						</button>
 					</form>
@@ -118,7 +136,7 @@
 
 			<!-- Order summary sidebar -->
 			<div class="space-y-4">
-				<div class="card bg-base-100 border border-base-200 shadow-sm">
+				<div class="card border border-base-200 bg-base-100 shadow-sm">
 					<div class="card-body">
 						<h2 class="card-title text-lg">Bestellübersicht</h2>
 						<div class="space-y-2 text-sm">
@@ -129,40 +147,41 @@
 							<div class="flex justify-between text-base-content/60">
 								<span>Versand</span>
 								{#if shippingCost === 0}
-									<span class="text-success font-medium">Kostenlos</span>
+									<span class="font-medium text-success">Kostenlos</span>
 								{:else}
 									<span>{formatPrice(shippingCost)}</span>
 								{/if}
 							</div>
 							<div class="divider my-1"></div>
-							<div class="flex justify-between font-semibold text-base">
+							<div class="flex justify-between text-base font-semibold">
 								<span>Gesamt</span>
 								<span>{formatPrice(total)}</span>
 							</div>
 							<p class="text-xs text-base-content/40">inkl. MwSt. und Tabaksteuer</p>
 						</div>
-						<a href="/checkout" class="btn btn-primary w-full mt-4 gap-2">
-							<Lock class="w-4 h-4" />
+						<a href="/checkout" class="btn mt-4 w-full gap-2 btn-primary">
+							<Lock class="h-4 w-4" />
 							Zur Kasse
 						</a>
-						<div class="flex items-center gap-2 text-xs text-base-content/40 justify-center mt-2">
-							<Lock class="w-3 h-3" />
+						<div class="mt-2 flex items-center justify-center gap-2 text-xs text-base-content/40">
+							<Lock class="h-3 w-3" />
 							Sichere, verschlüsselte Zahlung
 						</div>
 					</div>
 				</div>
 
 				{#if subtotal < freeShippingThreshold}
-					<div class="card bg-base-100 border border-base-200 shadow-sm">
+					<div class="card border border-base-200 bg-base-100 shadow-sm">
 						<div class="card-body py-4">
 							<div class="flex items-start gap-3 text-sm">
-								<Truck class="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+								<Truck class="mt-0.5 h-5 w-5 flex-shrink-0 text-secondary" />
 								<div class="flex-1">
 									<p class="text-base-content/70">
-										Noch <strong>{formatPrice(freeShippingThreshold - subtotal)}</strong> bis zum kostenlosen Versand.
+										Noch <strong>{formatPrice(freeShippingThreshold - subtotal)}</strong> bis zum kostenlosen
+										Versand.
 									</p>
 									<progress
-										class="progress progress-secondary w-full mt-2"
+										class="progress mt-2 w-full progress-secondary"
 										value={subtotal}
 										max={freeShippingThreshold}
 									></progress>
@@ -171,11 +190,11 @@
 						</div>
 					</div>
 				{:else}
-					<div class="card bg-base-100 border border-success/30 shadow-sm">
+					<div class="card border border-success/30 bg-base-100 shadow-sm">
 						<div class="card-body py-4">
 							<div class="flex items-center gap-3 text-sm">
-								<Truck class="w-5 h-5 text-success flex-shrink-0" />
-								<p class="text-success font-medium">Kostenloser Versand inklusive!</p>
+								<Truck class="h-5 w-5 flex-shrink-0 text-success" />
+								<p class="font-medium text-success">Kostenloser Versand inklusive!</p>
 							</div>
 						</div>
 					</div>

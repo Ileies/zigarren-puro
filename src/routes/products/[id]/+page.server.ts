@@ -39,16 +39,28 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	let details = null;
 	if (product.productType === ProductType.CIGAR) {
-		const [d] = await db.select().from(cigarDetailsTable).where(eq(cigarDetailsTable.productId, params.id));
+		const [d] = await db
+			.select()
+			.from(cigarDetailsTable)
+			.where(eq(cigarDetailsTable.productId, params.id));
 		details = d ?? null;
 	} else if (product.productType === ProductType.CIGARILLO) {
-		const [d] = await db.select().from(cigarilloDetailsTable).where(eq(cigarilloDetailsTable.productId, params.id));
+		const [d] = await db
+			.select()
+			.from(cigarilloDetailsTable)
+			.where(eq(cigarilloDetailsTable.productId, params.id));
 		details = d ?? null;
 	} else if (product.productType === ProductType.BEVERAGE) {
-		const [d] = await db.select().from(beverageDetailsTable).where(eq(beverageDetailsTable.productId, params.id));
+		const [d] = await db
+			.select()
+			.from(beverageDetailsTable)
+			.where(eq(beverageDetailsTable.productId, params.id));
 		details = d ?? null;
 	} else if (product.productType === ProductType.TOOL) {
-		const [d] = await db.select().from(toolDetailsTable).where(eq(toolDetailsTable.productId, params.id));
+		const [d] = await db
+			.select()
+			.from(toolDetailsTable)
+			.where(eq(toolDetailsTable.productId, params.id));
 		details = d ?? null;
 	}
 
@@ -57,7 +69,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		const [wish] = await db
 			.select()
 			.from(wishlistTable)
-			.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+			.where(
+				and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id))
+			);
 		isWishlisted = !!wish;
 	}
 
@@ -111,12 +125,16 @@ export const actions: Actions = {
 		const [existing] = await db
 			.select()
 			.from(wishlistTable)
-			.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+			.where(
+				and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id))
+			);
 
 		if (existing) {
 			await db
 				.delete(wishlistTable)
-				.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id)));
+				.where(
+					and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, params.id))
+				);
 			return { wishlisted: false };
 		} else {
 			await db.insert(wishlistTable).values({ customerId: locals.user.id, productId: params.id });
@@ -133,7 +151,9 @@ export const actions: Actions = {
 		const body = (data.get('body') as string)?.trim() || null;
 
 		if (!rating || rating < 1 || rating > 5) {
-			return fail(400, { reviewError: 'Bitte wählen Sie eine Bewertung zwischen 1 und 5 Sternen.' });
+			return fail(400, {
+				reviewError: 'Bitte wählen Sie eine Bewertung zwischen 1 und 5 Sternen.'
+			});
 		}
 
 		await db
@@ -152,7 +172,12 @@ export const actions: Actions = {
 
 		await db
 			.delete(productReviewTable)
-			.where(and(eq(productReviewTable.productId, params.id), eq(productReviewTable.customerId, locals.user.id)));
+			.where(
+				and(
+					eq(productReviewTable.productId, params.id),
+					eq(productReviewTable.customerId, locals.user.id)
+				)
+			);
 
 		return { reviewDeleted: true };
 	}

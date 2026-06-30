@@ -2,7 +2,14 @@ import type { Actions } from '@sveltejs/kit';
 import { z } from 'zod';
 import { sendMail } from '$lib/server/functions';
 
-const validTopics = ['info', 'beratung', 'events', 'bestellungen', 'rechtliches', 'support'] as const;
+const validTopics = [
+	'info',
+	'beratung',
+	'events',
+	'bestellungen',
+	'rechtliches',
+	'support'
+] as const;
 
 const contactSchema = z.object({
 	company: z.string().optional(),
@@ -45,7 +52,7 @@ export const actions: Actions = {
 			'',
 			message
 		].filter(Boolean) as string[];
-		
+
 		await sendMail({
 			to: `${topic}@zigarren-puro.de`,
 			subject: `Kontaktformular: ${subject || 'Neue Nachricht'}`,
@@ -55,5 +62,3 @@ export const actions: Actions = {
 		return { success: true };
 	}
 };
-
-

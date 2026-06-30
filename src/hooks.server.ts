@@ -110,7 +110,13 @@ const handleLocale: Handle = ({ event, resolve }) => {
 
 export const handle: Handle = sequence(handleAdmin, handleChecks, handleAuth, handleLocale);
 
-export const handleError = ({ error, event }: { error: unknown; event: import('@sveltejs/kit').RequestEvent }) => {
+export const handleError = ({
+	error,
+	event
+}: {
+	error: unknown;
+	event: import('@sveltejs/kit').RequestEvent;
+}) => {
 	const message = error instanceof Error ? error.message : String(error);
 	const stack = error instanceof Error ? error.stack : undefined;
 	console.error(`[500] ${event.url.pathname}`, stack ?? message);

@@ -38,7 +38,7 @@
 <div class="min-h-screen bg-base-200">
 	<div class="mx-auto max-w-3xl px-4 py-10">
 		<div class="mb-6 flex items-center gap-3">
-			<a href="/account" class="btn btn-ghost btn-sm btn-circle">
+			<a href="/account" class="btn btn-circle btn-ghost btn-sm">
 				<ArrowLeft class="h-4 w-4" />
 			</a>
 			<div>
@@ -48,13 +48,17 @@
 		</div>
 
 		{#if data.orders.length === 0}
-			<div class="flex flex-col items-center gap-4 rounded-2xl bg-base-100 px-6 py-16 text-center shadow-sm ring-1 ring-base-300">
+			<div
+				class="flex flex-col items-center gap-4 rounded-2xl bg-base-100 px-6 py-16 text-center shadow-sm ring-1 ring-base-300"
+			>
 				<Package class="h-12 w-12 text-base-content/20" />
 				<div>
 					<p class="font-medium text-base-content">Noch keine Bestellungen</p>
-					<p class="mt-1 text-sm text-base-content/50">Sobald du etwas bestellst, erscheint es hier.</p>
+					<p class="mt-1 text-sm text-base-content/50">
+						Sobald du etwas bestellst, erscheint es hier.
+					</p>
 				</div>
-				<a href="/shop" class="btn btn-primary btn-sm mt-2">Zum Shop</a>
+				<a href="/shop" class="btn mt-2 btn-sm btn-primary">Zum Shop</a>
 			</div>
 		{:else}
 			<div class="flex flex-col gap-3">
@@ -68,7 +72,9 @@
 								<Package class="h-5 w-5 text-base-content/40" />
 							</div>
 							<div>
-								<p class="font-mono text-xs text-base-content/40">#{order.id.slice(0, 8).toUpperCase()}</p>
+								<p class="font-mono text-xs text-base-content/40">
+									#{order.id.slice(0, 8).toUpperCase()}
+								</p>
 								<p class="mt-0.5 text-sm font-medium text-base-content">
 									{new Date(order.createdAt).toLocaleDateString('de-DE', {
 										day: '2-digit',
@@ -76,7 +82,9 @@
 										year: 'numeric'
 									})}
 								</p>
-								<p class="text-xs text-base-content/50">{shippingMethodLabels[order.shippingMethod] ?? order.shippingMethod}</p>
+								<p class="text-xs text-base-content/50">
+									{shippingMethodLabels[order.shippingMethod] ?? order.shippingMethod}
+								</p>
 							</div>
 						</div>
 						<div class="flex items-center gap-4 sm:flex-col sm:items-end">

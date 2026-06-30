@@ -14,10 +14,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
 	if (search) {
 		conditions.push(
-			or(
-				like(productTable.name, `%${search}%`),
-				like(productTable.sku, `%${search}%`)
-			) as any
+			or(like(productTable.name, `%${search}%`), like(productTable.sku, `%${search}%`)) as any
 		);
 	}
 
@@ -69,7 +66,10 @@ export const actions: Actions = {
 			return { error: 'Ungültige Eingabe' };
 		}
 
-		await db.update(productTable).set({ stock, updatedAt: new Date() }).where(eq(productTable.id, id));
+		await db
+			.update(productTable)
+			.set({ stock, updatedAt: new Date() })
+			.where(eq(productTable.id, id));
 
 		return { success: true };
 	}

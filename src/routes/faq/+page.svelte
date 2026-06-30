@@ -110,29 +110,34 @@
 
 <svelte:head>
 	<title>FAQ – Häufige Fragen - Zigarren Puro</title>
-	<meta name="description" content="Antworten auf häufig gestellte Fragen zu Produkten, Bestellung, Versand und Jugendschutz bei Zigarren Puro." />
+	<meta
+		name="description"
+		content="Antworten auf häufig gestellte Fragen zu Produkten, Bestellung, Versand und Jugendschutz bei Zigarren Puro."
+	/>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-	<div class="text-center mb-12">
-		<h1 class="text-4xl font-bold text-primary mb-4">Häufige Fragen</h1>
-		<p class="text-lg text-base-content/70">Finden Sie schnell Antworten auf die häufigsten Fragen</p>
+<div class="container mx-auto max-w-4xl px-4 py-8">
+	<div class="mb-12 text-center">
+		<h1 class="mb-4 text-4xl font-bold text-primary">Häufige Fragen</h1>
+		<p class="text-lg text-base-content/70">
+			Finden Sie schnell Antworten auf die häufigsten Fragen
+		</p>
 	</div>
 
 	<div class="space-y-8">
 		{#each sections as section}
 			<div>
-				<h2 class="text-xl font-semibold mb-3 flex items-center gap-2 text-base-content">
-					<svelte:component this={section.icon} class="w-5 h-5 text-secondary" />
+				<h2 class="mb-3 flex items-center gap-2 text-xl font-semibold text-base-content">
+					<svelte:component this={section.icon} class="h-5 w-5 text-secondary" />
 					{section.title}
 				</h2>
 				<div class="space-y-2">
 					{#each section.items as item}
-						<div class="collapse collapse-arrow bg-base-100 shadow-sm border border-base-200">
+						<div class="collapse-arrow collapse border border-base-200 bg-base-100 shadow-sm">
 							<input type="checkbox" />
 							<div class="collapse-title font-medium">{item.q}</div>
 							<div class="collapse-content">
-								<p class="text-base-content/80 text-sm leading-relaxed">{item.a}</p>
+								<p class="text-sm leading-relaxed text-base-content/80">{item.a}</p>
 							</div>
 						</div>
 					{/each}
@@ -142,18 +147,18 @@
 	</div>
 
 	<!-- Contact CTA -->
-	<div class="card bg-base-100 shadow-lg mt-12 border border-base-200">
+	<div class="card mt-12 border border-base-200 bg-base-100 shadow-lg">
 		<div class="card-body text-center">
-			<HelpCircle class="w-10 h-10 text-secondary mx-auto mb-2" />
+			<HelpCircle class="mx-auto mb-2 h-10 w-10 text-secondary" />
 			<h2 class="card-title justify-center text-xl">Ihre Frage ist nicht dabei?</h2>
-			<p class="text-base-content/70 text-sm">Unser Team hilft Ihnen gerne persönlich weiter.</p>
-			<div class="flex flex-col sm:flex-row gap-3 justify-center mt-4">
+			<p class="text-sm text-base-content/70">Unser Team hilft Ihnen gerne persönlich weiter.</p>
+			<div class="mt-4 flex flex-col justify-center gap-3 sm:flex-row">
 				<a href={`tel:${phone.replace(/[^+\d]/g, '')}`} class="btn btn-outline btn-secondary">
-					<Phone class="w-4 h-4" />
+					<Phone class="h-4 w-4" />
 					{phone}
 				</a>
 				<a href={`mailto:${email}`} class="btn btn-secondary">
-					<Mail class="w-4 h-4" />
+					<Mail class="h-4 w-4" />
 					{email}
 				</a>
 			</div>

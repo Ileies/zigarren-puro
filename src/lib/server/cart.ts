@@ -13,8 +13,7 @@ export function getCart(cookies: Cookies): CartItem[] {
 		const parsed = JSON.parse(Buffer.from(raw, 'base64').toString('utf8'));
 		if (!Array.isArray(parsed)) return [];
 		return parsed.filter(
-			(i): i is CartItem =>
-				typeof i.id === 'string' && typeof i.qty === 'number' && i.qty > 0
+			(i): i is CartItem => typeof i.id === 'string' && typeof i.qty === 'number' && i.qty > 0
 		);
 	} catch {
 		return [];

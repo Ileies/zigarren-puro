@@ -8,17 +8,17 @@ Offene Tasks: [`TODO.md`](./TODO.md)
 
 ## Tech Stack
 
-| Bereich | Technologie |
-|---|---|
-| Framework | SvelteKit 2 + Svelte 5 |
-| Styling | Tailwind CSS 4 + DaisyUI 5 |
-| Datenbank | SQLite via better-sqlite3 |
-| ORM | Drizzle ORM |
-| E-Mail | Nodemailer (SMTP via netcup) |
-| Laufzeit | Node.js (Bun nur als Package Manager) |
-| Icons | Lucide Svelte |
-| Validierung | Zod 4 |
-| Analytics | PostHog |
+| Bereich     | Technologie                           |
+| ----------- | ------------------------------------- |
+| Framework   | SvelteKit 2 + Svelte 5                |
+| Styling     | Tailwind CSS 4 + DaisyUI 5            |
+| Datenbank   | SQLite via better-sqlite3             |
+| ORM         | Drizzle ORM                           |
+| E-Mail      | Nodemailer (SMTP via netcup)          |
+| Laufzeit    | Node.js (Bun nur als Package Manager) |
+| Icons       | Lucide Svelte                         |
+| Validierung | Zod 4                                 |
+| Analytics   | PostHog                               |
 
 Bun wird nur als Package Manager genutzt (`bun install`, `bun run <script>`). Die App läuft mit Node.js (kein `bun:sqlite`, kein `bun:*`-Imports).
 
@@ -155,18 +155,18 @@ Eigenes Vite-Plugin -- kein Paraglide.
 
 ## Umgebungsvariablen
 
-| Variable | Beschreibung |
-|---|---|
-| `PUBLIC_ORIGIN` | `zigarren-puro.de` |
-| `PUBLIC_APP_NAME` | `Zigarren Puro` |
-| `ADMIN_PASSWORD` | Passwort für `/admin` |
-| `SECRET` | Base64-Token für Token-Generierung |
-| `FROM_EMAIL` | `info@zigarren-puro.de` |
-| `SMTP_HOST/PORT/USER/PASS` | Netcup-SMTP-Zugangsdaten |
-| `OPENAI_API_KEY` | Konfiguriert (Produktbeschreibungen) |
-| `STRIPE_SECRET_KEY` | Leer -- noch nicht implementiert |
-| `PUBLIC_POSTHOG_KEY` | Leer -- Analytics noch nicht aktiv |
-| `GOOGLE_CLIENT_ID/SECRET` | Leer -- OAuth nicht implementiert |
+| Variable                   | Beschreibung                         |
+| -------------------------- | ------------------------------------ |
+| `PUBLIC_ORIGIN`            | `zigarren-puro.de`                   |
+| `PUBLIC_APP_NAME`          | `Zigarren Puro`                      |
+| `ADMIN_PASSWORD`           | Passwort für `/admin`                |
+| `SECRET`                   | Base64-Token für Token-Generierung   |
+| `FROM_EMAIL`               | `info@zigarren-puro.de`              |
+| `SMTP_HOST/PORT/USER/PASS` | Netcup-SMTP-Zugangsdaten             |
+| `OPENAI_API_KEY`           | Konfiguriert (Produktbeschreibungen) |
+| `STRIPE_SECRET_KEY`        | Leer -- noch nicht implementiert     |
+| `PUBLIC_POSTHOG_KEY`       | Leer -- Analytics noch nicht aktiv   |
+| `GOOGLE_CLIENT_ID/SECRET`  | Leer -- OAuth nicht implementiert    |
 
 ---
 

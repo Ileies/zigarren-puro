@@ -10,8 +10,8 @@ export type Seo = {
 //export type Customer = customerTable.$inferSelect;
 
 export interface User {
-	role: string
-	verified: boolean
+	role: string;
+	verified: boolean;
 }
 
 export enum LogLevel {

@@ -39,8 +39,10 @@
 
 	function buildUrl(type: string | null, sort?: string) {
 		const u = new URLSearchParams(page.url.searchParams);
-		if (type) u.set('type', type); else u.delete('type');
-		if (sort) u.set('sort', sort); else u.delete('sort');
+		if (type) u.set('type', type);
+		else u.delete('type');
+		if (sort) u.set('sort', sort);
+		else u.delete('sort');
 		return `/shop?${u.toString()}`;
 	}
 
@@ -51,25 +53,29 @@
 
 <svelte:head>
 	<title>{m.shopTitle()} - Zigarren Puro</title>
-	<meta name="description" content="Entdecken Sie unsere exklusive Auswahl an Premiumzigarren, Spirituosen und Zubehör." />
+	<meta
+		name="description"
+		content="Entdecken Sie unsere exklusive Auswahl an Premiumzigarren, Spirituosen und Zubehör."
+	/>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-7xl">
+<div class="container mx-auto max-w-7xl px-4 py-8">
 	<!-- Page header -->
-	<div class="flex items-center justify-between mb-6">
+	<div class="mb-6 flex items-center justify-between">
 		<div>
 			<h1 class="text-2xl font-bold">{m.shopTitle()}</h1>
-			<p class="text-sm text-base-content/60 mt-0.5">
-				{data.products.length} {m.products()}
+			<p class="mt-0.5 text-sm text-base-content/60">
+				{data.products.length}
+				{m.products()}
 			</p>
 		</div>
 
 		<!-- Sort -->
 		<label class="flex items-center gap-2 text-sm">
-			<SlidersHorizontal class="w-4 h-4 text-base-content/50" />
-			<span class="hidden sm:inline text-base-content/70">{m.sortBy()}</span>
+			<SlidersHorizontal class="h-4 w-4 text-base-content/50" />
+			<span class="hidden text-base-content/70 sm:inline">{m.sortBy()}</span>
 			<select
-				class="select select-bordered select-sm"
+				class="select-bordered select select-sm"
 				value={data.sort}
 				onchange={(e) => goto(buildUrl(data.activeType, (e.target as HTMLSelectElement).value))}
 			>
@@ -81,11 +87,13 @@
 	</div>
 
 	<!-- Category filter chips -->
-	<div class="flex flex-wrap gap-2 mb-8">
+	<div class="mb-8 flex flex-wrap gap-2">
 		{#each typeFilters as f}
 			<a
 				href={buildUrl(f.type)}
-				class="btn btn-sm {data.activeType === f.type ? 'btn-secondary' : 'btn-ghost border border-base-300'}"
+				class="btn btn-sm {data.activeType === f.type
+					? 'btn-secondary'
+					: 'border border-base-300 btn-ghost'}"
 			>
 				{f.label()}
 			</a>
@@ -94,65 +102,74 @@
 
 	<!-- Product grid -->
 	{#if data.products.length === 0}
-		<div class="flex flex-col items-center justify-center py-24 text-center gap-4 text-base-content/40">
-			<Package class="w-14 h-14" />
+		<div
+			class="flex flex-col items-center justify-center gap-4 py-24 text-center text-base-content/40"
+		>
+			<Package class="h-14 w-14" />
 			<div>
 				<p class="text-lg font-medium text-base-content/60">{m.noProductsFound()}</p>
-				<p class="text-sm mt-1">Produkte werden derzeit erfasst - schauen Sie bald wieder vorbei.</p>
+				<p class="mt-1 text-sm">
+					Produkte werden derzeit erfasst - schauen Sie bald wieder vorbei.
+				</p>
 			</div>
-			<a href="/shop" class="btn btn-secondary btn-sm mt-2">{m.allProducts()}</a>
+			<a href="/shop" class="btn mt-2 btn-sm btn-secondary">{m.allProducts()}</a>
 		</div>
 	{:else}
-		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 			{#each data.products as product (product.id)}
-				<div class="card bg-base-100 border border-base-300 hover:border-secondary hover:shadow-md transition-all duration-200 group">
+				<div
+					class="group card border border-base-300 bg-base-100 transition-all duration-200 hover:border-secondary hover:shadow-md"
+				>
 					<a href="/products/{product.id}" class="contents">
-						<figure class="aspect-square bg-base-200 flex items-center justify-center rounded-t-box overflow-hidden">
-							<Package class="w-16 h-16 text-base-content/20 group-hover:text-base-content/30 transition-colors" />
+						<figure
+							class="flex aspect-square items-center justify-center overflow-hidden rounded-t-box bg-base-200"
+						>
+							<Package
+								class="h-16 w-16 text-base-content/20 transition-colors group-hover:text-base-content/30"
+							/>
 						</figure>
 					</a>
 
-					<div class="card-body p-4 gap-1">
+					<div class="card-body gap-1 p-4">
 						{#if product.producerName}
-							<p class="text-xs text-base-content/50 font-medium uppercase tracking-wide truncate">
+							<p class="truncate text-xs font-medium tracking-wide text-base-content/50 uppercase">
 								{product.producerName}
 							</p>
 						{/if}
 
-						<a href="/products/{product.id}" class="font-semibold text-sm leading-snug line-clamp-2 hover:text-secondary transition-colors">
+						<a
+							href="/products/{product.id}"
+							class="line-clamp-2 text-sm leading-snug font-semibold transition-colors hover:text-secondary"
+						>
 							{product.name}
 						</a>
 
-						<div class="flex items-center justify-between mt-2">
+						<div class="mt-2 flex items-center justify-between">
 							<span class="text-lg font-bold text-secondary">
 								{formatPrice(product.price)}
 							</span>
 
 							{#if product.stock > 0}
-								<span class="badge badge-success badge-sm">{m.inStock()}</span>
+								<span class="badge badge-sm badge-success">{m.inStock()}</span>
 							{:else}
-								<span class="badge badge-error badge-sm">{m.outOfStock()}</span>
+								<span class="badge badge-sm badge-error">{m.outOfStock()}</span>
 							{/if}
 						</div>
 
-						<form
-							method="POST"
-							action="/cart?/add"
-							use:enhance={handleAddToCart(product.id)}
-						>
+						<form method="POST" action="/cart?/add" use:enhance={handleAddToCart(product.id)}>
 							<input type="hidden" name="id" value={product.id} />
 							<button
 								type="submit"
-								class="btn btn-sm w-full mt-3 gap-2 transition-all"
+								class="btn mt-3 w-full gap-2 transition-all btn-sm"
 								class:btn-secondary={justAdded !== product.id}
 								class:btn-success={justAdded === product.id}
 								disabled={product.stock === 0}
 							>
 								{#if justAdded === product.id}
-									<Check class="w-4 h-4" />
+									<Check class="h-4 w-4" />
 									Hinzugefügt!
 								{:else}
-									<ShoppingCart class="w-4 h-4" />
+									<ShoppingCart class="h-4 w-4" />
 									{m.addToCart()}
 								{/if}
 							</button>

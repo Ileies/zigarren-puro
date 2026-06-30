@@ -22,7 +22,11 @@ export const load: PageServerLoad = async ({ url, locals, cookies }) => {
 	}
 
 	const [row] = await db
-		.select({ token: tokenTable.token, usedAt: tokenTable.usedAt, customerId: tokenTable.customerId })
+		.select({
+			token: tokenTable.token,
+			usedAt: tokenTable.usedAt,
+			customerId: tokenTable.customerId
+		})
 		.from(tokenTable)
 		.where(
 			and(
@@ -41,10 +45,7 @@ export const load: PageServerLoad = async ({ url, locals, cookies }) => {
 			.set({ isVerified: true, updatedAt: new Date() })
 			.where(eq(customerTable.id, row.customerId))
 			.run();
-		tx.update(tokenTable)
-			.set({ usedAt: new Date() })
-			.where(eq(tokenTable.token, token))
-			.run();
+		tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
 	});
 
 	cookies.set('show_welcome', '1', {

@@ -46,7 +46,10 @@ export const actions: Actions = {
 			return { error: 'Name und Herkunftsland sind Pflichtfelder.' };
 		}
 
-		await db.update(producerTable).set({ name, country, description, contactInfo }).where(eq(producerTable.id, id));
+		await db
+			.update(producerTable)
+			.set({ name, country, description, contactInfo })
+			.where(eq(producerTable.id, id));
 		return { success: 'Hersteller aktualisiert.' };
 	},
 
@@ -57,7 +60,8 @@ export const actions: Actions = {
 
 		if (!id) return { error: 'Fehlende ID.' };
 		if (!file || file.size === 0) return { uploadError: 'Keine Datei ausgewählt.', uploadId: id };
-		if (!ALLOWED_MIME.includes(file.type)) return { uploadError: 'Nur JPG, PNG und WebP sind erlaubt.', uploadId: id };
+		if (!ALLOWED_MIME.includes(file.type))
+			return { uploadError: 'Nur JPG, PNG und WebP sind erlaubt.', uploadId: id };
 		if (file.size > MAX_SIZE) return { uploadError: 'Datei zu groß (max. 2 MB).', uploadId: id };
 
 		const ext = file.type === 'image/jpeg' ? 'jpg' : file.type === 'image/png' ? 'png' : 'webp';
@@ -75,7 +79,10 @@ export const actions: Actions = {
 		} catch {}
 
 		await writeFile(join(PRODUCER_IMAGES_DIR, filename), Buffer.from(await file.arrayBuffer()));
-		await db.update(producerTable).set({ imageUrl: `/producer-images/${filename}` }).where(eq(producerTable.id, id));
+		await db
+			.update(producerTable)
+			.set({ imageUrl: `/producer-images/${filename}` })
+			.where(eq(producerTable.id, id));
 
 		return { uploadSuccess: true, uploadId: id };
 	},
@@ -127,7 +134,10 @@ export const actions: Actions = {
 		try {
 			await db.delete(producerTable).where(eq(producerTable.id, id));
 		} catch {
-			return { error: 'Hersteller konnte nicht gelöscht werden. Möglicherweise sind noch Produkte zugeordnet.' };
+			return {
+				error:
+					'Hersteller konnte nicht gelöscht werden. Möglicherweise sind noch Produkte zugeordnet.'
+			};
 		}
 
 		return { success: 'Hersteller gelöscht.' };

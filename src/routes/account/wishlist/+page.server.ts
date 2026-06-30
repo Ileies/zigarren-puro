@@ -38,7 +38,9 @@ export const actions: Actions = {
 
 		await db
 			.delete(wishlistTable)
-			.where(and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, productId)));
+			.where(
+				and(eq(wishlistTable.customerId, locals.user.id), eq(wishlistTable.productId, productId))
+			);
 	},
 
 	addToCart: async ({ locals, cookies, request }) => {

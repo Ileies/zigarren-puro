@@ -69,10 +69,7 @@ export const actions: Actions = {
 				.set({ passwordHash, failedAttempts: 0, lockedUntil: null, updatedAt: new Date() })
 				.where(eq(authCredentialsTable.customerId, row.customerId))
 				.run();
-			tx.update(tokenTable)
-				.set({ usedAt: new Date() })
-				.where(eq(tokenTable.token, token))
-				.run();
+			tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
 		});
 
 		redirect(302, '/login?reset=1');

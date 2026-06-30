@@ -18,69 +18,75 @@
 	const labelClass = 'block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1';
 </script>
 
-<div class="p-6 max-w-2xl">
-	<div class="flex items-center gap-3 mb-6">
+<div class="max-w-2xl p-6">
+	<div class="mb-6 flex items-center gap-3">
 		<a href="/admin/inventory" class="text-sm text-zinc-400 hover:text-zinc-700">&larr; Inventar</a>
 		<span class="text-zinc-300">/</span>
 		<span class="text-sm text-zinc-600">{product.name}</span>
 	</div>
 
-	<div class="flex items-start justify-between mb-6">
+	<div class="mb-6 flex items-start justify-between">
 		<div>
 			<h1 class="text-xl font-bold text-zinc-900">{product.name}</h1>
-			<div class="text-sm text-zinc-400 mt-0.5">
+			<div class="mt-0.5 text-sm text-zinc-400">
 				{typeLabels[product.productType] ?? product.productType}
 			</div>
 		</div>
 	</div>
 
 	{#if form?.success}
-		<div class="mb-4 rounded-md bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
+		<div
+			class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+		>
 			Produkt wurde gespeichert.
 		</div>
 	{/if}
 	{#if form?.imageSuccess}
-		<div class="mb-4 rounded-md bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
+		<div
+			class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
+		>
 			Bild wurde hochgeladen.
 		</div>
 	{/if}
 	{#if form?.imageRemoved}
-		<div class="mb-4 rounded-md bg-zinc-50 border border-zinc-200 px-4 py-3 text-sm text-zinc-700">
+		<div class="mb-4 rounded-md border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-700">
 			Bild wurde entfernt.
 		</div>
 	{/if}
 	{#if form?.error}
-		<div class="mb-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
+		<div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
 			{form.error}
 		</div>
 	{/if}
 
 	<!-- Image upload -->
-	<div class="bg-white rounded-lg border border-zinc-200 p-5 mb-6">
-		<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500 mb-4">Produktbild</h2>
+	<div class="mb-6 rounded-lg border border-zinc-200 bg-white p-5">
+		<h2 class="mb-4 text-xs font-semibold tracking-wide text-zinc-500 uppercase">Produktbild</h2>
 		<div class="flex items-start gap-5">
-			<div class="w-28 h-28 bg-zinc-100 rounded-md flex items-center justify-center overflow-hidden flex-shrink-0 border border-zinc-200">
+			<div
+				class="flex h-28 w-28 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-100"
+			>
 				{#if product.imageUrl}
-					<img src={product.imageUrl} alt={product.name} class="w-full h-full object-cover" />
+					<img src={product.imageUrl} alt={product.name} class="h-full w-full object-cover" />
 				{:else}
 					<span class="text-xs text-zinc-400">Kein Bild</span>
 				{/if}
 			</div>
-			<div class="flex flex-col gap-3 flex-1">
+			<div class="flex flex-1 flex-col gap-3">
 				<form method="POST" action="?/uploadImage" enctype="multipart/form-data" use:enhance>
 					<label class={labelClass} for="image">JPG, PNG oder WebP · max. 5 MB</label>
-					<div class="flex gap-2 mt-1">
+					<div class="mt-1 flex gap-2">
 						<input
 							id="image"
 							name="image"
 							type="file"
 							accept="image/jpeg,image/png,image/webp"
 							required
-							class="flex-1 text-sm text-zinc-600 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-zinc-100 file:text-zinc-700 hover:file:bg-zinc-200 cursor-pointer"
+							class="flex-1 cursor-pointer text-sm text-zinc-600 file:mr-3 file:rounded file:border-0 file:bg-zinc-100 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-zinc-700 hover:file:bg-zinc-200"
 						/>
 						<button
 							type="submit"
-							class="bg-zinc-900 text-white px-3 py-1.5 rounded text-xs font-medium hover:bg-zinc-700 transition-colors whitespace-nowrap"
+							class="rounded bg-zinc-900 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-white transition-colors hover:bg-zinc-700"
 						>
 							Hochladen
 						</button>
@@ -88,7 +94,10 @@
 				</form>
 				{#if product.imageUrl}
 					<form method="POST" action="?/removeImage" use:enhance>
-						<button type="submit" class="text-xs text-red-500 hover:text-red-700 underline underline-offset-2">
+						<button
+							type="submit"
+							class="text-xs text-red-500 underline underline-offset-2 hover:text-red-700"
+						>
 							Bild entfernen
 						</button>
 					</form>
@@ -97,10 +106,10 @@
 		</div>
 	</div>
 
-	<form method="POST" action="?/update" use:enhance class="space-y-6 mb-6">
+	<form method="POST" action="?/update" use:enhance class="mb-6 space-y-6">
 		<!-- Base fields -->
-		<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-			<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Basisfelder</h2>
+		<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+			<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Basisfelder</h2>
 
 			<div>
 				<label class={labelClass} for="name">Name <span class="text-red-500">*</span></label>
@@ -115,7 +124,9 @@
 			</div>
 
 			<div>
-				<label class={labelClass} for="producerId">Hersteller <span class="text-red-500">*</span></label>
+				<label class={labelClass} for="producerId"
+					>Hersteller <span class="text-red-500">*</span></label
+				>
 				<select id="producerId" name="producerId" required class={inputClass}>
 					{#each data.producers as producer}
 						<option value={producer.id} selected={producer.id === product.producerId}>
@@ -127,7 +138,8 @@
 
 			<div class="grid grid-cols-3 gap-4">
 				<div>
-					<label class={labelClass} for="price">Preis (€) <span class="text-red-500">*</span></label>
+					<label class={labelClass} for="price">Preis (€) <span class="text-red-500">*</span></label
+					>
 					<input
 						id="price"
 						name="price"
@@ -140,7 +152,9 @@
 					/>
 				</div>
 				<div>
-					<label class={labelClass} for="stock">Lagerbestand <span class="text-red-500">*</span></label>
+					<label class={labelClass} for="stock"
+						>Lagerbestand <span class="text-red-500">*</span></label
+					>
 					<input
 						id="stock"
 						name="stock"
@@ -158,7 +172,9 @@
 			</div>
 
 			<div>
-				<label class={labelClass} for="tags">Tags <span class="text-zinc-400 font-normal normal-case">(kommagetrennt)</span></label>
+				<label class={labelClass} for="tags"
+					>Tags <span class="font-normal text-zinc-400 normal-case">(kommagetrennt)</span></label
+				>
 				<input
 					id="tags"
 					name="tags"
@@ -172,12 +188,16 @@
 
 		<!-- Cigar details -->
 		{#if product.productType === 'cigar'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zigarren-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Zigarren-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="lengthMm"
+							>Länge (mm) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -190,7 +210,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="ringGauge"
+							>Ringmaß <span class="text-red-500">*</span></label
+						>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -206,15 +228,23 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="strength">Stärke <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="strength"
+							>Stärke <span class="text-red-500">*</span></label
+						>
 						<select id="strength" name="strength" required class={inputClass}>
-							<option value="mild" selected={product.cigarDetails?.strength === 'mild'}>Mild</option>
-							<option value="medium" selected={product.cigarDetails?.strength === 'medium'}>Medium</option>
-							<option value="full" selected={product.cigarDetails?.strength === 'full'}>Full</option>
+							<option value="mild" selected={product.cigarDetails?.strength === 'mild'}>Mild</option
+							>
+							<option value="medium" selected={product.cigarDetails?.strength === 'medium'}
+								>Medium</option
+							>
+							<option value="full" selected={product.cigarDetails?.strength === 'full'}>Full</option
+							>
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="wrapperType"
+							>Deckblatt <span class="text-red-500">*</span></label
+						>
 						<input
 							id="wrapperType"
 							name="wrapperType"
@@ -228,7 +258,9 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="countryOfOrigin"
+							>Herkunft <span class="text-red-500">*</span></label
+						>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -255,12 +287,16 @@
 
 		<!-- Cigarillo details -->
 		{#if product.productType === 'cigarillo'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zigarillo-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Zigarillo-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="lengthMm"
+							>Länge (mm) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -273,7 +309,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="ringGauge"
+							>Ringmaß <span class="text-red-500">*</span></label
+						>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -289,15 +327,26 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="filterType">Filter <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="filterType"
+							>Filter <span class="text-red-500">*</span></label
+						>
 						<select id="filterType" name="filterType" required class={inputClass}>
-							<option value="none" selected={product.cigarilloDetails?.filterType === 'none'}>Ohne Filter</option>
-							<option value="regular" selected={product.cigarilloDetails?.filterType === 'regular'}>Regular</option>
-							<option value="charcoal" selected={product.cigarilloDetails?.filterType === 'charcoal'}>Aktivkohle</option>
+							<option value="none" selected={product.cigarilloDetails?.filterType === 'none'}
+								>Ohne Filter</option
+							>
+							<option value="regular" selected={product.cigarilloDetails?.filterType === 'regular'}
+								>Regular</option
+							>
+							<option
+								value="charcoal"
+								selected={product.cigarilloDetails?.filterType === 'charcoal'}>Aktivkohle</option
+							>
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="wrapperType"
+							>Deckblatt <span class="text-red-500">*</span></label
+						>
 						<input
 							id="wrapperType"
 							name="wrapperType"
@@ -313,22 +362,34 @@
 
 		<!-- Beverage details -->
 		{#if product.productType === 'beverage'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Getränke-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+					Getränke-Details
+				</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="beverageType">Typ <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="beverageType"
+							>Typ <span class="text-red-500">*</span></label
+						>
 						<select id="beverageType" name="beverageType" required class={inputClass}>
 							<option value="wine" selected={product.beverageDetails?.type === 'wine'}>Wein</option>
-							<option value="whiskey" selected={product.beverageDetails?.type === 'whiskey'}>Whiskey</option>
+							<option value="whiskey" selected={product.beverageDetails?.type === 'whiskey'}
+								>Whiskey</option
+							>
 							<option value="rum" selected={product.beverageDetails?.type === 'rum'}>Rum</option>
-							<option value="cognac" selected={product.beverageDetails?.type === 'cognac'}>Cognac</option>
-							<option value="vodka" selected={product.beverageDetails?.type === 'vodka'}>Vodka</option>
+							<option value="cognac" selected={product.beverageDetails?.type === 'cognac'}
+								>Cognac</option
+							>
+							<option value="vodka" selected={product.beverageDetails?.type === 'vodka'}
+								>Vodka</option
+							>
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="countryOfOrigin"
+							>Herkunft <span class="text-red-500">*</span></label
+						>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -342,7 +403,9 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="volumeMl">Volumen (ml) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="volumeMl"
+							>Volumen (ml) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="volumeMl"
 							name="volumeMl"
@@ -355,7 +418,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="alcoholPercentage">Alkohol (%) <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="alcoholPercentage"
+							>Alkohol (%) <span class="text-red-500">*</span></label
+						>
 						<input
 							id="alcoholPercentage"
 							name="alcoholPercentage"
@@ -395,8 +460,8 @@
 
 		<!-- Tool details -->
 		{#if product.productType === 'tool'}
-			<div class="bg-white rounded-lg border border-zinc-200 p-5 space-y-4">
-				<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Zubehör-Details</h2>
+			<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
+				<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Zubehör-Details</h2>
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
@@ -411,7 +476,9 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="material">Material <span class="text-red-500">*</span></label>
+						<label class={labelClass} for="material"
+							>Material <span class="text-red-500">*</span></label
+						>
 						<input
 							id="material"
 							name="material"
@@ -432,8 +499,11 @@
 
 				<div>
 					<label class={labelClass} for="careInstructions">Pflegehinweise</label>
-					<textarea id="careInstructions" name="careInstructions" rows="2" class="{inputClass} resize-y"
-						>{product.toolDetails?.careInstructions ?? ''}</textarea
+					<textarea
+						id="careInstructions"
+						name="careInstructions"
+						rows="2"
+						class="{inputClass} resize-y">{product.toolDetails?.careInstructions ?? ''}</textarea
 					>
 				</div>
 			</div>
@@ -442,7 +512,7 @@
 		<div>
 			<button
 				type="submit"
-				class="bg-zinc-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-700 transition-colors"
+				class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 			>
 				Speichern
 			</button>
@@ -450,17 +520,17 @@
 	</form>
 
 	<!-- Delete -->
-	<div class="bg-white rounded-lg border border-red-200 p-5">
-		<h2 class="text-xs font-semibold uppercase tracking-wide text-red-500 mb-2">Gefahrenzone</h2>
+	<div class="rounded-lg border border-red-200 bg-white p-5">
+		<h2 class="mb-2 text-xs font-semibold tracking-wide text-red-500 uppercase">Gefahrenzone</h2>
 		{#if confirmDelete}
-			<p class="text-sm text-zinc-600 mb-3">
+			<p class="mb-3 text-sm text-zinc-600">
 				Sicher? Das Produkt wird dauerhaft gelöscht und kann nicht wiederhergestellt werden.
 			</p>
 			<div class="flex gap-2">
 				<form method="POST" action="?/delete" use:enhance>
 					<button
 						type="submit"
-						class="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors"
+						class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
 					>
 						Ja, löschen
 					</button>
@@ -468,7 +538,7 @@
 				<button
 					type="button"
 					onclick={() => (confirmDelete = false)}
-					class="border border-zinc-300 text-zinc-600 px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-50 transition-colors"
+					class="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
 				>
 					Abbrechen
 				</button>
@@ -477,7 +547,7 @@
 			<button
 				type="button"
 				onclick={() => (confirmDelete = true)}
-				class="text-sm text-red-600 hover:text-red-800 underline underline-offset-2"
+				class="text-sm text-red-600 underline underline-offset-2 hover:text-red-800"
 			>
 				Produkt löschen
 			</button>

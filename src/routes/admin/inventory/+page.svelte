@@ -83,11 +83,11 @@
 </script>
 
 <div class="p-6">
-	<div class="flex items-center justify-between mb-6">
+	<div class="mb-6 flex items-center justify-between">
 		<h1 class="text-xl font-bold text-zinc-900">Inventar</h1>
 		<a
 			href="/admin/inventory/create"
-			class="bg-zinc-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-700 transition-colors"
+			class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 		>
 			+ Neues Produkt
 		</a>
@@ -101,11 +101,11 @@
 				name="search"
 				placeholder="Nach Name oder SKU suchen..."
 				value={data.search}
-				class="flex-1 border border-zinc-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-zinc-500"
+				class="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 			/>
 			<button
 				type="submit"
-				class="bg-zinc-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-zinc-700 transition-colors"
+				class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 			>
 				Suchen
 			</button>
@@ -113,14 +113,15 @@
 
 		<div class="flex gap-3">
 			<div class="flex-1">
-				<label class="block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1" for="filter-type"
-					>Produkttyp</label
+				<label
+					class="mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase"
+					for="filter-type">Produkttyp</label
 				>
 				<select
 					id="filter-type"
 					value={data.filterType}
 					onchange={handleFilterChange}
-					class="w-full border border-zinc-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-zinc-500"
+					class="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 				>
 					{#each typeOptions as option}
 						<option value={option.value}>{option.label}</option>
@@ -129,8 +130,9 @@
 			</div>
 
 			<div class="flex-1">
-				<label class="block text-xs font-medium text-zinc-500 uppercase tracking-wide mb-1" for="sort-by"
-					>Sortieren nach</label
+				<label
+					class="mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase"
+					for="sort-by">Sortieren nach</label
 				>
 				<div class="flex gap-2">
 					<select
@@ -145,7 +147,7 @@
 							});
 							window.location.href = url;
 						}}
-						class="flex-1 border border-zinc-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-zinc-500"
+						class="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
 						{#each sortOptions as option}
 							<option value={option.value}>{option.label}</option>
@@ -153,7 +155,7 @@
 					</select>
 					<button
 						onclick={() => toggleSort(data.sortBy)}
-						class="px-3 py-2 border border-zinc-300 rounded-md text-sm font-medium text-zinc-600 hover:bg-zinc-50 transition-colors"
+						class="rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
 						title={data.sortOrder === 'asc' ? 'Absteigend' : 'Aufsteigend'}
 					>
 						{data.sortOrder === 'asc' ? '↑' : '↓'}
@@ -163,7 +165,7 @@
 		</div>
 	</div>
 
-	<div class="text-sm text-zinc-500 mb-4">
+	<div class="mb-4 text-sm text-zinc-500">
 		{data.products.length}
 		{data.products.length === 1 ? 'Produkt' : 'Produkte'}
 		{#if data.search || data.filterType}
@@ -171,24 +173,28 @@
 		{/if}
 	</div>
 
-	<div class="bg-white rounded-lg border border-zinc-200 overflow-hidden">
+	<div class="overflow-hidden rounded-lg border border-zinc-200 bg-white">
 		<table class="w-full text-sm">
 			<thead>
 				<tr class="border-b border-zinc-200 bg-zinc-50">
 					<th
 						onclick={() => toggleSort('name')}
-						class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide cursor-pointer hover:bg-zinc-100 transition-colors"
+						class="cursor-pointer px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
 					>
 						Name
 						{#if data.sortBy === 'name'}
 							<span class="text-zinc-400">{data.sortOrder === 'asc' ? '↑' : '↓'}</span>
 						{/if}
 					</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Hersteller</th>
-					<th class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide">Typ</th>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Hersteller</th
+					>
+					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
+						>Typ</th
+					>
 					<th
 						onclick={() => toggleSort('sku')}
-						class="text-left px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide cursor-pointer hover:bg-zinc-100 transition-colors"
+						class="cursor-pointer px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
 					>
 						SKU
 						{#if data.sortBy === 'sku'}
@@ -197,7 +203,7 @@
 					</th>
 					<th
 						onclick={() => toggleSort('price')}
-						class="text-right px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide cursor-pointer hover:bg-zinc-100 transition-colors"
+						class="cursor-pointer px-4 py-3 text-right text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
 					>
 						Preis
 						{#if data.sortBy === 'price'}
@@ -206,7 +212,7 @@
 					</th>
 					<th
 						onclick={() => toggleSort('stock')}
-						class="text-right px-4 py-3 text-xs text-zinc-500 font-medium uppercase tracking-wide cursor-pointer hover:bg-zinc-100 transition-colors"
+						class="cursor-pointer px-4 py-3 text-right text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
 					>
 						Bestand
 						{#if data.sortBy === 'stock'}
@@ -224,25 +230,34 @@
 					>
 						<td class="px-4 py-3 font-medium text-zinc-900">{product.name}</td>
 						<td class="px-4 py-3 text-zinc-500">{product.producerName ?? '-'}</td>
-						<td class="px-4 py-3 text-zinc-500">{typeLabels[product.productType] ?? product.productType}</td>
+						<td class="px-4 py-3 text-zinc-500"
+							>{typeLabels[product.productType] ?? product.productType}</td
+						>
 						<td class="px-4 py-3 font-mono text-xs text-zinc-400">{product.sku}</td>
-						<td class="px-4 py-3 text-right font-medium text-zinc-800">{Number(product.price).toFixed(2)} &euro;</td>
+						<td class="px-4 py-3 text-right font-medium text-zinc-800"
+							>{Number(product.price).toFixed(2)} &euro;</td
+						>
 						<td class="px-4 py-3 text-right">
 							<div class="flex items-center justify-end gap-2">
 								{#if product.stock === 0}
-									<span class="text-xs bg-red-100 text-red-700 px-2 py-1 rounded font-medium">Ausverkauft</span>
+									<span class="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700"
+										>Ausverkauft</span
+									>
 								{:else if product.stock <= 4}
-									<span class="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded font-medium">Gering</span>
+									<span class="rounded bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700"
+										>Gering</span
+									>
 								{/if}
 
 								{#if editingId === product.id}
 									<form
 										method="POST"
 										action="?/updateStock"
-										use:enhance={() => async ({ update }) => {
-											await update({ reset: false });
-											editingId = null;
-										}}
+										use:enhance={() =>
+											async ({ update }) => {
+												await update({ reset: false });
+												editingId = null;
+											}}
 									>
 										<input type="hidden" name="id" value={product.id} />
 										<div class="flex items-center gap-1">
@@ -251,14 +266,19 @@
 												name="stock"
 												bind:value={editStock}
 												min="0"
-												class="w-16 text-right border border-zinc-300 rounded px-1.5 py-0.5 text-sm focus:outline-none focus:border-zinc-500"
+												class="w-16 rounded border border-zinc-300 px-1.5 py-0.5 text-right text-sm focus:border-zinc-500 focus:outline-none"
 											/>
-											<button type="submit" class="text-green-600 hover:text-green-800 px-1 text-base leading-none">&check;</button>
+											<button
+												type="submit"
+												class="px-1 text-base leading-none text-green-600 hover:text-green-800"
+												>&check;</button
+											>
 											<button
 												type="button"
 												onclick={() => (editingId = null)}
-												class="text-zinc-400 hover:text-zinc-600 px-1 text-base leading-none"
-											>&times;</button>
+												class="px-1 text-base leading-none text-zinc-400 hover:text-zinc-600"
+												>&times;</button
+											>
 										</div>
 									</form>
 								{:else}
@@ -266,10 +286,10 @@
 										onclick={() => startEdit(product.id, product.stock)}
 										class="font-medium tabular-nums hover:underline
 										       {product.stock === 0
-										           ? 'text-red-600'
-										           : product.stock <= 4
-										               ? 'text-amber-600'
-										               : 'text-zinc-800'}"
+											? 'text-red-600'
+											: product.stock <= 4
+												? 'text-amber-600'
+												: 'text-zinc-800'}"
 										title="Bestand bearbeiten"
 									>
 										{product.stock}
@@ -280,7 +300,7 @@
 						<td class="px-4 py-3 text-right">
 							<a
 								href="/admin/inventory/{product.id}"
-								class="text-xs text-zinc-400 hover:text-zinc-800 underline underline-offset-2"
+								class="text-xs text-zinc-400 underline underline-offset-2 hover:text-zinc-800"
 							>
 								Bearbeiten
 							</a>
@@ -289,7 +309,9 @@
 				{:else}
 					<tr>
 						<td colspan="7" class="px-4 py-10 text-center text-sm text-zinc-400">
-							{data.search || data.filterType ? 'Keine Produkte gefunden' : 'Keine Produkte vorhanden'}
+							{data.search || data.filterType
+								? 'Keine Produkte gefunden'
+								: 'Keine Produkte vorhanden'}
 						</td>
 					</tr>
 				{/each}

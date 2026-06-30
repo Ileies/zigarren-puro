@@ -5,7 +5,9 @@ import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
 import type { Gender, OrderStatus, PaymentMethod, PaymentStatus, ShippingMethod } from '$lib/types';
 
 export const customerTable = sqliteTable('customers', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
 	email: text('email').notNull().unique(),
 	firstName: text('first_name').notNull(),
 	lastName: text('last_name').notNull(),
@@ -23,8 +25,12 @@ export const customerTable = sqliteTable('customers', {
 export type Customer = typeof customerTable.$inferSelect;
 
 export const addressTable = sqliteTable('addresses', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
-	customerId: text('customer_id').references(() => customerTable.id).notNull(),
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
+	customerId: text('customer_id')
+		.references(() => customerTable.id)
+		.notNull(),
 	type: text('type').notNull().$type<'shipping' | 'billing'>(),
 	street: text('street').notNull(),
 	city: text('city').notNull(),
@@ -35,14 +41,22 @@ export const addressTable = sqliteTable('addresses', {
 });
 
 export const orderTable = sqliteTable('orders', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
-	customerId: text('customer_id').references(() => customerTable.id).notNull(),
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
+	customerId: text('customer_id')
+		.references(() => customerTable.id)
+		.notNull(),
 	orderStatus: text('order_status').notNull().$type<OrderStatus>(),
 	paymentStatus: text('payment_status').notNull().$type<PaymentStatus>(),
 	paymentMethod: text('payment_method').notNull().$type<PaymentMethod>(),
 	shippingMethod: text('shipping_method').notNull().$type<ShippingMethod>(),
-	shippingAddressId: text('shipping_address_id').references(() => addressTable.id).notNull(),
-	billingAddressId: text('billing_address_id').references(() => addressTable.id).notNull(),
+	shippingAddressId: text('shipping_address_id')
+		.references(() => addressTable.id)
+		.notNull(),
+	billingAddressId: text('billing_address_id')
+		.references(() => addressTable.id)
+		.notNull(),
 	subtotalAmount: real('subtotal_amount').notNull(),
 	shippingAmount: real('shipping_amount').notNull(),
 	taxAmount: real('tax_amount').notNull(),
@@ -56,34 +70,54 @@ export const orderTable = sqliteTable('orders', {
 });
 
 export const orderItemTable = sqliteTable('order_items', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
-	orderId: text('order_id').references(() => orderTable.id, { onDelete: 'cascade' }).notNull(),
-	productId: text('product_id').references(() => productTable.id).notNull(),
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
+	orderId: text('order_id')
+		.references(() => orderTable.id, { onDelete: 'cascade' })
+		.notNull(),
+	productId: text('product_id')
+		.references(() => productTable.id)
+		.notNull(),
 	quantity: integer('quantity').notNull(),
 	unitPrice: real('unit_price').notNull(),
 	subtotal: real('subtotal').notNull(),
 	metadata: text('metadata', { mode: 'json' }) // For storing product-specific details at time of order
 });
 
-export const productReviewTable = sqliteTable('product_reviews', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
-	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	customerId: text('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
-	rating: integer('rating').notNull(), // 1-5
-	title: text('title'),
-	body: text('body'),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
-}, (table) => [
-	unique('product_review_per_user').on(table.productId, table.customerId)
-]);
+export const productReviewTable = sqliteTable(
+	'product_reviews',
+	{
+		id: text('id')
+			.$defaultFn(() => crypto.randomUUID())
+			.primaryKey(),
+		productId: text('product_id')
+			.references(() => productTable.id, { onDelete: 'cascade' })
+			.notNull(),
+		customerId: text('customer_id')
+			.references(() => customerTable.id, { onDelete: 'cascade' })
+			.notNull(),
+		rating: integer('rating').notNull(), // 1-5
+		title: text('title'),
+		body: text('body'),
+		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+	},
+	(table) => [unique('product_review_per_user').on(table.productId, table.customerId)]
+);
 
-export const wishlistTable = sqliteTable('wishlists', {
-	customerId: text('customer_id').references(() => customerTable.id, { onDelete: 'cascade' }).notNull(),
-	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
-}, (table) => [
-	primaryKey({ columns: [table.customerId, table.productId] })
-]);
+export const wishlistTable = sqliteTable(
+	'wishlists',
+	{
+		customerId: text('customer_id')
+			.references(() => customerTable.id, { onDelete: 'cascade' })
+			.notNull(),
+		productId: text('product_id')
+			.references(() => productTable.id, { onDelete: 'cascade' })
+			.notNull(),
+		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+	},
+	(table) => [primaryKey({ columns: [table.customerId, table.productId] })]
+);
 
 export const customerRelations = relations(customerTable, ({ one, many }) => ({
 	orders: many(orderTable),

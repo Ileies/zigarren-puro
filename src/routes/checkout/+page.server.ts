@@ -119,7 +119,12 @@ export const actions: Actions = {
 
 		const ids = cartItems.map((i) => i.id);
 		const products = await db
-			.select({ id: productTable.id, name: productTable.name, price: productTable.price, stock: productTable.stock })
+			.select({
+				id: productTable.id,
+				name: productTable.name,
+				price: productTable.price,
+				stock: productTable.stock
+			})
 			.from(productTable)
 			.where(inArray(productTable.id, ids));
 
@@ -127,7 +132,9 @@ export const actions: Actions = {
 			const product = products.find((p) => p.id === cartItem.id);
 			if (!product) return fail(400, { error: 'Ein Produkt ist nicht mehr verfügbar.' });
 			if (product.stock !== null && product.stock < cartItem.qty) {
-				return fail(400, { error: `"${product.name}" ist nicht in der gewünschten Menge verfügbar.` });
+				return fail(400, {
+					error: `"${product.name}" ist nicht in der gewünschten Menge verfügbar.`
+				});
 			}
 		}
 
@@ -144,7 +151,9 @@ export const actions: Actions = {
 			const [addr] = await db
 				.select({ id: addressTable.id })
 				.from(addressTable)
-				.where(and(eq(addressTable.id, shippingAddressId), eq(addressTable.customerId, locals.user.id)));
+				.where(
+					and(eq(addressTable.id, shippingAddressId), eq(addressTable.customerId, locals.user.id))
+				);
 			if (!addr) return fail(400, { error: 'Ungültige Lieferadresse.' });
 			resolvedShippingId = addr.id;
 		} else {
@@ -175,12 +184,16 @@ export const actions: Actions = {
 			const [addr] = await db
 				.select({ id: addressTable.id })
 				.from(addressTable)
-				.where(and(eq(addressTable.id, billingAddressId), eq(addressTable.customerId, locals.user.id)));
+				.where(
+					and(eq(addressTable.id, billingAddressId), eq(addressTable.customerId, locals.user.id))
+				);
 			if (!addr) return fail(400, { error: 'Ungültige Rechnungsadresse.' });
 			resolvedBillingId = addr.id;
 		} else {
 			if (!billingStreet || !billingCity || !billingPostalCode || !billingState) {
-				return fail(400, { error: 'Bitte füllen Sie alle Pflichtfelder der Rechnungsadresse aus.' });
+				return fail(400, {
+					error: 'Bitte füllen Sie alle Pflichtfelder der Rechnungsadresse aus.'
+				});
 			}
 			const [newAddr] = await db
 				.insert(addressTable)
@@ -206,7 +219,8 @@ export const actions: Actions = {
 				orderStatus: OrderStatus.PENDING,
 				paymentStatus: PaymentStatus.PENDING,
 				paymentMethod: useStripe ? PaymentMethod.CREDIT_CARD : PaymentMethod.BANK_TRANSFER,
-				shippingMethod: shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
+				shippingMethod:
+					shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
 				shippingAddressId: resolvedShippingId,
 				billingAddressId: resolvedBillingId,
 				subtotalAmount: subtotal,

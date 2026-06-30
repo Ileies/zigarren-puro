@@ -4,15 +4,15 @@ Premium-Webshop für Zigarren, Zigarillos, Spirituosen und Zubehör.
 
 ## Stack
 
-| Bereich | Technologie |
-|---|---|
-| Framework | SvelteKit 2 + Svelte 5 |
-| Styling | Tailwind CSS 4 + DaisyUI 5 |
+| Bereich   | Technologie                           |
+| --------- | ------------------------------------- |
+| Framework | SvelteKit 2 + Svelte 5                |
+| Styling   | Tailwind CSS 4 + DaisyUI 5            |
 | Datenbank | PostgreSQL (Supabase) via Drizzle ORM |
-| Laufzeit | Bun |
-| E-Mail | Nodemailer (netcup SMTP) |
-| Auth | crypto.scrypt, eigenes Session-System |
-| i18n | Eigenes Vite-Plugin (DE/EN/AR/CN/RU) |
+| Laufzeit  | Bun                                   |
+| E-Mail    | Nodemailer (netcup SMTP)              |
+| Auth      | crypto.scrypt, eigenes Session-System |
+| i18n      | Eigenes Vite-Plugin (DE/EN/AR/CN/RU)  |
 
 ## Voraussetzungen
 
@@ -40,15 +40,15 @@ bun run format    # Prettier
 
 ## Umgebungsvariablen
 
-| Variable | Beschreibung |
-|---|---|
-| `DATABASE_URL` | PostgreSQL-Verbindungsstring |
-| `PUBLIC_ORIGIN` | Produktions-Domain |
-| `PUBLIC_APP_NAME` | App-Name |
-| `ADMIN_PASSWORD` | Passwort für `/admin` |
-| `SECRET` | Base64-Token für Token-Generierung |
-| `FROM_EMAIL` | Absender-Adresse für transaktionale E-Mails |
-| `SMTP_HOST/PORT/USER/PASS` | SMTP-Zugangsdaten |
-| `OPENAI_API_KEY` | Für Produktbeschreibungen |
+| Variable                   | Beschreibung                                |
+| -------------------------- | ------------------------------------------- |
+| `DATABASE_URL`             | PostgreSQL-Verbindungsstring                |
+| `PUBLIC_ORIGIN`            | Produktions-Domain                          |
+| `PUBLIC_APP_NAME`          | App-Name                                    |
+| `ADMIN_PASSWORD`           | Passwort für `/admin`                       |
+| `SECRET`                   | Base64-Token für Token-Generierung          |
+| `FROM_EMAIL`               | Absender-Adresse für transaktionale E-Mails |
+| `SMTP_HOST/PORT/USER/PASS` | SMTP-Zugangsdaten                           |
+| `OPENAI_API_KEY`           | Für Produktbeschreibungen                   |
 
 Weitere Variablen (Stripe, PostHog, Google OAuth) sind vorbereitet, aber noch nicht aktiv.

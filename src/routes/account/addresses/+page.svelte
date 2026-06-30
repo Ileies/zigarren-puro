@@ -32,7 +32,7 @@
 <div class="min-h-screen bg-base-200">
 	<div class="mx-auto max-w-3xl px-4 py-10">
 		<div class="mb-6 flex items-center gap-3">
-			<a href="/account" class="btn btn-ghost btn-sm btn-circle">
+			<a href="/account" class="btn btn-circle btn-ghost btn-sm">
 				<ArrowLeft class="h-4 w-4" />
 			</a>
 			<div>
@@ -58,7 +58,9 @@
 			</h2>
 
 			{#if shipping.length === 0}
-				<p class="rounded-xl bg-base-100 px-5 py-4 text-sm text-base-content/50 ring-1 ring-base-300">
+				<p
+					class="rounded-xl bg-base-100 px-5 py-4 text-sm text-base-content/50 ring-1 ring-base-300"
+				>
 					Noch keine Lieferadresse hinterlegt.
 				</p>
 			{:else}
@@ -73,10 +75,13 @@
 								<MapPin class="mt-0.5 h-4 w-4 shrink-0 text-base-content/40" />
 								<div class="text-sm text-base-content">
 									<p class="font-medium">{address.street}</p>
-									<p>{address.postalCode} {address.city}{address.state ? `, ${address.state}` : ''}</p>
+									<p>
+										{address.postalCode}
+										{address.city}{address.state ? `, ${address.state}` : ''}
+									</p>
 									<p>{countryNames[address.country] ?? address.country}</p>
 									{#if address.isDefault}
-										<span class="badge badge-primary badge-sm mt-1">Standard</span>
+										<span class="mt-1 badge badge-sm badge-primary">Standard</span>
 									{/if}
 								</div>
 							</div>
@@ -85,11 +90,7 @@
 									<form method="POST" action="?/setDefault" use:enhance>
 										<input type="hidden" name="id" value={address.id} />
 										<input type="hidden" name="type" value={address.type} />
-										<button
-											type="submit"
-											class="btn btn-ghost btn-xs"
-											title="Als Standard setzen"
-										>
+										<button type="submit" class="btn btn-ghost btn-xs" title="Als Standard setzen">
 											<Star class="h-3.5 w-3.5" />
 										</button>
 									</form>
@@ -98,7 +99,7 @@
 									<input type="hidden" name="id" value={address.id} />
 									<button
 										type="submit"
-										class="btn btn-ghost btn-xs text-error"
+										class="btn text-error btn-ghost btn-xs"
 										title="Adresse löschen"
 									>
 										<Trash2 class="h-3.5 w-3.5" />
@@ -119,7 +120,9 @@
 			</h2>
 
 			{#if billing.length === 0}
-				<p class="rounded-xl bg-base-100 px-5 py-4 text-sm text-base-content/50 ring-1 ring-base-300">
+				<p
+					class="rounded-xl bg-base-100 px-5 py-4 text-sm text-base-content/50 ring-1 ring-base-300"
+				>
 					Noch keine Rechnungsadresse hinterlegt.
 				</p>
 			{:else}
@@ -134,10 +137,13 @@
 								<MapPin class="mt-0.5 h-4 w-4 shrink-0 text-base-content/40" />
 								<div class="text-sm text-base-content">
 									<p class="font-medium">{address.street}</p>
-									<p>{address.postalCode} {address.city}{address.state ? `, ${address.state}` : ''}</p>
+									<p>
+										{address.postalCode}
+										{address.city}{address.state ? `, ${address.state}` : ''}
+									</p>
 									<p>{countryNames[address.country] ?? address.country}</p>
 									{#if address.isDefault}
-										<span class="badge badge-secondary badge-sm mt-1">Standard</span>
+										<span class="mt-1 badge badge-sm badge-secondary">Standard</span>
 									{/if}
 								</div>
 							</div>
@@ -146,11 +152,7 @@
 									<form method="POST" action="?/setDefault" use:enhance>
 										<input type="hidden" name="id" value={address.id} />
 										<input type="hidden" name="type" value={address.type} />
-										<button
-											type="submit"
-											class="btn btn-ghost btn-xs"
-											title="Als Standard setzen"
-										>
+										<button type="submit" class="btn btn-ghost btn-xs" title="Als Standard setzen">
 											<Star class="h-3.5 w-3.5" />
 										</button>
 									</form>
@@ -159,7 +161,7 @@
 									<input type="hidden" name="id" value={address.id} />
 									<button
 										type="submit"
-										class="btn btn-ghost btn-xs text-error"
+										class="btn text-error btn-ghost btn-xs"
 										title="Adresse löschen"
 									>
 										<Trash2 class="h-3.5 w-3.5" />
@@ -174,7 +176,7 @@
 
 		<!-- Add address -->
 		{#if !showForm}
-			<button onclick={() => (showForm = true)} class="btn btn-primary gap-2">
+			<button onclick={() => (showForm = true)} class="btn gap-2 btn-primary">
 				<Plus class="h-4 w-4" />
 				Neue Adresse hinzufügen
 			</button>
@@ -205,7 +207,7 @@
 									name="type"
 									value="shipping"
 									checked
-									class="radio radio-primary radio-sm"
+									class="radio radio-sm radio-primary"
 								/>
 								<span class="text-sm">Lieferadresse</span>
 							</label>
@@ -214,7 +216,7 @@
 									type="radio"
 									name="type"
 									value="billing"
-									class="radio radio-primary radio-sm"
+									class="radio radio-sm radio-primary"
 								/>
 								<span class="text-sm">Rechnungsadresse</span>
 							</label>
@@ -223,14 +225,16 @@
 
 					<!-- Street -->
 					<label class="flex flex-col gap-1.5">
-						<span class="text-sm font-medium">Straße & Hausnummer <span class="text-error">*</span></span>
+						<span class="text-sm font-medium"
+							>Straße & Hausnummer <span class="text-error">*</span></span
+						>
 						<input
 							type="text"
 							name="street"
 							required
 							autocomplete="street-address"
 							placeholder="Musterstraße 42"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 
@@ -244,7 +248,7 @@
 								required
 								autocomplete="postal-code"
 								placeholder="12345"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 							/>
 						</label>
 						<label class="col-span-3 flex flex-col gap-1.5">
@@ -255,7 +259,7 @@
 								required
 								autocomplete="address-level2"
 								placeholder="Berlin"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 							/>
 						</label>
 					</div>
@@ -272,12 +276,16 @@
 								name="state"
 								autocomplete="address-level1"
 								placeholder="Bayern"
-								class="input input-bordered w-full focus:input-primary"
+								class="input-bordered input w-full focus:input-primary"
 							/>
 						</label>
 						<label class="flex flex-col gap-1.5">
 							<span class="text-sm font-medium">Land <span class="text-error">*</span></span>
-							<select name="country" required class="select select-bordered w-full focus:select-primary">
+							<select
+								name="country"
+								required
+								class="select-bordered select w-full focus:select-primary"
+							>
 								<option value="DE">Deutschland</option>
 								<option value="AT">Österreich</option>
 								<option value="CH">Schweiz</option>
@@ -301,7 +309,7 @@
 					<div class="flex gap-3 pt-1">
 						<button type="submit" disabled={addLoading} class="btn btn-primary">
 							{#if addLoading}
-								<span class="loading loading-spinner loading-sm"></span>
+								<span class="loading loading-sm loading-spinner"></span>
 							{:else}
 								Adresse speichern
 							{/if}

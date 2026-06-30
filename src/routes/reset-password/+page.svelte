@@ -23,7 +23,14 @@
 			{#if data.status === 'invalid' || data.status === 'missing' || data.status === 'used'}
 				<div class="flex flex-col items-center gap-4 text-center">
 					<div class="flex h-14 w-14 items-center justify-center rounded-full bg-error/15">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-7 w-7 text-error"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+						>
 							<circle cx="12" cy="12" r="10" />
 							<line x1="12" y1="8" x2="12" y2="12" />
 							<line x1="12" y1="16" x2="12.01" y2="16" />
@@ -37,7 +44,7 @@
 							Dieser Link ist ungültig oder abgelaufen. Bitte fordern Sie einen neuen an.
 						{/if}
 					</p>
-					<a href="/forgot-password" class="btn btn-primary mt-2 w-full">Neuen Link anfordern</a>
+					<a href="/forgot-password" class="btn mt-2 w-full btn-primary">Neuen Link anfordern</a>
 				</div>
 			{:else}
 				<h1 class="mb-6 text-xl font-semibold text-base-content">Neues Passwort</h1>
@@ -70,7 +77,7 @@
 							minlength="8"
 							autocomplete="new-password"
 							placeholder="Mindestens 8 Zeichen"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 
@@ -83,13 +90,13 @@
 							minlength="8"
 							autocomplete="new-password"
 							placeholder="Passwort wiederholen"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 
-					<button type="submit" disabled={loading} class="btn btn-primary mt-2 w-full">
+					<button type="submit" disabled={loading} class="btn mt-2 w-full btn-primary">
 						{#if loading}
-							<span class="loading loading-spinner loading-sm"></span>
+							<span class="loading loading-sm loading-spinner"></span>
 						{:else}
 							Passwort speichern
 						{/if}

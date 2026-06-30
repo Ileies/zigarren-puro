@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Carousel from '../Carousel.svelte';
-	
+
 	const carouselSlides = [
 		{
 			id: 'slide1',
@@ -34,7 +34,7 @@
 </script>
 
 <!-- Carousel Section -->
-<section class="py-8 bg-base-200/50">
+<section class="bg-base-200/50 py-8">
 	<div class="container mx-auto px-6">
 		<Carousel slides={carouselSlides} />
 	</div>

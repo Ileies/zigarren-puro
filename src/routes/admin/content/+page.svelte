@@ -17,9 +17,9 @@
 	});
 </script>
 
-<div class="p-6 max-w-3xl">
-	<h1 class="text-xl font-bold text-zinc-900 mb-1">Website-Inhalte</h1>
-	<p class="text-sm text-zinc-500 mb-8">Texte und Bilder der Startseite bearbeiten</p>
+<div class="max-w-3xl p-6">
+	<h1 class="mb-1 text-xl font-bold text-zinc-900">Website-Inhalte</h1>
+	<p class="mb-8 text-sm text-zinc-500">Texte und Bilder der Startseite bearbeiten</p>
 
 	{#if form?.error}
 		<div class="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -29,50 +29,51 @@
 
 	<!-- Hero-Bereich -->
 	<section class="mb-8">
-		<h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500 mb-4">
+		<h2 class="mb-4 text-sm font-semibold tracking-wide text-zinc-500 uppercase">
 			Startseite - Hero-Bereich
 		</h2>
 
 		<!-- Hero Hintergrundbild -->
-		<div class="bg-white rounded-lg border border-zinc-200 p-5 mb-4">
-			<h3 class="text-sm font-semibold text-zinc-800 mb-3">Hintergrundbild</h3>
+		<div class="mb-4 rounded-lg border border-zinc-200 bg-white p-5">
+			<h3 class="mb-3 text-sm font-semibold text-zinc-800">Hintergrundbild</h3>
 
 			{#if form?.imageSuccess}
-				<div class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+				<div
+					class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700"
+				>
 					Bild erfolgreich hochgeladen.
 				</div>
 			{/if}
 
 			<div class="mb-4">
-				<div class="relative w-full h-48 rounded overflow-hidden bg-zinc-100 border border-zinc-200">
+				<div
+					class="relative h-48 w-full overflow-hidden rounded border border-zinc-200 bg-zinc-100"
+				>
 					<img
 						src={heroImagePreview ?? data.content.hero_bg_image}
 						alt="Hero Vorschau"
-						class="w-full h-full object-cover"
+						class="h-full w-full object-cover"
 					/>
-					<div class="absolute inset-0 bg-gradient-to-b from-black/40 to-black/60 flex items-center justify-center">
-						<span class="text-white text-sm font-medium opacity-80">Vorschau</span>
+					<div
+						class="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/40 to-black/60"
+					>
+						<span class="text-sm font-medium text-white opacity-80">Vorschau</span>
 					</div>
 				</div>
 			</div>
 
-			<form
-				method="POST"
-				action="?/uploadHeroImage"
-				enctype="multipart/form-data"
-				use:enhance
-			>
+			<form method="POST" action="?/uploadHeroImage" enctype="multipart/form-data" use:enhance>
 				<div class="flex items-center gap-3">
 					<input
 						type="file"
 						name="hero_image"
 						accept="image/jpeg,image/png,image/webp"
 						bind:files={heroImageFile}
-						class="block text-sm text-zinc-600 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border file:border-zinc-200 file:bg-zinc-50 file:text-xs file:font-medium file:text-zinc-700 hover:file:bg-zinc-100 cursor-pointer"
+						class="block cursor-pointer text-sm text-zinc-600 file:mr-3 file:rounded file:border file:border-zinc-200 file:bg-zinc-50 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-zinc-700 hover:file:bg-zinc-100"
 					/>
 					<button
 						type="submit"
-						class="shrink-0 px-4 py-1.5 text-sm font-medium bg-zinc-900 text-white rounded hover:bg-zinc-700 transition-colors"
+						class="shrink-0 rounded bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 					>
 						Hochladen
 					</button>
@@ -82,11 +83,13 @@
 		</div>
 
 		<!-- Hero Texte -->
-		<div class="bg-white rounded-lg border border-zinc-200 p-5">
-			<h3 class="text-sm font-semibold text-zinc-800 mb-3">Texte & CTA</h3>
+		<div class="rounded-lg border border-zinc-200 bg-white p-5">
+			<h3 class="mb-3 text-sm font-semibold text-zinc-800">Texte & CTA</h3>
 
 			{#if form?.heroSuccess}
-				<div class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+				<div
+					class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700"
+				>
 					Änderungen gespeichert.
 				</div>
 			{/if}
@@ -94,7 +97,7 @@
 			<form method="POST" action="?/updateHero" use:enhance>
 				<div class="space-y-4">
 					<div>
-						<label for="hero_subtitle" class="block text-xs font-medium text-zinc-600 mb-1">
+						<label for="hero_subtitle" class="mb-1 block text-xs font-medium text-zinc-600">
 							Untertitel <span class="text-zinc-400">(oberhalb des Titels)</span>
 						</label>
 						<input
@@ -103,12 +106,12 @@
 							type="text"
 							value={data.content.hero_subtitle}
 							placeholder={data.defaults.hero_subtitle}
-							class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400"
+							class="w-full rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 						/>
 					</div>
 
 					<div>
-						<label for="hero_tagline" class="block text-xs font-medium text-zinc-600 mb-1">
+						<label for="hero_tagline" class="mb-1 block text-xs font-medium text-zinc-600">
 							Tagline <span class="text-zinc-400">(unterhalb des Titels)</span>
 						</label>
 						<textarea
@@ -117,13 +120,13 @@
 							rows="2"
 							value={data.content.hero_tagline}
 							placeholder={data.defaults.hero_tagline}
-							class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400 resize-none"
+							class="w-full resize-none rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 						></textarea>
 					</div>
 
 					<div class="grid grid-cols-2 gap-4">
 						<div>
-							<label for="hero_cta_text" class="block text-xs font-medium text-zinc-600 mb-1">
+							<label for="hero_cta_text" class="mb-1 block text-xs font-medium text-zinc-600">
 								Button-Text
 							</label>
 							<input
@@ -132,11 +135,11 @@
 								type="text"
 								value={data.content.hero_cta_text}
 								placeholder={data.defaults.hero_cta_text}
-								class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400"
+								class="w-full rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 							/>
 						</div>
 						<div>
-							<label for="hero_cta_link" class="block text-xs font-medium text-zinc-600 mb-1">
+							<label for="hero_cta_link" class="mb-1 block text-xs font-medium text-zinc-600">
 								Button-Link
 							</label>
 							<input
@@ -145,7 +148,7 @@
 								type="text"
 								value={data.content.hero_cta_link}
 								placeholder={data.defaults.hero_cta_link}
-								class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400"
+								class="w-full rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 							/>
 						</div>
 					</div>
@@ -154,7 +157,7 @@
 				<div class="mt-4 flex justify-end">
 					<button
 						type="submit"
-						class="px-5 py-2 text-sm font-medium bg-zinc-900 text-white rounded hover:bg-zinc-700 transition-colors"
+						class="rounded bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 					>
 						Speichern
 					</button>
@@ -165,11 +168,13 @@
 
 	<!-- Social Links -->
 	<section>
-		<h2 class="text-sm font-semibold uppercase tracking-wide text-zinc-500 mb-4">Social Links</h2>
+		<h2 class="mb-4 text-sm font-semibold tracking-wide text-zinc-500 uppercase">Social Links</h2>
 
-		<div class="bg-white rounded-lg border border-zinc-200 p-5">
+		<div class="rounded-lg border border-zinc-200 bg-white p-5">
 			{#if form?.socialSuccess}
-				<div class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">
+				<div
+					class="mb-3 rounded border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700"
+				>
 					Social Links gespeichert.
 				</div>
 			{/if}
@@ -177,7 +182,7 @@
 			<form method="POST" action="?/updateSocial" use:enhance>
 				<div class="space-y-4">
 					<div>
-						<label for="social_facebook" class="block text-xs font-medium text-zinc-600 mb-1">
+						<label for="social_facebook" class="mb-1 block text-xs font-medium text-zinc-600">
 							Facebook URL
 						</label>
 						<input
@@ -186,12 +191,12 @@
 							type="url"
 							value={data.content.social_facebook}
 							placeholder={data.defaults.social_facebook}
-							class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400"
+							class="w-full rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 						/>
 					</div>
 
 					<div>
-						<label for="social_instagram" class="block text-xs font-medium text-zinc-600 mb-1">
+						<label for="social_instagram" class="mb-1 block text-xs font-medium text-zinc-600">
 							Instagram URL
 						</label>
 						<input
@@ -200,7 +205,7 @@
 							type="url"
 							value={data.content.social_instagram}
 							placeholder={data.defaults.social_instagram}
-							class="w-full px-3 py-2 text-sm border border-zinc-200 rounded focus:outline-none focus:ring-2 focus:ring-zinc-400"
+							class="w-full rounded border border-zinc-200 px-3 py-2 text-sm focus:ring-2 focus:ring-zinc-400 focus:outline-none"
 						/>
 					</div>
 				</div>
@@ -208,7 +213,7 @@
 				<div class="mt-4 flex justify-end">
 					<button
 						type="submit"
-						class="px-5 py-2 text-sm font-medium bg-zinc-900 text-white rounded hover:bg-zinc-700 transition-colors"
+						class="rounded bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
 					>
 						Speichern
 					</button>

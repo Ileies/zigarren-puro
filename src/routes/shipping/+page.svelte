@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { Truck, Clock, MapPin, Shield, Package, AlertTriangle, CheckCircle, Euro } from '@lucide/svelte';
+	import {
+		Truck,
+		Clock,
+		MapPin,
+		Shield,
+		Package,
+		AlertTriangle,
+		CheckCircle,
+		Euro
+	} from '@lucide/svelte';
 	import { email, phone } from '$lib/config';
 </script>
 
@@ -8,30 +17,35 @@
 	<meta name="description" content="Versandoptionen, Lieferzeiten und Kosten bei Zigarren Puro" />
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-5xl">
+<div class="container mx-auto max-w-5xl px-4 py-8">
 	<!-- Header -->
-	<div class="text-center mb-12">
-		<h1 class="text-4xl font-bold text-primary mb-4">Versand & Lieferung</h1>
-		<p class="text-lg text-base-content/70">Alles zu Lieferzeiten, Kosten und Besonderheiten bei Tabakwaren</p>
+	<div class="mb-12 text-center">
+		<h1 class="mb-4 text-4xl font-bold text-primary">Versand & Lieferung</h1>
+		<p class="text-lg text-base-content/70">
+			Alles zu Lieferzeiten, Kosten und Besonderheiten bei Tabakwaren
+		</p>
 	</div>
 
 	<!-- Age Verification Notice -->
-	<div class="alert alert-warning mb-8">
-		<AlertTriangle class="w-6 h-6 flex-shrink-0" />
+	<div class="mb-8 alert alert-warning">
+		<AlertTriangle class="h-6 w-6 flex-shrink-0" />
 		<div>
 			<h3 class="font-bold">Altersverifikation bei der Lieferung</h3>
-			<p>Tabakwaren dürfen gesetzlich nur an Personen ab 18 Jahren übergeben werden. Der Zusteller ist verpflichtet, Ihren Personalausweis zu prüfen. Bitte halten Sie diesen bei der Lieferung bereit.</p>
+			<p>
+				Tabakwaren dürfen gesetzlich nur an Personen ab 18 Jahren übergeben werden. Der Zusteller
+				ist verpflichtet, Ihren Personalausweis zu prüfen. Bitte halten Sie diesen bei der Lieferung
+				bereit.
+			</p>
 		</div>
 	</div>
 
-	<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-		<div class="lg:col-span-2 space-y-6">
-
+	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+		<div class="space-y-6 lg:col-span-2">
 			<!-- Lieferzeiten -->
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
-					<h2 class="card-title text-xl mb-4 flex items-center gap-2">
-						<Clock class="w-5 h-5 text-secondary" />
+					<h2 class="mb-4 card-title flex items-center gap-2 text-xl">
+						<Clock class="h-5 w-5 text-secondary" />
 						Lieferzeiten
 					</h2>
 					<div class="overflow-x-auto">
@@ -47,7 +61,7 @@
 								<tr>
 									<td>
 										<div class="flex items-center gap-2">
-											<MapPin class="w-4 h-4 text-secondary" />
+											<MapPin class="h-4 w-4 text-secondary" />
 											Deutschland
 										</div>
 									</td>
@@ -57,7 +71,7 @@
 								<tr>
 									<td>
 										<div class="flex items-center gap-2">
-											<MapPin class="w-4 h-4 text-secondary" />
+											<MapPin class="h-4 w-4 text-secondary" />
 											EU (Nachbarländer)
 										</div>
 									</td>
@@ -67,7 +81,7 @@
 								<tr>
 									<td>
 										<div class="flex items-center gap-2">
-											<MapPin class="w-4 h-4 text-secondary" />
+											<MapPin class="h-4 w-4 text-secondary" />
 											Übriges EU-Ausland
 										</div>
 									</td>
@@ -77,8 +91,9 @@
 							</tbody>
 						</table>
 					</div>
-					<p class="text-sm text-base-content/60 mt-2">
-						Werktage: Montag bis Freitag, ohne gesetzliche Feiertage. Bestellungen, die bis 12:00 Uhr eingehen, werden in der Regel noch am gleichen Tag bearbeitet.
+					<p class="mt-2 text-sm text-base-content/60">
+						Werktage: Montag bis Freitag, ohne gesetzliche Feiertage. Bestellungen, die bis 12:00
+						Uhr eingehen, werden in der Regel noch am gleichen Tag bearbeitet.
 					</p>
 				</div>
 			</div>
@@ -86,16 +101,21 @@
 			<!-- Versandkosten -->
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
-					<h2 class="card-title text-xl mb-4 flex items-center gap-2">
-						<Euro class="w-5 h-5 text-secondary" />
+					<h2 class="mb-4 card-title flex items-center gap-2 text-xl">
+						<Euro class="h-5 w-5 text-secondary" />
 						Versandkosten
 					</h2>
 					<div class="space-y-4">
-						<div class="bg-success/10 border border-success/20 p-4 rounded-lg flex items-start gap-3">
-							<CheckCircle class="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
+						<div
+							class="flex items-start gap-3 rounded-lg border border-success/20 bg-success/10 p-4"
+						>
+							<CheckCircle class="mt-0.5 h-5 w-5 flex-shrink-0 text-success" />
 							<div>
 								<p class="font-semibold text-success">Kostenloser Versand ab 150 €</p>
-								<p class="text-sm">Für alle Bestellungen innerhalb Deutschlands ab einem Warenwert von 150 € liefern wir versandkostenfrei.</p>
+								<p class="text-sm">
+									Für alle Bestellungen innerhalb Deutschlands ab einem Warenwert von 150 € liefern
+									wir versandkostenfrei.
+								</p>
 							</div>
 						</div>
 						<div class="overflow-x-auto">
@@ -122,7 +142,10 @@
 								</tbody>
 							</table>
 						</div>
-						<p class="text-sm text-base-content/60">Alle Preise inkl. MwSt. Für Länder, die nicht aufgeführt sind, wird der Versandpreis im Checkout berechnet.</p>
+						<p class="text-sm text-base-content/60">
+							Alle Preise inkl. MwSt. Für Länder, die nicht aufgeführt sind, wird der Versandpreis
+							im Checkout berechnet.
+						</p>
 					</div>
 				</div>
 			</div>
@@ -130,33 +153,37 @@
 			<!-- Verpackung -->
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
-					<h2 class="card-title text-xl mb-4 flex items-center gap-2">
-						<Package class="w-5 h-5 text-secondary" />
+					<h2 class="mb-4 card-title flex items-center gap-2 text-xl">
+						<Package class="h-5 w-5 text-secondary" />
 						Verpackung und Sorgfalt
 					</h2>
 					<div class="prose prose-sm max-w-none space-y-3">
-						<p>Zigarren und Zigarillos sind empfindliche Naturprodukte, die sachgemäßer Lagerung bedürfen. Wir verpacken jede Bestellung sorgfältig:</p>
+						<p>
+							Zigarren und Zigarillos sind empfindliche Naturprodukte, die sachgemäßer Lagerung
+							bedürfen. Wir verpacken jede Bestellung sorgfältig:
+						</p>
 						<ul>
 							<li>Klimatisierte Lagerung im Humidor bis zum Versand</li>
 							<li>Feuchtigkeitsregulierende Verpackung für den Transport</li>
 							<li>Stabile Kartonage zum Schutz vor Beschädigungen</li>
 							<li>Diskreter, wertig wirkender Versand ohne Aufdruck des Inhalts</li>
 						</ul>
-						<p>Bitte prüfen Sie die Lieferung bei Erhalt auf sichtbare Transportschäden und nehmen Sie beschädigte Sendungen unter Vorbehalt an oder verweigern Sie die Annahme.</p>
+						<p>
+							Bitte prüfen Sie die Lieferung bei Erhalt auf sichtbare Transportschäden und nehmen
+							Sie beschädigte Sendungen unter Vorbehalt an oder verweigern Sie die Annahme.
+						</p>
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 		<!-- Sidebar -->
 		<div class="space-y-6">
-
 			<!-- Altersverifikation Details -->
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
-					<h2 class="card-title text-lg mb-3 flex items-center gap-2">
-						<Shield class="w-5 h-5 text-secondary" />
+					<h2 class="mb-3 card-title flex items-center gap-2 text-lg">
+						<Shield class="h-5 w-5 text-secondary" />
 						Altersverifikation
 					</h2>
 					<div class="space-y-3 text-sm">
@@ -166,9 +193,12 @@
 							<div class="step step-primary">Personalausweis vorzeigen</div>
 							<div class="step step-primary">Volljährigkeit bestätigt → Übergabe</div>
 						</div>
-						<div class="alert alert-error alert-sm mt-2">
-							<AlertTriangle class="w-4 h-4" />
-							<p class="text-xs">Bei fehlendem Ausweis oder Minderjährigkeit wird nicht zugestellt. Die Rücksendekosten trägt der Kunde.</p>
+						<div class="alert-sm mt-2 alert alert-error">
+							<AlertTriangle class="h-4 w-4" />
+							<p class="text-xs">
+								Bei fehlendem Ausweis oder Minderjährigkeit wird nicht zugestellt. Die
+								Rücksendekosten trägt der Kunde.
+							</p>
 						</div>
 					</div>
 				</div>
@@ -177,25 +207,30 @@
 			<!-- Kontakt bei Fragen -->
 			<div class="card bg-base-100 shadow-lg">
 				<div class="card-body">
-					<h2 class="card-title text-lg mb-3 flex items-center gap-2">
-						<Truck class="w-5 h-5 text-secondary" />
+					<h2 class="mb-3 card-title flex items-center gap-2 text-lg">
+						<Truck class="h-5 w-5 text-secondary" />
 						Fragen zur Lieferung?
 					</h2>
 					<div class="space-y-3 text-sm">
 						<p>Unser Team hilft Ihnen gerne weiter:</p>
-						<a href={`tel:${phone.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2 hover:text-secondary transition-colors">
+						<a
+							href={`tel:${phone.replace(/[^+\d]/g, '')}`}
+							class="flex items-center gap-2 transition-colors hover:text-secondary"
+						>
 							<span>📞</span>
 							<span>{phone}</span>
 						</a>
-						<a href={`mailto:${email}`} class="flex items-center gap-2 hover:text-secondary transition-colors">
+						<a
+							href={`mailto:${email}`}
+							class="flex items-center gap-2 transition-colors hover:text-secondary"
+						>
 							<span>✉️</span>
 							<span>{email}</span>
 						</a>
-						<p class="text-base-content/60 text-xs">Mo–Fr: 13:00–19:00 Uhr</p>
+						<p class="text-xs text-base-content/60">Mo–Fr: 13:00–19:00 Uhr</p>
 					</div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </div>

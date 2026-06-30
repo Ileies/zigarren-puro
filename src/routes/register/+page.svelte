@@ -61,7 +61,7 @@
 							required
 							autocomplete="given-name"
 							placeholder="Max"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 					<label class="flex flex-col gap-1.5">
@@ -73,7 +73,7 @@
 							required
 							autocomplete="family-name"
 							placeholder="Mustermann"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 				</div>
@@ -88,7 +88,7 @@
 						required
 						autocomplete="email"
 						placeholder="ihre@email.de"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 					/>
 				</label>
 
@@ -97,7 +97,7 @@
 					<label class="flex flex-col gap-1.5">
 						<span class="text-sm font-medium">
 							Geburtsdatum <span class="text-error">*</span>
-							<span class="text-xs text-base-content/50 font-normal">(mind. 18 Jahre)</span>
+							<span class="text-xs font-normal text-base-content/50">(mind. 18 Jahre)</span>
 						</span>
 						<input
 							type="date"
@@ -106,15 +106,12 @@
 							required
 							max={maxBirthDate()}
 							autocomplete="bday"
-							class="input input-bordered w-full focus:input-primary"
+							class="input-bordered input w-full focus:input-primary"
 						/>
 					</label>
 					<label class="flex flex-col gap-1.5">
 						<span class="text-sm font-medium">Anrede</span>
-						<select
-							name="gender"
-							class="select select-bordered w-full focus:select-primary"
-						>
+						<select name="gender" class="select-bordered select w-full focus:select-primary">
 							<option value="">Keine Angabe</option>
 							<option value="male" selected={form?.gender === 'male'}>Herr</option>
 							<option value="female" selected={form?.gender === 'female'}>Frau</option>
@@ -127,7 +124,7 @@
 				<label class="flex flex-col gap-1.5">
 					<span class="text-sm font-medium text-base-content">
 						Telefon
-						<span class="text-xs text-base-content/50 font-normal">(optional)</span>
+						<span class="text-xs font-normal text-base-content/50">(optional)</span>
 					</span>
 					<input
 						type="tel"
@@ -135,7 +132,7 @@
 						value={form?.phone ?? ''}
 						autocomplete="tel"
 						placeholder="+49 123 456789"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 					/>
 				</label>
 
@@ -152,7 +149,7 @@
 						minlength="8"
 						autocomplete="new-password"
 						placeholder="Mindestens 8 Zeichen"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 						class:input-error={passwordTooShort}
 					/>
 					{#if passwordTooShort}
@@ -161,7 +158,9 @@
 				</label>
 
 				<label class="flex flex-col gap-1.5">
-					<span class="text-sm font-medium">Passwort bestätigen <span class="text-error">*</span></span>
+					<span class="text-sm font-medium"
+						>Passwort bestätigen <span class="text-error">*</span></span
+					>
 					<input
 						type="password"
 						name="passwordConfirm"
@@ -169,7 +168,7 @@
 						required
 						autocomplete="new-password"
 						placeholder="Passwort wiederholen"
-						class="input input-bordered w-full focus:input-primary"
+						class="input-bordered input w-full focus:input-primary"
 						class:input-error={passwordMismatch}
 					/>
 					{#if passwordMismatch}
@@ -186,7 +185,7 @@
 							type="checkbox"
 							name="acceptTerms"
 							required
-							class="checkbox checkbox-primary mt-0.5 shrink-0"
+							class="checkbox mt-0.5 shrink-0 checkbox-primary"
 						/>
 						<span class="text-sm text-base-content/80">
 							Ich akzeptiere die
@@ -201,7 +200,7 @@
 						<input
 							type="checkbox"
 							name="marketingConsent"
-							class="checkbox checkbox-primary mt-0.5 shrink-0"
+							class="checkbox mt-0.5 shrink-0 checkbox-primary"
 						/>
 						<span class="text-sm text-base-content/80">
 							Ich möchte Angebote, Neuigkeiten und exklusive Empfehlungen per E-Mail erhalten.
@@ -209,9 +208,13 @@
 					</label>
 				</div>
 
-				<button type="submit" disabled={loading || passwordMismatch || passwordTooShort} class="btn btn-primary mt-1 w-full">
+				<button
+					type="submit"
+					disabled={loading || passwordMismatch || passwordTooShort}
+					class="btn mt-1 w-full btn-primary"
+				>
 					{#if loading}
-						<span class="loading loading-spinner loading-sm"></span>
+						<span class="loading loading-sm loading-spinner"></span>
 					{:else}
 						Konto erstellen
 					{/if}

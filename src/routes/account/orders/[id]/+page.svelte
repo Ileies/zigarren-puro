@@ -55,7 +55,7 @@
 <div class="min-h-screen bg-base-200">
 	<div class="mx-auto max-w-3xl px-4 py-10">
 		<div class="mb-6 flex items-center gap-3">
-			<a href="/account/orders" class="btn btn-ghost btn-sm btn-circle">
+			<a href="/account/orders" class="btn btn-circle btn-ghost btn-sm">
 				<ArrowLeft class="h-4 w-4" />
 			</a>
 			<div>
@@ -85,19 +85,25 @@
 				<dl class="space-y-1.5 text-sm">
 					<div class="flex justify-between gap-4">
 						<dt class="text-base-content/50">Bestellnr.</dt>
-						<dd class="font-mono text-xs text-base-content/70 break-all">{order.id}</dd>
+						<dd class="font-mono text-xs break-all text-base-content/70">{order.id}</dd>
 					</div>
 					<div class="flex justify-between">
 						<dt class="text-base-content/50">Versandart</dt>
-						<dd class="text-base-content">{shippingMethodLabels[order.shippingMethod] ?? order.shippingMethod}</dd>
+						<dd class="text-base-content">
+							{shippingMethodLabels[order.shippingMethod] ?? order.shippingMethod}
+						</dd>
 					</div>
 					<div class="flex justify-between">
 						<dt class="text-base-content/50">Zahlungsart</dt>
-						<dd class="text-base-content">{paymentMethodLabels[order.paymentMethod] ?? order.paymentMethod}</dd>
+						<dd class="text-base-content">
+							{paymentMethodLabels[order.paymentMethod] ?? order.paymentMethod}
+						</dd>
 					</div>
 					<div class="flex justify-between">
 						<dt class="text-base-content/50">Zahlungsstatus</dt>
-						<dd class="text-base-content">{paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}</dd>
+						<dd class="text-base-content">
+							{paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}
+						</dd>
 					</div>
 					{#if order.placedAt}
 						<div class="flex justify-between">
@@ -120,7 +126,7 @@
 					Lieferadresse
 				</h2>
 				{#if order.shippingAddress}
-					<address class="not-italic text-sm text-base-content/80 space-y-0.5">
+					<address class="space-y-0.5 text-sm text-base-content/80 not-italic">
 						<p>{order.shippingAddress.street}</p>
 						<p>{order.shippingAddress.postalCode} {order.shippingAddress.city}</p>
 						{#if order.shippingAddress.state}
@@ -133,11 +139,11 @@
 				{/if}
 
 				{#if order.billingAddress && order.billingAddress.id !== order.shippingAddress?.id}
-					<h2 class="mb-3 mt-5 flex items-center gap-2 text-sm font-semibold text-base-content">
+					<h2 class="mt-5 mb-3 flex items-center gap-2 text-sm font-semibold text-base-content">
 						<MapPin class="h-4 w-4 text-base-content/40" />
 						Rechnungsadresse
 					</h2>
-					<address class="not-italic text-sm text-base-content/80 space-y-0.5">
+					<address class="space-y-0.5 text-sm text-base-content/80 not-italic">
 						<p>{order.billingAddress.street}</p>
 						<p>{order.billingAddress.postalCode} {order.billingAddress.city}</p>
 						{#if order.billingAddress.state}
@@ -157,10 +163,22 @@
 			<table class="w-full text-sm">
 				<thead>
 					<tr class="border-b border-base-200 bg-base-200/50">
-						<th class="px-5 py-2.5 text-left text-xs font-medium uppercase tracking-wide text-base-content/50">Produkt</th>
-						<th class="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wide text-base-content/50">Einzelpreis</th>
-						<th class="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wide text-base-content/50">Menge</th>
-						<th class="px-5 py-2.5 text-right text-xs font-medium uppercase tracking-wide text-base-content/50">Gesamt</th>
+						<th
+							class="px-5 py-2.5 text-left text-xs font-medium tracking-wide text-base-content/50 uppercase"
+							>Produkt</th
+						>
+						<th
+							class="px-5 py-2.5 text-right text-xs font-medium tracking-wide text-base-content/50 uppercase"
+							>Einzelpreis</th
+						>
+						<th
+							class="px-5 py-2.5 text-right text-xs font-medium tracking-wide text-base-content/50 uppercase"
+							>Menge</th
+						>
+						<th
+							class="px-5 py-2.5 text-right text-xs font-medium tracking-wide text-base-content/50 uppercase"
+							>Gesamt</th
+						>
 					</tr>
 				</thead>
 				<tbody>
@@ -168,25 +186,34 @@
 						<tr class="border-b border-base-200/50 last:border-0">
 							<td class="px-5 py-3 text-base-content">
 								{#if item.product}
-									<a href="/products/{item.product.id}" class="hover:text-primary transition-colors">
+									<a
+										href="/products/{item.product.id}"
+										class="transition-colors hover:text-primary"
+									>
 										{item.product.name}
 									</a>
 								{:else}
 									<span class="text-base-content/40">Produkt nicht mehr verfügbar</span>
 								{/if}
 							</td>
-							<td class="px-5 py-3 text-right text-base-content/60">{Number(item.unitPrice).toFixed(2)} €</td>
+							<td class="px-5 py-3 text-right text-base-content/60"
+								>{Number(item.unitPrice).toFixed(2)} €</td
+							>
 							<td class="px-5 py-3 text-right text-base-content/60">{item.quantity}</td>
-							<td class="px-5 py-3 text-right font-medium text-base-content">{Number(item.subtotal).toFixed(2)} €</td>
+							<td class="px-5 py-3 text-right font-medium text-base-content"
+								>{Number(item.subtotal).toFixed(2)} €</td
+							>
 						</tr>
 					{:else}
 						<tr>
-							<td colspan="4" class="px-5 py-8 text-center text-sm text-base-content/40">Keine Artikel</td>
+							<td colspan="4" class="px-5 py-8 text-center text-sm text-base-content/40"
+								>Keine Artikel</td
+							>
 						</tr>
 					{/each}
 				</tbody>
 			</table>
-			<div class="border-t border-base-200 px-5 py-4 space-y-1.5 text-sm">
+			<div class="space-y-1.5 border-t border-base-200 px-5 py-4 text-sm">
 				<div class="flex justify-between text-base-content/60">
 					<span>Zwischensumme</span>
 					<span>{Number(order.subtotalAmount).toFixed(2)} €</span>
@@ -199,7 +226,9 @@
 					<span>MwSt.</span>
 					<span>{Number(order.taxAmount).toFixed(2)} €</span>
 				</div>
-				<div class="flex justify-between border-t border-base-200 pt-2 text-base font-semibold text-base-content">
+				<div
+					class="flex justify-between border-t border-base-200 pt-2 text-base font-semibold text-base-content"
+				>
 					<span>Gesamt</span>
 					<span>{Number(order.totalAmount).toFixed(2)} €</span>
 				</div>

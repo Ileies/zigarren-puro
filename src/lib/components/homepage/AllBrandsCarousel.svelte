@@ -1,6 +1,6 @@
 <script lang="ts">
 	import BrandsCarousel from './BrandsCarousel.svelte';
-	
+
 	const allBrands = [
 		{ name: 'A.J. Fernandez', src: '/allbrands/a-j-fernandez.png' },
 		{ name: 'Alec Bradley', src: '/allbrands/alec-bradley.png' },
@@ -33,17 +33,17 @@
 </script>
 
 <!-- All Brands Carousel Section -->
-<section class="py-12 bg-base-200">
+<section class="bg-base-200 py-12">
 	<div class="container mx-auto px-6">
-		<div class="text-center mb-8">
-			<h2 class="text-2xl lg:text-3xl font-bold text-base-content mb-3">
+		<div class="mb-8 text-center">
+			<h2 class="mb-3 text-2xl font-bold text-base-content lg:text-3xl">
 				Weitere <span class="text-secondary">Premium Marken</span>
 			</h2>
 			<p class="text-base text-base-content/70">
 				Entdecken Sie unser komplettes Sortiment weltbekannter Zigarrenmarken
 			</p>
 		</div>
-		
+
 		<BrandsCarousel brands={allBrands} />
 	</div>
 </section>

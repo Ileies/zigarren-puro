@@ -35,7 +35,9 @@ export const actions: Actions = {
 				text: `Name: ${name}\nE-Mail: ${email}\n\n${message}`
 			});
 		} catch {
-			return { error: 'Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.' };
+			return {
+				error: 'Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es erneut.'
+			};
 		}
 
 		return { success: true };
