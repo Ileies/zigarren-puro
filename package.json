@@ -2,6 +2,7 @@
 	"name": "zigarren-puro",
 	"private": true,
 	"version": "0.0.1",
+	"homepage": "https://zigarren-puro.de",
 	"type": "module",
 	"scripts": {
 		"dev": "npx vite dev",
