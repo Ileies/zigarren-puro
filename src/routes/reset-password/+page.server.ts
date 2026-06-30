@@ -64,15 +64,15 @@ export const actions: Actions = {
 
 		const passwordHash = await hashPassword(password);
 
-		await db.transaction(async (tx) => {
-			await tx
-				.update(authCredentialsTable)
+		db.transaction((tx) => {
+			tx.update(authCredentialsTable)
 				.set({ passwordHash, failedAttempts: 0, lockedUntil: null, updatedAt: new Date() })
-				.where(eq(authCredentialsTable.customerId, row.customerId));
-			await tx
-				.update(tokenTable)
+				.where(eq(authCredentialsTable.customerId, row.customerId))
+				.run();
+			tx.update(tokenTable)
 				.set({ usedAt: new Date() })
-				.where(eq(tokenTable.token, token));
+				.where(eq(tokenTable.token, token))
+				.run();
 		});
 
 		redirect(302, '/login?reset=1');

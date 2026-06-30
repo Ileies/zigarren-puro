@@ -33,15 +33,15 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	if (!row) return { status: 'invalid' as const };
 	if (row.usedAt) return { status: 'already_verified' as const };
 
-	await db.transaction(async (tx) => {
-		await tx
-			.update(customerTable)
+	db.transaction((tx) => {
+		tx.update(customerTable)
 			.set({ isVerified: true, updatedAt: new Date() })
-			.where(eq(customerTable.id, row.customerId));
-		await tx
-			.update(tokenTable)
+			.where(eq(customerTable.id, row.customerId))
+			.run();
+		tx.update(tokenTable)
 			.set({ usedAt: new Date() })
-			.where(eq(tokenTable.token, token));
+			.where(eq(tokenTable.token, token))
+			.run();
 	});
 
 	return { status: 'success' as const };
