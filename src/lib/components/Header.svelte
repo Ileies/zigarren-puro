@@ -115,30 +115,10 @@
 
 						<!-- Icons -->
 						<div class="flex items-center gap-6 flex-shrink-0">
-							{#if user}
-								<div class="dropdown dropdown-end">
-									<button tabindex="0" class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors cursor-pointer" aria-label="Konto">
-										<CircleUser class="w-7 h-7" />
-										<span class="hidden xl:block text-base tracking-wide">{user.firstName}</span>
-									</button>
-									<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-									<ul tabindex="0" class="dropdown-content menu bg-base-100 text-base-content rounded-box z-50 w-52 p-2 shadow-lg ring-1 ring-base-300 mt-1">
-										<li class="menu-title text-xs px-3 py-1">{user.firstName} {user.lastName}</li>
-										<li><a href="/account">Mein Konto</a></li>
-										<li><a href="/account/orders">Meine Bestellungen</a></li>
-										<li>
-											<form method="POST" action="/logout">
-												<button type="submit" class="w-full text-left text-error">Abmelden</button>
-											</form>
-										</li>
-									</ul>
-								</div>
-							{:else}
-								<a class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors" href="/login" aria-label="Anmelden">
-									<CircleUser class="w-7 h-7" />
-									<span class="hidden xl:block text-base tracking-wide">Anmelden</span>
-								</a>
-							{/if}
+							<a class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors" href={user ? '/account' : '/login'} aria-label={user ? 'Mein Konto' : 'Anmelden'}>
+								<CircleUser class="w-7 h-7" />
+								<span class="hidden xl:block text-base tracking-wide">{user ? user.firstName : 'Anmelden'}</span>
+							</a>
 							<a class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors" href="/cart" aria-label="Warenkorb">
 								<ShoppingCart class="w-7 h-7" />
 								<span class="hidden xl:block text-base tracking-wide">Warenkorb</span>

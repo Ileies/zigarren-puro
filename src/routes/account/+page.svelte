@@ -6,6 +6,7 @@
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	let activeTab = $state<'profile' | 'password' | 'email'>('profile');
+	let logoutModalOpen = $state(false);
 	let profileLoading = $state(false);
 	let passwordLoading = $state(false);
 	let emailLoading = $state(false);
@@ -402,5 +403,27 @@
 				{/if}
 			</div>
 		</div>
+
+		<!-- Abmelden -->
+		<div class="mt-8 border-t border-base-300 pt-6">
+			<button onclick={() => (logoutModalOpen = true)} class="btn btn-outline btn-error btn-sm">Abmelden</button>
+		</div>
+
+		<!-- Abmelden-Bestätigung -->
+		{#if logoutModalOpen}
+			<div class="modal modal-open">
+				<div class="modal-box max-w-sm">
+					<h3 class="text-lg font-semibold">Wirklich abmelden?</h3>
+					<p class="mt-2 text-sm text-base-content/60">Sie werden aus Ihrem Konto abgemeldet.</p>
+					<div class="modal-action">
+						<button onclick={() => (logoutModalOpen = false)} class="btn btn-ghost btn-sm">Abbrechen</button>
+						<form method="POST" action="/logout">
+							<button type="submit" class="btn btn-error btn-sm">Abmelden</button>
+						</form>
+					</div>
+				</div>
+				<button class="modal-backdrop" onclick={() => (logoutModalOpen = false)}></button>
+			</div>
+		{/if}
 	</div>
 </div>
