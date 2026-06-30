@@ -21,7 +21,7 @@ try {
 
 	// Clean remote directory (excluding data folder)
 	console.log('Cleaning remote directory...');
-	await $`ssh zp "find ${REMOTE_DIR} -mindepth 1 -maxdepth 1 ! -name 'data' -exec rm -rf {} +"`;
+	await $`ssh zp "find ${REMOTE_DIR} -mindepth 1 -maxdepth 1 ! -name 'data' ! -name 'local.db' -exec rm -rf {} +"`;
 
 	// Extract build on server
 	console.log('Extracting build on server...');
