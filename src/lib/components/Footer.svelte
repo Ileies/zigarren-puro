@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { Award, Globe, Mail, MapPin, Phone, Shield, Truck } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
-	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
+	import { storeAddress, location, facebook as defaultFacebook, instagram as defaultInstagram, phone, email } from '$lib/config';
 	import * as m from '$lib/messages';
 	import { enhance } from '$app/forms';
+
+	interface Props {
+		facebook?: string;
+		instagram?: string;
+	}
+
+	let { facebook = defaultFacebook, instagram = defaultInstagram }: Props = $props();
 
 	const customerServiceLinks = [
 		{ title: m.contact(), href: '/contact' },

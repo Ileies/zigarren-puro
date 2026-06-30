@@ -26,7 +26,7 @@
 		</main>
 	</div>
 
-	<Footer />
+	<Footer facebook={data.socialFacebook} instagram={data.socialInstagram} />
 
 	{#if welcomeVisible && data.user}
 		<WelcomeModal firstName={data.user.firstName} onClose={() => (welcomeVisible = false)} />
