@@ -14,7 +14,12 @@ import type { BeverageType, CigarStrength, FilterType } from '$lib/types';
 import { writeFile, unlink, mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const PRODUCT_IMAGES_DIR = join(process.cwd(), 'static', 'product-images');
+// adapter-node serves static files from build/client/ at runtime; in dev they live in static/
+const PRODUCT_IMAGES_DIR = join(
+	process.cwd(),
+	process.env.NODE_ENV === 'production' ? 'client' : 'static',
+	'product-images'
+);
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024;
 
