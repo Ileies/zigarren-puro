@@ -1,12 +1,26 @@
 <script lang="ts">
-	import { heroTagline, heroCtaButton } from '$lib/messages';
+	interface Props {
+		bgImage?: string;
+		subtitle?: string;
+		tagline?: string;
+		ctaText?: string;
+		ctaLink?: string;
+	}
+
+	let {
+		bgImage = '/gallery/cohiba-linea.png',
+		subtitle = 'Premium · Since 2024',
+		tagline = 'Exklusive Zigarren und Spirituosen aus aller Welt - für wahre Kenner.',
+		ctaText = 'Shop besuchen',
+		ctaLink = '/shop'
+	}: Props = $props();
 </script>
 
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
 	<!-- Background image -->
 	<div
 		class="absolute inset-0 bg-cover bg-center scale-105"
-		style="background-image: url('/gallery/cohiba-linea.png');"
+		style="background-image: url('{bgImage}');"
 	></div>
 
 	<!-- Gradient overlay -->
@@ -15,19 +29,19 @@
 	<!-- Content -->
 	<div class="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
 		<p class="text-sm md:text-base font-light tracking-[0.4em] uppercase text-amber-400 mb-6 opacity-90">
-			Premium · Since 2024
+			{subtitle}
 		</p>
 		<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight leading-none">
 			Zigarren Puro
 		</h1>
 		<p class="text-lg md:text-xl lg:text-2xl mb-12 opacity-80 font-light tracking-wide max-w-2xl mx-auto">
-			{heroTagline()}
+			{tagline}
 		</p>
 		<a
-			href="/shop"
+			href={ctaLink}
 			class="btn btn-lg border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 px-10 tracking-widest uppercase text-sm font-semibold"
 		>
-			{heroCtaButton()}
+			{ctaText}
 		</a>
 	</div>
 

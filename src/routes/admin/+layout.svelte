@@ -7,8 +7,9 @@
 		{ href: '/admin', label: 'Dashboard', exact: true },
 		{ href: '/admin/inventory', label: 'Inventar', exact: false },
 		{ href: '/admin/producers', label: 'Hersteller', exact: false },
-{ href: '/admin/orders', label: 'Bestellungen', exact: false },
-		{ href: '/admin/customers', label: 'Kunden', exact: false }
+		{ href: '/admin/orders', label: 'Bestellungen', exact: false },
+		{ href: '/admin/customers', label: 'Kunden', exact: false },
+		{ href: '/admin/content', label: 'Inhalte', exact: false }
 	];
 
 	function isActive(href: string, exact: boolean) {
