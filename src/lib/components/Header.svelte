@@ -68,14 +68,13 @@
 								</label>
 							</div>
 
-							<div class="flex items-center gap-2 flex-shrink-0">
-								<a href={user ? '/account' : '/login'} class="btn btn-ghost btn-circle transition-colors" aria-label={user ? 'Mein Konto' : 'Anmelden'}>
-									<CircleUser class="w-7 h-7" />
+							<div class="flex items-center gap-5 flex-shrink-0">
+								<a href={user ? '/account' : '/login'} class="text-primary-content/70 hover:text-primary-content transition-colors" aria-label={user ? 'Mein Konto' : 'Anmelden'}>
+									<CircleUser class="w-8 h-8" />
 								</a>
-								<a href="/cart" class="btn btn-ghost btn-circle transition-colors relative"
-									 aria-label="Cart">
-									<ShoppingCart class="w-7 h-7" />
-									{#if cartCount > 0}<span class="badge badge-accent badge-xs absolute -top-1 -right-1">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
+								<a href="/cart" class="relative text-primary-content/70 hover:text-primary-content transition-colors" aria-label="Warenkorb">
+									<ShoppingCart class="w-8 h-8" />
+									{#if cartCount > 0}<span class="badge badge-accent badge-xs absolute -top-1 -right-1 font-bold">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
 								</a>
 							</div>
 						</div>
@@ -115,11 +114,12 @@
 						</label>
 
 						<!-- Icons -->
-						<div class="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+						<div class="flex items-center gap-6 flex-shrink-0">
 							{#if user}
 								<div class="dropdown dropdown-end">
-									<button tabindex="0" class="btn btn-ghost transition-colors p-2" aria-label="Konto">
-										<CircleUser class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+									<button tabindex="0" class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors cursor-pointer" aria-label="Konto">
+										<CircleUser class="w-7 h-7" />
+										<span class="hidden xl:block text-base tracking-wide">{user.firstName}</span>
 									</button>
 									<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 									<ul tabindex="0" class="dropdown-content menu bg-base-100 text-base-content rounded-box z-50 w-52 p-2 shadow-lg ring-1 ring-base-300 mt-1">
@@ -134,14 +134,15 @@
 									</ul>
 								</div>
 							{:else}
-								<a class="btn btn-ghost transition-colors p-2" href="/login" aria-label="Anmelden">
-									<CircleUser class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
+								<a class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors" href="/login" aria-label="Anmelden">
+									<CircleUser class="w-7 h-7" />
+									<span class="hidden xl:block text-base tracking-wide">Anmelden</span>
 								</a>
 							{/if}
-							<a class="btn btn-ghost transition-colors p-2 relative" href="/cart" aria-label="Cart">
-								<ShoppingCart class="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
-								<!-- Cart badge placeholder -->
-								{#if cartCount > 0}<span class="badge badge-accent badge-xs absolute -top-1 -right-1">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
+							<a class="flex items-center gap-2 text-primary-content/70 hover:text-primary-content transition-colors" href="/cart" aria-label="Warenkorb">
+								<ShoppingCart class="w-7 h-7" />
+								<span class="hidden xl:block text-base tracking-wide">Warenkorb</span>
+								{#if cartCount > 0}<span class="text-accent text-base font-semibold">{cartCount > 99 ? '99+' : cartCount}</span>{/if}
 							</a>
 						</div>
 					</div>
