@@ -85,8 +85,8 @@ export const actions: Actions = {
 
 		const passwordHash = await auth.hashPassword(password);
 
-		const customer = await db.transaction(async (tx) => {
-			const [newCustomer] = await tx
+		const customer = db.transaction((tx) => {
+			const [newCustomer] = tx
 				.insert(customerTable)
 				.values({
 					email,
@@ -98,12 +98,13 @@ export const actions: Actions = {
 					marketingConsent,
 					preferredLanguage: event.request.headers.get('accept-language')?.split(',')[0] ?? 'de'
 				})
-				.returning({ id: customerTable.id });
+				.returning({ id: customerTable.id })
+				.all();
 
-			await tx.insert(authCredentialsTable).values({
+			tx.insert(authCredentialsTable).values({
 				customerId: newCustomer.id,
 				passwordHash
-			});
+			}).run();
 
 			return newCustomer;
 		});
