@@ -70,10 +70,15 @@ export const actions: Actions = {
 
 		if (!product) error(404, 'Produkt nicht gefunden');
 
+		const tagsRaw = (data.get('tags') as string)?.trim() || '';
+		const tags = JSON.stringify(
+			tagsRaw.split(',').map((t) => t.trim()).filter(Boolean)
+		);
+
 		try {
 			await db
 				.update(productTable)
-				.set({ name, description, price: priceNum, stock, sku, producerId, updatedAt: new Date() })
+				.set({ name, description, price: priceNum, stock, sku, producerId, tags, updatedAt: new Date() })
 				.where(eq(productTable.id, params.id));
 		} catch {
 			return { error: 'Fehler beim Speichern. Möglicherweise ist die SKU bereits vergeben.' };

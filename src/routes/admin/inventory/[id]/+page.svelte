@@ -103,7 +103,7 @@
 			<h2 class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Basisfelder</h2>
 
 			<div>
-				<label class={labelClass} for="name">Name</label>
+				<label class={labelClass} for="name">Name <span class="text-red-500">*</span></label>
 				<input id="name" name="name" type="text" value={product.name} required class={inputClass} />
 			</div>
 
@@ -115,7 +115,7 @@
 			</div>
 
 			<div>
-				<label class={labelClass} for="producerId">Hersteller</label>
+				<label class={labelClass} for="producerId">Hersteller <span class="text-red-500">*</span></label>
 				<select id="producerId" name="producerId" required class={inputClass}>
 					{#each data.producers as producer}
 						<option value={producer.id} selected={producer.id === product.producerId}>
@@ -127,7 +127,7 @@
 
 			<div class="grid grid-cols-3 gap-4">
 				<div>
-					<label class={labelClass} for="price">Preis (€)</label>
+					<label class={labelClass} for="price">Preis (€) <span class="text-red-500">*</span></label>
 					<input
 						id="price"
 						name="price"
@@ -140,7 +140,7 @@
 					/>
 				</div>
 				<div>
-					<label class={labelClass} for="stock">Lagerbestand</label>
+					<label class={labelClass} for="stock">Lagerbestand <span class="text-red-500">*</span></label>
 					<input
 						id="stock"
 						name="stock"
@@ -152,9 +152,21 @@
 					/>
 				</div>
 				<div>
-					<label class={labelClass} for="sku">SKU</label>
+					<label class={labelClass} for="sku">SKU <span class="text-red-500">*</span></label>
 					<input id="sku" name="sku" type="text" value={product.sku} required class={inputClass} />
 				</div>
+			</div>
+
+			<div>
+				<label class={labelClass} for="tags">Tags <span class="text-zinc-400 font-normal normal-case">(kommagetrennt)</span></label>
+				<input
+					id="tags"
+					name="tags"
+					type="text"
+					value={JSON.parse(product.tags ?? '[]').join(', ')}
+					placeholder="z.B. Bestseller, Kubanisch, Premium"
+					class={inputClass}
+				/>
 			</div>
 		</div>
 
@@ -165,7 +177,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm)</label>
+						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -178,7 +190,7 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß</label>
+						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -194,7 +206,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="strength">Stärke</label>
+						<label class={labelClass} for="strength">Stärke <span class="text-red-500">*</span></label>
 						<select id="strength" name="strength" required class={inputClass}>
 							<option value="mild" selected={product.cigarDetails?.strength === 'mild'}>Mild</option>
 							<option value="medium" selected={product.cigarDetails?.strength === 'medium'}>Medium</option>
@@ -202,7 +214,7 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt</label>
+						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
 						<input
 							id="wrapperType"
 							name="wrapperType"
@@ -216,7 +228,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft</label>
+						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -248,7 +260,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="lengthMm">Länge (mm)</label>
+						<label class={labelClass} for="lengthMm">Länge (mm) <span class="text-red-500">*</span></label>
 						<input
 							id="lengthMm"
 							name="lengthMm"
@@ -261,7 +273,7 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="ringGauge">Ringmaß</label>
+						<label class={labelClass} for="ringGauge">Ringmaß <span class="text-red-500">*</span></label>
 						<input
 							id="ringGauge"
 							name="ringGauge"
@@ -277,7 +289,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="filterType">Filter</label>
+						<label class={labelClass} for="filterType">Filter <span class="text-red-500">*</span></label>
 						<select id="filterType" name="filterType" required class={inputClass}>
 							<option value="none" selected={product.cigarilloDetails?.filterType === 'none'}>Ohne Filter</option>
 							<option value="regular" selected={product.cigarilloDetails?.filterType === 'regular'}>Regular</option>
@@ -285,7 +297,7 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="wrapperType">Deckblatt</label>
+						<label class={labelClass} for="wrapperType">Deckblatt <span class="text-red-500">*</span></label>
 						<input
 							id="wrapperType"
 							name="wrapperType"
@@ -306,7 +318,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="beverageType">Typ</label>
+						<label class={labelClass} for="beverageType">Typ <span class="text-red-500">*</span></label>
 						<select id="beverageType" name="beverageType" required class={inputClass}>
 							<option value="wine" selected={product.beverageDetails?.type === 'wine'}>Wein</option>
 							<option value="whiskey" selected={product.beverageDetails?.type === 'whiskey'}>Whiskey</option>
@@ -316,7 +328,7 @@
 						</select>
 					</div>
 					<div>
-						<label class={labelClass} for="countryOfOrigin">Herkunft</label>
+						<label class={labelClass} for="countryOfOrigin">Herkunft <span class="text-red-500">*</span></label>
 						<input
 							id="countryOfOrigin"
 							name="countryOfOrigin"
@@ -330,7 +342,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="volumeMl">Volumen (ml)</label>
+						<label class={labelClass} for="volumeMl">Volumen (ml) <span class="text-red-500">*</span></label>
 						<input
 							id="volumeMl"
 							name="volumeMl"
@@ -343,7 +355,7 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="alcoholPercentage">Alkohol (%)</label>
+						<label class={labelClass} for="alcoholPercentage">Alkohol (%) <span class="text-red-500">*</span></label>
 						<input
 							id="alcoholPercentage"
 							name="alcoholPercentage"
@@ -388,7 +400,7 @@
 
 				<div class="grid grid-cols-2 gap-4">
 					<div>
-						<label class={labelClass} for="brand">Marke</label>
+						<label class={labelClass} for="brand">Marke <span class="text-red-500">*</span></label>
 						<input
 							id="brand"
 							name="brand"
@@ -399,7 +411,7 @@
 						/>
 					</div>
 					<div>
-						<label class={labelClass} for="material">Material</label>
+						<label class={labelClass} for="material">Material <span class="text-red-500">*</span></label>
 						<input
 							id="material"
 							name="material"

@@ -104,12 +104,10 @@
 		</div>
 	</div>
 
-	<div class="flex gap-4">
-		<a href="/admin/inventory" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">
-			Inventar verwalten
-		</a>
-		<a href="/admin/orders" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">
-			Bestellungen verwalten
-		</a>
+	<div class="flex gap-4 flex-wrap">
+		<a href="/admin/inventory" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">Inventar</a>
+		<a href="/admin/producers" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">Hersteller</a>
+<a href="/admin/orders" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">Bestellungen</a>
+		<a href="/admin/customers" class="text-sm text-zinc-600 hover:text-zinc-900 underline underline-offset-2">Kunden</a>
 	</div>
 </div>

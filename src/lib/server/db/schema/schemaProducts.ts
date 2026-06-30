@@ -8,6 +8,7 @@ export const producerTable = sqliteTable('producers', {
 	description: text('description'),
 	country: text('country').notNull(),
 	contactInfo: text('contact_info'),
+	imageUrl: text('image_url'),
 	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
 });
 
@@ -21,22 +22,10 @@ export const productTable = sqliteTable('products', {
 	stock: integer('stock').notNull().default(0),
 	sku: text('sku').notNull().unique(),
 	productType: text('product_type').notNull().$type<ProductType>(),
+	tags: text('tags').default('[]').notNull(),
 	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
 	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull()
 });
-
-export const categoryTable = sqliteTable('product_categories', {
-	id: text('id').$defaultFn(() => crypto.randomUUID()).primaryKey(),
-	name: text('name').notNull(),
-	description: text('description')
-});
-
-export const categoryMappingTable = sqliteTable('product_category_mappings', {
-	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).notNull(),
-	categoryId: text('category_id').references(() => categoryTable.id, { onDelete: 'cascade' }).notNull()
-}, (table) => [
-	primaryKey({ columns: [table.productId, table.categoryId] })
-]);
 
 export const cigarDetailsTable = sqliteTable('cigar_details', {
 	productId: text('product_id').references(() => productTable.id, { onDelete: 'cascade' }).primaryKey(),
@@ -78,12 +67,11 @@ export const producerRelations = relations(producerTable, ({ many }) => ({
 	products: many(productTable)
 }));
 
-export const productRelations = relations(productTable, ({ one, many }) => ({
+export const productRelations = relations(productTable, ({ one }) => ({
 	producer: one(producerTable, {
 		fields: [productTable.producerId],
 		references: [producerTable.id]
 	}),
-	categories: many(categoryMappingTable),
 	cigarDetails: one(cigarDetailsTable, {
 		fields: [productTable.id],
 		references: [cigarDetailsTable.productId]
@@ -99,21 +87,6 @@ export const productRelations = relations(productTable, ({ one, many }) => ({
 	toolDetails: one(toolDetailsTable, {
 		fields: [productTable.id],
 		references: [toolDetailsTable.productId]
-	})
-}));
-
-export const categoryRelations = relations(categoryTable, ({ many }) => ({
-	products: many(categoryMappingTable)
-}));
-
-export const categoryMappingRelations = relations(categoryMappingTable, ({ one }) => ({
-	product: one(productTable, {
-		fields: [categoryMappingTable.productId],
-		references: [productTable.id]
-	}),
-	category: one(categoryTable, {
-		fields: [categoryMappingTable.categoryId],
-		references: [categoryTable.id]
 	})
 }));
 
