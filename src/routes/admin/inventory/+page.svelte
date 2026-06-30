@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	let { data } = $props();
 
@@ -35,7 +35,7 @@
 	}
 
 	function buildUrl(params: Record<string, string>) {
-		const url = new URL($page.url);
+		const url = new URL(page.url);
 		Object.entries(params).forEach(([key, value]) => {
 			if (value) {
 				url.searchParams.set(key, value);
