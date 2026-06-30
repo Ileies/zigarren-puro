@@ -1,14 +1,18 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { untrack } from 'svelte';
 	import Header from '$lib/components/Header.svelte';
 	import '../app.css';
 	import Footer from '$lib/components/Footer.svelte';
+	import WelcomeModal from '$lib/components/WelcomeModal.svelte';
 
 	let { children, data } = $props();
 
 	let toastDismissed = $state(false);
 	const toastVisible = $derived(data.dbOffline && !toastDismissed);
 	let isAdmin = $derived(page.url.pathname.startsWith('/admin'));
+
+	let welcomeVisible = $state(untrack(() => data.showWelcome && !!data.user));
 </script>
 
 {#if isAdmin}
@@ -23,6 +27,10 @@
 	</div>
 
 	<Footer />
+
+	{#if welcomeVisible && data.user}
+		<WelcomeModal firstName={data.user.firstName} onClose={() => (welcomeVisible = false)} />
+	{/if}
 
 	{#if toastVisible}
 		<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 rounded-lg bg-red-600 px-5 py-3 text-white shadow-lg text-sm font-medium">

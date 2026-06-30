@@ -6,7 +6,7 @@ import { tokenTable, customerTable } from '$lib/server/db/schema';
 import { TokenType } from '$lib/types';
 import { sendVerificationEmail } from '$lib/server/functions';
 
-export const load: PageServerLoad = async ({ url, locals }) => {
+export const load: PageServerLoad = async ({ url, locals, cookies }) => {
 	if (locals.user?.id) {
 		const [customer] = await db
 			.select({ isVerified: customerTable.isVerified })
@@ -16,7 +16,10 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 	}
 
 	const token = url.searchParams.get('token');
-	if (!token) return { status: 'pending' as const };
+	if (!token) {
+		if (!locals.user) redirect(302, '/login');
+		return { status: 'pending' as const };
+	}
 
 	const [row] = await db
 		.select({ token: tokenTable.token, usedAt: tokenTable.usedAt, customerId: tokenTable.customerId })
@@ -42,6 +45,13 @@ export const load: PageServerLoad = async ({ url, locals }) => {
 			.set({ usedAt: new Date() })
 			.where(eq(tokenTable.token, token))
 			.run();
+	});
+
+	cookies.set('show_welcome', '1', {
+		path: '/',
+		httpOnly: false,
+		maxAge: 60 * 10,
+		sameSite: 'lax'
 	});
 
 	return { status: 'success' as const };
