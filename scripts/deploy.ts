@@ -5,7 +5,11 @@ const REMOTE_DIR = `/zigarren-puro.de/httpdocs/`;
 try {
 	console.log('Creating entry.cjs in build directory');
 	await $`echo 'import("./index.js");' > ./build/entry.cjs`;
-	await $`cp ./package.json ./build`
+	await $`cp ./package.json ./build`;
+
+	// Install production dependencies (including native addons like better-sqlite3)
+	console.log('Installing production dependencies in build directory...');
+	await $`npm install --omit=dev`.cwd('./build');
 
 	// Compress build directory
 	console.log('Compressing build directory...');
@@ -27,6 +31,10 @@ try {
 	console.log('Cleaning up temporary files...');
 	await $`ssh zp "rm /tmp/build.tar.gz"`;
 	await $`rm build.tar.gz`;
+
+	// Trigger Plesk Passenger restart
+	console.log('Triggering app restart via Plesk...');
+	await $`ssh zp "mkdir -p ${REMOTE_DIR}tmp && touch ${REMOTE_DIR}tmp/restart.txt"`;
 
 	console.log('Deployment completed successfully!');
 } catch (error) {
