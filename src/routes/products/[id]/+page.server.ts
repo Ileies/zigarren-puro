@@ -27,6 +27,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			sku: productTable.sku,
 			productType: productTable.productType,
 			createdAt: productTable.createdAt,
+			imageUrl: productTable.imageUrl,
 			producerName: producerTable.name,
 			producerCountry: producerTable.country,
 			producerDescription: producerTable.description

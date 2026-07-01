@@ -106,7 +106,7 @@
 							name="birthDate"
 							value={form?.birthDate ?? ''}
 							required
-							max={maxBirthDate()}
+							max={maxBirthDate}
 							autocomplete="bday"
 							class="input-bordered input w-full focus:input-primary"
 						/>

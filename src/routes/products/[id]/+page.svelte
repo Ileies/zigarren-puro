@@ -47,8 +47,8 @@
 		}
 	});
 
-	function formatPrice(price: string) {
-		return parseFloat(price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+	function formatPrice(price: number) {
+		return price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
 	}
 
 	function formatDate(date: string | Date) {
@@ -69,8 +69,8 @@
 		data.product.productType === ProductType.CIGAR && data.details && 'strength' in data.details
 			? (data.details as {
 					productId: string;
-					lengthMm: string;
-					ringGauge: string;
+					lengthMm: number;
+					ringGauge: number;
 					strength: CigarStrength;
 					wrapperType: string;
 					countryOfOrigin: string;
@@ -84,8 +84,8 @@
 			'filterType' in data.details
 			? (data.details as {
 					productId: string;
-					lengthMm: string;
-					ringGauge: string;
+					lengthMm: number;
+					ringGauge: number;
 					filterType: string;
 					wrapperType: string;
 				})
@@ -95,8 +95,8 @@
 		data.product.productType === ProductType.BEVERAGE && data.details && 'volumeMl' in data.details
 			? (data.details as {
 					productId: string;
-					volumeMl: string;
-					alcoholPercentage: string;
+					volumeMl: number;
+					alcoholPercentage: number;
 					type: string;
 					countryOfOrigin: string;
 					agingYears: number | null;
@@ -171,14 +171,14 @@
 					<div class="flex gap-0.5">
 						{#each [1, 2, 3, 4, 5] as star (star)}
 							<Star
-								class="h-4 w-4 {star <= Math.round(data.avgRating)
+								class="h-4 w-4 {star <= Math.round(data.avgRating ?? 0)
 									? 'text-warning'
 									: 'text-base-content/20'}"
-								fill={star <= Math.round(data.avgRating) ? 'currentColor' : 'none'}
+								fill={star <= Math.round(data.avgRating ?? 0) ? 'currentColor' : 'none'}
 							/>
 						{/each}
 					</div>
-					<span class="text-sm font-medium">{data.avgRating.toFixed(1)}</span>
+					<span class="text-sm font-medium">{(data.avgRating ?? 0).toFixed(1)}</span>
 					<span class="text-sm text-base-content/50"
 						>({data.reviewCount} {data.reviewCount === 1 ? 'Bewertung' : 'Bewertungen'})</span
 					>
@@ -376,15 +376,15 @@
 
 	{#if data.reviewCount > 0}
 		<div class="mb-8 flex items-center gap-4">
-			<span class="text-5xl font-bold">{data.avgRating.toFixed(1)}</span>
+			<span class="text-5xl font-bold">{(data.avgRating ?? 0).toFixed(1)}</span>
 			<div>
 				<div class="mb-1 flex gap-0.5">
 					{#each [1, 2, 3, 4, 5] as star (star)}
 						<Star
-							class="h-6 w-6 {star <= Math.round(data.avgRating)
+							class="h-6 w-6 {star <= Math.round(data.avgRating ?? 0)
 								? 'text-warning'
 								: 'text-base-content/20'}"
-							fill={star <= Math.round(data.avgRating) ? 'currentColor' : 'none'}
+							fill={star <= Math.round(data.avgRating ?? 0) ? 'currentColor' : 'none'}
 						/>
 					{/each}
 				</div>
@@ -434,7 +434,7 @@
 						class="btn gap-1 btn-ghost btn-sm"
 						onclick={() => {
 							editingReview = true;
-							selectedRating = data.userReview.rating;
+							selectedRating = data.userReview?.rating ?? 0;
 						}}
 					>
 						<Pencil class="h-3.5 w-3.5" />
