@@ -5,8 +5,8 @@
 
 	let { data } = $props();
 
-	const orderShort = data.order.id.slice(0, 8).toUpperCase();
-	const isCreditCard = data.order.paymentMethod === 'credit_card';
+	const orderShort = $derived(data.order.id.slice(0, 8).toUpperCase());
+	const isCreditCard = $derived(data.order.paymentMethod === 'credit_card');
 
 	function formatPrice(n: string | number) {
 		return parseFloat(String(n)).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });

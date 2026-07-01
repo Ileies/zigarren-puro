@@ -438,7 +438,11 @@
 						</form>
 					</div>
 				</div>
-				<button class="modal-backdrop" onclick={() => (logoutModalOpen = false)}></button>
+				<button
+					class="modal-backdrop"
+					aria-label="Abmelden-Dialog schließen"
+					onclick={() => (logoutModalOpen = false)}
+				></button>
 			</div>
 		{/if}
 	</div>

@@ -1,14 +1,7 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { enhance } from '$app/forms';
-	import {
-		Lock,
-		Truck,
-		ChevronLeft,
-		Package,
-		CreditCard,
-		Building2,
-		AlertCircle
-	} from '@lucide/svelte';
+	import { Lock, Truck, Package, CreditCard, Building2, AlertCircle } from '@lucide/svelte';
 	import * as m from '$lib/messages';
 	import { freeShippingThreshold, shippingCosts } from '$lib/config';
 	import { loadStripe, type StripeEmbeddedCheckout } from '@stripe/stripe-js';
@@ -35,8 +28,8 @@
 		'Thüringen'
 	];
 
-	const savedShipping = data.addresses.filter((a) => a.type === 'shipping');
-	const savedBilling = data.addresses.filter((a) => a.type === 'billing');
+	const savedShipping = untrack(() => data.addresses.filter((a) => a.type === 'shipping'));
+	const savedBilling = untrack(() => data.addresses.filter((a) => a.type === 'billing'));
 
 	// Step 1 state
 	let shippingMode = $state<'saved' | 'new'>(savedShipping.length > 0 ? 'saved' : 'new');

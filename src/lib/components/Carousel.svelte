@@ -56,7 +56,7 @@
 		aria-label="Image carousel"
 		style="height: 430px;"
 	>
-		{#each slides as slide, index}
+		{#each slides as slide, index (slide.id)}
 			<div
 				class="absolute inset-0 transition-opacity duration-500 {index === currentSlide
 					? 'z-10 opacity-100'
@@ -89,7 +89,7 @@
 
 		<!-- Navigation Dots - Inside Image -->
 		<div class="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 transform gap-2">
-			{#each slides as _, index}
+			{#each slides as slide, index (slide.id)}
 				<button
 					onclick={() => (currentSlide = index)}
 					class="h-3 w-3 rounded-full transition-colors {index === currentSlide
