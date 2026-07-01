@@ -48,7 +48,7 @@
 	</div>
 
 	<div class="mb-5 flex flex-wrap gap-1.5">
-		{#each filters as f}
+		{#each filters as f (f.value)}
 			<a
 				href="/admin/orders{f.value ? '?status=' + f.value : ''}"
 				class="rounded-full px-3 py-1.5 text-xs font-medium transition-colors
@@ -87,7 +87,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.orders as order}
+				{#each data.orders as order (order.id)}
 					<tr class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50">
 						<td class="px-4 py-3">
 							<a

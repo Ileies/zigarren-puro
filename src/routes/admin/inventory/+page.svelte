@@ -123,7 +123,7 @@
 					onchange={handleFilterChange}
 					class="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 				>
-					{#each typeOptions as option}
+					{#each typeOptions as option (option.value)}
 						<option value={option.value}>{option.label}</option>
 					{/each}
 				</select>
@@ -149,7 +149,7 @@
 						}}
 						class="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
-						{#each sortOptions as option}
+						{#each sortOptions as option (option.value)}
 							<option value={option.value}>{option.label}</option>
 						{/each}
 					</select>
@@ -223,7 +223,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.products as product}
+				{#each data.products as product (product.id)}
 					<tr
 						class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50
 						       {product.stock === 0 ? 'bg-red-50' : product.stock <= 4 ? 'bg-amber-50' : ''}"

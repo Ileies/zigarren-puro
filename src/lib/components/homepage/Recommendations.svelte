@@ -62,7 +62,7 @@
 		</div>
 
 		<div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-			{#each recommendations as product}
+			{#each recommendations as product (product.href)}
 				<a href={product.href} class="group block">
 					<div
 						class="relative h-72 overflow-hidden rounded-2xl bg-gradient-to-br from-base-200 to-base-300 shadow-lg transition-all duration-500 hover:shadow-2xl"

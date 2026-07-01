@@ -187,7 +187,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each order.items as item}
+				{#each order.items as item (item.id)}
 					<tr class="border-b border-zinc-50 last:border-0">
 						<td class="px-4 py-3 text-zinc-800">{item.product?.name ?? 'Unbekannt'}</td>
 						<td class="px-4 py-3 text-right text-zinc-600"
@@ -250,7 +250,7 @@
 						name="orderStatus"
 						class="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
-						{#each Object.entries(orderStatusLabels) as [value, label]}
+						{#each Object.entries(orderStatusLabels) as [value, label] (value)}
 							<option {value} selected={order.orderStatus === value}>{label}</option>
 						{/each}
 					</select>
@@ -267,7 +267,7 @@
 						name="paymentStatus"
 						class="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
-						{#each Object.entries(paymentStatusLabels) as [value, label]}
+						{#each Object.entries(paymentStatusLabels) as [value, label] (value)}
 							<option {value} selected={order.paymentStatus === value}>{label}</option>
 						{/each}
 					</select>

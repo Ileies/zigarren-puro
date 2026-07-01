@@ -78,7 +78,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				{#each data.customers as customer}
+				{#each data.customers as customer (customer.id)}
 					<tr class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50">
 						<td class="px-4 py-3 font-medium text-zinc-900">
 							{customer.firstName}

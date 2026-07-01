@@ -2,7 +2,8 @@
 	import { enhance } from '$app/forms';
 	import { ProductType } from '$lib/types';
 
-	let { data, form }: { data: any; form: Record<string, unknown> | null } = $props();
+	import type { PageData } from './$types';
+	let { data, form }: { data: PageData; form: Record<string, unknown> | null } = $props();
 
 	let productType = $state<string>(ProductType.CIGAR);
 
@@ -40,7 +41,7 @@
 		<div class="space-y-4 rounded-lg border border-zinc-200 bg-white p-5">
 			<h2 class="text-xs font-semibold tracking-wide text-zinc-500 uppercase">Produkttyp</h2>
 			<div class="grid grid-cols-4 gap-3">
-				{#each Object.entries(ProductType) as [key, value]}
+				{#each Object.entries(ProductType) as [, value] (value)}
 					<label
 						class="relative flex cursor-pointer items-center gap-2 rounded-md border border-zinc-200 p-3 hover:bg-zinc-50"
 						class:border-zinc-900={productType === value}
@@ -79,7 +80,7 @@
 				>
 				<select id="producerId" name="producerId" required class={inputClass}>
 					<option value="">Bitte wählen...</option>
-					{#each data.producers as producer}
+					{#each data.producers as producer (producer.id)}
 						<option value={producer.id}>{producer.name}</option>
 					{/each}
 				</select>

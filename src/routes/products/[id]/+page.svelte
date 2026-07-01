@@ -13,14 +13,14 @@
 		Trash2
 	} from '@lucide/svelte';
 	import { ProductType, CigarStrength } from '$lib/types';
-	import type { ActionData } from './$types';
+	import type { ActionData, PageData } from './$types';
 
 	let addedFeedback = $state(false);
 	let selectedRating = $state(0);
 	let hoverRating = $state(0);
 	let editingReview = $state(false);
 
-	let { data, form }: { data: any; form: ActionData } = $props();
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const isWishlisted = $derived(
 		form != null && 'wishlisted' in form
@@ -169,7 +169,7 @@
 			{#if data.reviewCount > 0}
 				<div class="flex items-center gap-2">
 					<div class="flex gap-0.5">
-						{#each [1, 2, 3, 4, 5] as star}
+						{#each [1, 2, 3, 4, 5] as star (star)}
 							<Star
 								class="h-4 w-4 {star <= Math.round(data.avgRating)
 									? 'text-warning'
@@ -379,7 +379,7 @@
 			<span class="text-5xl font-bold">{data.avgRating.toFixed(1)}</span>
 			<div>
 				<div class="mb-1 flex gap-0.5">
-					{#each [1, 2, 3, 4, 5] as star}
+					{#each [1, 2, 3, 4, 5] as star (star)}
 						<Star
 							class="h-6 w-6 {star <= Math.round(data.avgRating)
 								? 'text-warning'
@@ -412,7 +412,7 @@
 				<div class="flex-1">
 					<p class="mb-1 text-xs text-base-content/50">Ihre Bewertung</p>
 					<div class="mb-2 flex gap-0.5">
-						{#each [1, 2, 3, 4, 5] as star}
+						{#each [1, 2, 3, 4, 5] as star (star)}
 							<Star
 								class="h-4 w-4 {star <= data.userReview.rating
 									? 'text-warning'
@@ -489,7 +489,7 @@
 				<div class="mb-4">
 					<p class="label-text mb-1">Sterne *</p>
 					<div class="flex gap-1" role="group" aria-label="Sternebewertung auswählen">
-						{#each [1, 2, 3, 4, 5] as star}
+						{#each [1, 2, 3, 4, 5] as star (star)}
 							<button
 								type="button"
 								class="p-0.5 transition-transform hover:scale-110"
@@ -555,12 +555,12 @@
 	<!-- Review list (excluding user's own) -->
 	{#if data.reviews.length > 0}
 		<div class="flex flex-col gap-4">
-			{#each data.reviews.filter((r: any) => !data.userReview || r.id !== data.userReview.id) as review}
+			{#each data.reviews.filter((r) => !data.userReview || r.id !== data.userReview.id) as review (review.id)}
 				<div class="rounded-box bg-base-200 p-5">
 					<div class="mb-2 flex items-start justify-between gap-2">
 						<div>
 							<div class="mb-1 flex gap-0.5">
-								{#each [1, 2, 3, 4, 5] as star}
+								{#each [1, 2, 3, 4, 5] as star (star)}
 									<Star
 										class="h-4 w-4 {star <= review.rating
 											? 'text-warning'

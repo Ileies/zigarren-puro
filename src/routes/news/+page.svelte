@@ -92,7 +92,7 @@
 
 	<!-- Category Filter -->
 	<div class="mb-8 flex flex-wrap justify-center gap-2">
-		{#each categories as cat}
+		{#each categories as cat (cat)}
 			<button
 				class="btn btn-sm {activeCategory === cat
 					? 'btn-secondary'
@@ -106,7 +106,7 @@
 
 	<!-- Articles Grid -->
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-		{#each filtered as article}
+		{#each filtered as article (article.title)}
 			<article
 				class="card border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md"
 			>

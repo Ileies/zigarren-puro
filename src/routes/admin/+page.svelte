@@ -55,7 +55,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{#each data.recentOrders as order}
+					{#each data.recentOrders as order (order.id)}
 						<tr class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50">
 							<td class="px-4 py-2">
 								<a
@@ -94,7 +94,7 @@
 				<h2 class="text-sm font-semibold text-zinc-900">Bestellungen nach Status</h2>
 			</div>
 			<div class="space-y-2 p-4">
-				{#each data.orderCounts as { status, total }}
+				{#each data.orderCounts as { status, total } (status)}
 					<div class="flex items-center justify-between text-sm">
 						<span class="text-zinc-600">{orderStatusLabels[status] ?? status}</span>
 						<span class="font-medium text-zinc-900">{total}</span>

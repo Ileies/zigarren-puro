@@ -78,7 +78,7 @@
 	</div>
 
 	<div class="mb-16 grid grid-cols-1 gap-6 md:grid-cols-2">
-		{#each brands as brand}
+		{#each brands as brand (brand.name)}
 			<div
 				class="card border border-base-200 bg-base-100 shadow-sm transition-shadow hover:shadow-md"
 			>

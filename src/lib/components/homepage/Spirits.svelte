@@ -12,7 +12,7 @@
 		</div>
 
 		<div class="mx-auto grid max-w-6xl grid-cols-2 gap-4 lg:grid-cols-4">
-			{#each ['Whiskey', 'Rum', 'Gin', 'Cognac'] as spirit}
+			{#each ['Whiskey', 'Rum', 'Gin', 'Cognac'] as spirit (spirit)}
 				<a href={`/search?category=${spirit.toLowerCase()}`} class="group block">
 					<div
 						class="relative h-48 overflow-hidden rounded-lg bg-gradient-to-br from-amber-50 to-amber-100 shadow-md transition-all duration-300 hover:shadow-xl"

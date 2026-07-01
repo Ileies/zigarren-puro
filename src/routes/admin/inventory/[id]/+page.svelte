@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 
-	let { data, form }: { data: any; form: Record<string, unknown> | null } = $props();
+	import type { PageData } from './$types';
+	let { data, form }: { data: PageData; form: Record<string, unknown> | null } = $props();
 	let product = $derived(data.product);
 
 	const typeLabels: Record<string, string> = {
@@ -128,7 +129,7 @@
 					>Hersteller <span class="text-red-500">*</span></label
 				>
 				<select id="producerId" name="producerId" required class={inputClass}>
-					{#each data.producers as producer}
+					{#each data.producers as producer (producer.id)}
 						<option value={producer.id} selected={producer.id === product.producerId}>
 							{producer.name}
 						</option>

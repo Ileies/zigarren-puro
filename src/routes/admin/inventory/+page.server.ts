@@ -1,7 +1,8 @@
 import type { PageServerLoad, Actions } from './$types';
 import db from '$lib/server/db';
 import { productTable, producerTable } from '$lib/server/db/schema';
-import { asc, eq, desc, or, like } from 'drizzle-orm';
+import { asc, eq, desc, or, like, and } from 'drizzle-orm';
+import type { SQL } from 'drizzle-orm';
 import type { ProductType } from '$lib/types';
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -10,16 +11,15 @@ export const load: PageServerLoad = async ({ url }) => {
 	const sortBy = url.searchParams.get('sort') || 'name';
 	const sortOrder = url.searchParams.get('order') || 'asc';
 
-	const conditions: Parameters<typeof or>[0][] = [];
+	const conditions: SQL[] = [];
 
 	if (search) {
-		conditions.push(
-			or(like(productTable.name, `%${search}%`), like(productTable.sku, `%${search}%`)) as any
-		);
+		const cond = or(like(productTable.name, `%${search}%`), like(productTable.sku, `%${search}%`));
+		if (cond) conditions.push(cond);
 	}
 
 	if (filterType) {
-		conditions.push(eq(productTable.productType, filterType) as any);
+		conditions.push(eq(productTable.productType, filterType));
 	}
 
 	const orderColumn =
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ url }) => {
 
 	const orderFn = sortOrder === 'desc' ? desc(orderColumn) : asc(orderColumn);
 
-	let query = db
+	const products = await db
 		.select({
 			id: productTable.id,
 			name: productTable.name,
@@ -44,14 +44,9 @@ export const load: PageServerLoad = async ({ url }) => {
 			producerName: producerTable.name
 		})
 		.from(productTable)
-		.leftJoin(producerTable, eq(productTable.producerId, producerTable.id)) as any;
-
-	if (conditions.length > 0) {
-		query = query.where(or(...conditions));
-	}
-
-	query = query.orderBy(orderFn);
-	const products = await query;
+		.leftJoin(producerTable, eq(productTable.producerId, producerTable.id))
+		.where(conditions.length > 0 ? and(...conditions) : undefined)
+		.orderBy(orderFn);
 
 	return { products, search, filterType, sortBy, sortOrder };
 };

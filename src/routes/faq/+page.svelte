@@ -125,14 +125,14 @@
 	</div>
 
 	<div class="space-y-8">
-		{#each sections as section}
+		{#each sections as section (section.title)}
 			<div>
 				<h2 class="mb-3 flex items-center gap-2 text-xl font-semibold text-base-content">
 					<svelte:component this={section.icon} class="h-5 w-5 text-secondary" />
 					{section.title}
 				</h2>
 				<div class="space-y-2">
-					{#each section.items as item}
+					{#each section.items as item (item.q)}
 						<div class="collapse-arrow collapse border border-base-200 bg-base-100 shadow-sm">
 							<input type="checkbox" />
 							<div class="collapse-title font-medium">{item.q}</div>

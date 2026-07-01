@@ -93,7 +93,7 @@
 
 					<!-- Rum Events -->
 					<div class="space-y-6">
-						{#each rumTastings as event}
+						{#each rumTastings as event (event.id)}
 							<div
 								class="card bg-base-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
 							>
@@ -168,7 +168,7 @@
 
 					<!-- Cigar Events -->
 					<div class="space-y-6">
-						{#each cigarTastings as event}
+						{#each cigarTastings as event (event.id)}
 							<div
 								class="card bg-base-100 shadow-lg transition-shadow duration-300 hover:shadow-xl"
 							>

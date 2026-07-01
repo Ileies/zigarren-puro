@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { MapPin, Mail, Phone, Clock, Send, Car, Train } from '@lucide/svelte';
 	import Map from '$lib/components/Map.svelte';
-	export let form: any;
+	import type { ActionData } from './$types';
+	let { form }: { form: ActionData } = $props();
 
 	const addressLines = ['Zigarren Puro', 'Richard-Wagner-Str. 11', '50674 Köln'];
 
@@ -108,7 +109,7 @@
 									required
 								>
 									<option disabled selected>Wählen Sie ein Thema</option>
-									{#each topics as topic}
+									{#each topics as topic (topic.value)}
 										<option value={topic.value}>{topic.label}</option>
 									{/each}
 								</select>
@@ -167,7 +168,7 @@
 								<div class="flex items-start gap-3">
 									<MapPin class="mt-0.5 h-5 w-5 text-primary" />
 									<div class="text-base-content/80">
-										{#each addressLines as line}
+										{#each addressLines as line (line)}
 											<div>{line}</div>
 										{/each}
 									</div>
@@ -190,7 +191,7 @@
 								<Clock class="h-5 w-5" /> Öffnungszeiten
 							</h3>
 							<div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-								{#each openingHours as item}
+								{#each openingHours as item (item.day)}
 									<div class="flex items-center justify-between rounded-lg bg-base-200 p-3">
 										<span class="font-medium">{item.day}</span>
 										<span class="text-base-content/70">{item.hours}</span>

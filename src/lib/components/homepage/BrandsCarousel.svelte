@@ -69,7 +69,7 @@
 			class="flex transition-transform duration-500 ease-in-out"
 			style="transform: translateX(-{currentIndex * (100 / brandsPerView)}%)"
 		>
-			{#each brands as brand}
+			{#each brands as brand (brand.name)}
 				<div class="flex-shrink-0 px-4" style="width: {100 / brandsPerView}%">
 					<a
 						href="/search?q={encodeURIComponent(brand.name)}"

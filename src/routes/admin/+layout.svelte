@@ -26,7 +26,7 @@
 			<div class="text-sm font-bold text-white">Zigarren Puro</div>
 		</div>
 		<nav class="flex-1 space-y-0.5 p-3">
-			{#each nav as item}
+			{#each nav as item (item.href)}
 				<a
 					href={item.href}
 					class="flex items-center rounded px-3 py-2 text-sm font-medium transition-colors

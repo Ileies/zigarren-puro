@@ -71,7 +71,7 @@
 
 		<!-- Clean navigation grid -->
 		<div class="mb-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-			{#each navigationLinks as link}
+			{#each navigationLinks as link (link.href)}
 				<a href={link.href} class="rounded-lg bg-base-200 p-6 transition-colors hover:bg-base-300">
 					<svelte:component this={link.icon} class="h-8 w-8 {link.color} mx-auto mb-3" />
 					<h3 class="mb-2 font-semibold text-base-content">{link.title}</h3>

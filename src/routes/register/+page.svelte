@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { untrack } from 'svelte';
 	import type { ActionData } from './$types';
 
 	let { form }: { form: ActionData } = $props();
@@ -11,7 +12,8 @@
 	const passwordMismatch = $derived(passwordConfirm.length > 0 && password !== passwordConfirm);
 	const passwordTooShort = $derived(password.length > 0 && password.length < 8);
 
-	const maxBirthDate = $derived(() => {
+	const maxBirthDate = untrack(() => {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const d = new Date();
 		d.setFullYear(d.getFullYear() - 18);
 		return d.toISOString().split('T')[0];

@@ -28,6 +28,7 @@
 	);
 
 	function buildUrl(params: { type?: string | null; sort?: string; q?: string }) {
+		// eslint-disable-next-line svelte/prefer-svelte-reactivity
 		const u = new URLSearchParams(page.url.searchParams);
 		if ('type' in params) {
 			if (params.type) u.set('type', params.type);
@@ -86,7 +87,7 @@
 				value={data.sort}
 				onchange={(e) => goto(buildUrl({ sort: (e.target as HTMLSelectElement).value }))}
 			>
-				{#each sortOptions as opt}
+				{#each sortOptions as opt (opt.value)}
 					<option value={opt.value}>{opt.label}</option>
 				{/each}
 			</select>
@@ -95,7 +96,7 @@
 
 	<!-- Category chips -->
 	<div class="mb-8 flex flex-wrap gap-2">
-		{#each typeFilters as f}
+		{#each typeFilters as f (f.type ?? 'all')}
 			<a
 				href={buildUrl({ type: f.type })}
 				class="btn btn-sm {data.activeType === f.type
