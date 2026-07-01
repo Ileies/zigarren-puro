@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Award, Globe, Mail, MapPin, Phone, Shield, Truck } from '@lucide/svelte';
+	import { Globe, Mail, MapPin, Phone, Shield } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import {
 		storeAddress,
@@ -38,12 +38,6 @@
 		{ title: m.terms(), href: '/terms' },
 		{ title: m.imprint(), href: '/imprint' },
 		{ title: m.cancellationRight(), href: '/cancellation' }
-	];
-
-	const features = [
-		{ icon: Award, text: m.qualityGuarantee() },
-		{ icon: Truck, text: m.worldwideShipping() },
-		{ icon: Shield, text: m.securePayment() }
 	];
 
 	let customerEmail = $state('');

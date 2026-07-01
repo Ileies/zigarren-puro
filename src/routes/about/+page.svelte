@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Users, Award, Clock, MapPin, Phone, Mail, Heart, Star, Target } from '@lucide/svelte';
+	import { MapPin, Phone, Mail, Heart, Star, Target } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
 	import Picture from '$lib/components/Picture.svelte';

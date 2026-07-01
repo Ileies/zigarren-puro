@@ -6,13 +6,11 @@
 		CreditCard,
 		Truck,
 		Shield,
-		Phone,
-		Mail,
 		FileText,
 		Package,
 		RefreshCcw
 	} from '@lucide/svelte';
-	import { phone, email, legalAddress, storeAddress } from '$lib/config';
+	import { phone, email, legalAddress } from '$lib/config';
 	import { resolve } from '$app/paths';
 </script>
 

@@ -76,7 +76,9 @@ export const actions: Actions = {
 					await unlink(join(PRODUCER_IMAGES_DIR, f));
 				}
 			}
-		} catch {}
+		} catch {
+			/* file may not exist */
+		}
 
 		await writeFile(join(PRODUCER_IMAGES_DIR, filename), Buffer.from(await file.arrayBuffer()));
 		await db
@@ -103,7 +105,9 @@ export const actions: Actions = {
 			if (filename) {
 				try {
 					await unlink(join(PRODUCER_IMAGES_DIR, filename));
-				} catch {}
+				} catch {
+					/* file may not exist */
+				}
 			}
 		}
 
@@ -127,7 +131,9 @@ export const actions: Actions = {
 			if (filename) {
 				try {
 					await unlink(join(PRODUCER_IMAGES_DIR, filename));
-				} catch {}
+				} catch {
+					/* file may not exist */
+				}
 			}
 		}
 

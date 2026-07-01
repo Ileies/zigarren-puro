@@ -9,7 +9,7 @@ import {
 	toolDetailsTable
 } from '$lib/server/db/schema';
 import { asc } from 'drizzle-orm';
-import { error, redirect } from '@sveltejs/kit';
+import { redirect } from '@sveltejs/kit';
 import type { BeverageType, CigarStrength, FilterType, ProductType } from '$lib/types';
 
 export const load: PageServerLoad = async () => {

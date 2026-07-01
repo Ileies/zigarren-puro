@@ -237,7 +237,9 @@ export const actions: Actions = {
 					await unlink(join(PRODUCT_IMAGES_DIR, f));
 				}
 			}
-		} catch {}
+		} catch {
+			/* file may not exist */
+		}
 
 		await writeFile(join(PRODUCT_IMAGES_DIR, filename), Buffer.from(await file.arrayBuffer()));
 		await db
@@ -259,7 +261,9 @@ export const actions: Actions = {
 			if (filename) {
 				try {
 					await unlink(join(PRODUCT_IMAGES_DIR, filename));
-				} catch {}
+				} catch {
+					/* file may not exist */
+				}
 			}
 		}
 

@@ -4,7 +4,7 @@ import { PUBLIC_APP_NAME, PUBLIC_ORIGIN } from '$env/static/public';
 import type { Options } from 'nodemailer/lib/mailer';
 import Logger from '$lib/server/Logger';
 import db from '$lib/server/db';
-import { tokenTable, authCredentialsTable } from '$lib/server/db/schema';
+import { tokenTable } from '$lib/server/db/schema';
 import { TokenType } from '$lib/types';
 import { bankAccount, companyName } from '$lib/config';
 import { and, eq, isNull } from 'drizzle-orm';

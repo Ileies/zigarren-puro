@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
 import db from '$lib/server/db';
 import { customerTable, orderTable } from '$lib/server/db/schema';
-import { asc, count, eq, ilike, or, sql } from 'drizzle-orm';
+import { asc, count, eq, sql } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const search = url.searchParams.get('search')?.trim() ?? '';
