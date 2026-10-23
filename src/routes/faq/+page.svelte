@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { HelpCircle, Package, Truck, Shield, RefreshCcw, Mail, Phone } from '@lucide/svelte';
-	import { email, phone } from '$lib/config';
+	import { email, phone } from '#lib/config.js';
 
 	const sections = [
 		{

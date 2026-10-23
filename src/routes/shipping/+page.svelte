@@ -9,7 +9,7 @@
 		CheckCircle,
 		Euro
 	} from '@lucide/svelte';
-	import { email, phone } from '$lib/config';
+	import { email, phone } from '#lib/config.js';
 </script>
 
 <svelte:head>

@@ -11,8 +11,8 @@
 		Store,
 		ArrowRight
 	} from '@lucide/svelte';
-	import Map from '$lib/components/Map.svelte';
-	import { phone, email, storeAddress, legalAddress } from '$lib/config';
+	import Map from '#lib/components/Map.svelte';
+	import { phone, email, storeAddress, legalAddress } from '#lib/config.js';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -129,7 +129,7 @@
 
 				<div class="mt-4">
 					<a
-						href={resolve('/contact')}
+						href={resolve('contact')}
 						class="flex items-center gap-1 text-sm font-medium text-secondary transition-colors hover:text-secondary/80"
 					>
 						<ArrowRight class="h-3 w-3" />

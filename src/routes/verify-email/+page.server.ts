@@ -1,10 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { and, eq, gt, isNull } from 'drizzle-orm';
-import db from '$lib/server/db';
-import { tokenTable, customerTable } from '$lib/server/db/schema';
-import { TokenType } from '$lib/types';
-import { sendVerificationEmail } from '$lib/server/functions';
+import db from '#lib/server/db/index.js';
+import { tokenTable, customerTable } from '#lib/server/db/schema/index.js';
+import { TokenType } from '#lib/types.js';
+import { sendVerificationEmail } from '#lib/server/functions.js';
 
 export const load: PageServerLoad = async ({ url, locals, cookies }) => {
 	if (locals.user?.id) {

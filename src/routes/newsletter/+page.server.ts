@@ -1,10 +1,10 @@
 import type { Actions } from '@sveltejs/kit';
 import { z } from 'zod';
-import { sendMail } from '$lib/server/functions';
-import db from '$lib/server/db';
-import { customerTable } from '$lib/server/db/schema';
+import { sendMail } from '#lib/server/functions.js';
+import db from '#lib/server/db/index.js';
+import { customerTable } from '#lib/server/db/schema/index.js';
 import { eq } from 'drizzle-orm';
-import { PUBLIC_ORIGIN, PUBLIC_APP_NAME } from '$env/static/public';
+import { PUBLIC_ORIGIN, PUBLIC_APP_NAME } from '$app/env/public';
 
 const subscribeSchema = z.object({
 	email: z.string().email()

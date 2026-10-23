@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
-import db from '$lib/server/db';
-import { orderTable, customerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { orderTable, customerTable } from '#lib/server/db/schema/index.js';
 import { desc, eq } from 'drizzle-orm';
-import { OrderStatus } from '$lib/types';
+import { OrderStatus } from '#lib/types.js';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const statusParam = url.searchParams.get('status');

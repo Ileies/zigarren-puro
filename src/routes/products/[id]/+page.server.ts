@@ -1,7 +1,7 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { addToCart } from '$lib/server/cart';
+import db from '#lib/server/db/index.js';
+import { addToCart } from '#lib/server/cart.js';
 import {
 	productTable,
 	producerTable,
@@ -12,9 +12,9 @@ import {
 	wishlistTable,
 	productReviewTable,
 	customerTable
-} from '$lib/server/db/schema';
+} from '#lib/server/db/schema/index.js';
 import { and, avg, count, desc, eq, sql } from 'drizzle-orm';
-import { ProductType } from '$lib/types';
+import { ProductType } from '#lib/types.js';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const [product] = await db

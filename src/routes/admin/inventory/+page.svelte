@@ -35,7 +35,7 @@
 	}
 
 	function buildUrl(params: Record<string, string>) {
-		const url = new URL(page.url);
+		const url = new URL(page.url.href);
 		Object.entries(params).forEach(([key, value]) => {
 			if (value) {
 				url.searchParams.set(key, value);

@@ -6,7 +6,7 @@ Eine wiederverwendbare Svelte-Komponente für noch nicht implementierte Routes u
 
 ```svelte
 <script lang="ts">
-	import Placeholder from '$lib/components/Placeholder.svelte';
+	import Placeholder from '#lib/components/Placeholder.svelte';
 </script>
 
 <Placeholder title="Seite in Entwicklung" description="Diese Seite wird derzeit entwickelt." />

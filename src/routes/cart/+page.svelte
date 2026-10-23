@@ -10,7 +10,7 @@
 		Minus,
 		Package
 	} from '@lucide/svelte';
-	import { freeShippingThreshold, shippingCosts } from '$lib/config';
+	import { freeShippingThreshold, shippingCosts } from '#lib/config.js';
 
 	let { data } = $props();
 

@@ -1,6 +1,6 @@
 # Zigarren Puro -- CLAUDE.md
 
-Premium-Webshop für Zigarren und Spirituosen. SvelteKit 5 + Drizzle ORM + SQLite (better-sqlite3). Gehostet auf eigenem Server mit `@sveltejs/adapter-node`.
+Premium-Webshop für Zigarren und Spirituosen. SvelteKit 3 + Drizzle ORM + SQLite (`bun:sqlite`). Gehostet auf eigenem Server mit `@sveltejs/adapter-bun`.
 
 Offene Tasks: [`TODO.md`](./TODO.md)
 
@@ -8,19 +8,19 @@ Offene Tasks: [`TODO.md`](./TODO.md)
 
 ## Tech Stack
 
-| Bereich     | Technologie                           |
-| ----------- | ------------------------------------- |
-| Framework   | SvelteKit 2 + Svelte 5                |
-| Styling     | Tailwind CSS 4 + DaisyUI 5            |
-| Datenbank   | SQLite via better-sqlite3             |
-| ORM         | Drizzle ORM                           |
-| E-Mail      | Nodemailer (SMTP via netcup)          |
-| Laufzeit    | Node.js (Bun nur als Package Manager) |
-| Icons       | Lucide Svelte                         |
-| Validierung | Zod 4                                 |
-| Analytics   | PostHog                               |
+| Bereich     | Technologie                             |
+| ----------- | --------------------------------------- |
+| Framework   | SvelteKit 3 + Svelte 5                  |
+| Styling     | Tailwind CSS 4 + DaisyUI 5              |
+| Datenbank   | SQLite via Bun's built-in SQLite driver |
+| ORM         | Drizzle ORM                             |
+| E-Mail      | Nodemailer (SMTP via netcup)            |
+| Laufzeit    | Bun                                     |
+| Icons       | Lucide Svelte                           |
+| Validierung | Zod 4                                   |
+| Analytics   | PostHog                                 |
 
-Bun wird nur als Package Manager genutzt (`bun install`, `bun run <script>`). Die App läuft mit Node.js (kein `bun:sqlite`, kein `bun:*`-Imports).
+Bun wird für Entwicklung, Builds und Server-Runtime genutzt. SQLite läuft über `bun:sqlite`.
 
 ---
 
@@ -129,7 +129,7 @@ Eigenes Vite-Plugin -- kein Paraglide.
 - `messages.ts` regenerieren: ausschließlich über `bun run dev` oder `bun run build`
 - Neue Texte: in alle 5 JSON-Dateien eintragen, dann Dev-Server neu starten
 - RTL: Arabisch automatisch erkannt, `locals.dir = "rtl"`
-- Server: `locals.locale`, `locals.dir` -- Client: Imports aus `$lib/messages`
+- Server: `locals.locale`, `locals.dir` -- Client: Imports aus `#lib/messages.js`
 
 ---
 

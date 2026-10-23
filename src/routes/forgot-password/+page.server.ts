@@ -1,9 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { eq } from 'drizzle-orm';
-import db from '$lib/server/db';
-import { customerTable } from '$lib/server/db/schema';
-import { sendPasswordResetEmail } from '$lib/server/functions';
+import db from '#lib/server/db/index.js';
+import { customerTable } from '#lib/server/db/schema/index.js';
+import { sendPasswordResetEmail } from '#lib/server/functions.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/');

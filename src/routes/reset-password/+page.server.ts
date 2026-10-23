@@ -1,10 +1,10 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { and, eq, gt, isNull } from 'drizzle-orm';
-import db from '$lib/server/db';
-import { tokenTable, authCredentialsTable } from '$lib/server/db/schema';
-import { TokenType } from '$lib/types';
-import { hashPassword } from '$lib/server/auth';
+import db from '#lib/server/db/index.js';
+import { tokenTable, authCredentialsTable } from '#lib/server/db/schema/index.js';
+import { TokenType } from '#lib/types.js';
+import { hashPassword } from '#lib/server/auth.js';
 
 async function resolveToken(token: string) {
 	const [row] = await db

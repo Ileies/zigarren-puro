@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getLocale, locales, setLocale } from '$lib/messages';
+	import { getLocale, locales, setLocale } from '#lib/messages.js';
 	import { ChevronDown } from '@lucide/svelte';
 
 	let isOpen = $state(false);

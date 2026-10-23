@@ -1,6 +1,6 @@
-import db from '$db';
-import { logTable } from '$db/schema';
-import { LogLevel } from '$lib/types';
+import db from '#lib/server/db/index.js';
+import { logTable } from '#lib/server/db/schema/index.js';
+import { LogLevel } from '#lib/types.js';
 
 /**
  * Logger class for handling and storing log messages with different severity levels.

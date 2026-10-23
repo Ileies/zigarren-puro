@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text, real } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
-import type { BeverageType, CigarStrength, FilterType, ProductType } from '$lib/types';
+import type { BeverageType, CigarStrength, FilterType, ProductType } from '#lib/types.js';
 
 export const producerTable = sqliteTable('producers', {
 	id: text('id')

@@ -2,8 +2,8 @@ import type { RequestEvent } from '@sveltejs/kit';
 import { and, eq, gt } from 'drizzle-orm';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
-import db from '$lib/server/db';
-import { sessionTable, customerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { sessionTable, customerTable } from '#lib/server/db/schema/index.js';
 
 const scryptAsync = promisify(scrypt);
 

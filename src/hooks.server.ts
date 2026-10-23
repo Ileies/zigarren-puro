@@ -1,18 +1,18 @@
-import { sequence } from '@sveltejs/kit/hooks';
-import * as auth from '$lib/server/auth';
-import { type Handle } from '@sveltejs/kit';
-import { cookieName, getTextDirection, locales, runWithLocale } from '$lib/messages';
-import Logger from '$lib/server/Logger';
-import db from '$lib/server/db';
+import { sequence, type Handle } from '@sveltejs/kit/hooks';
+import { isHttpError } from '@sveltejs/kit';
+import * as auth from '#lib/server/auth.js';
+import { cookieName, getTextDirection, locales, runWithLocale } from '#lib/messages.js';
+import Logger from '#lib/server/Logger.js';
+import db from '#lib/server/db/index.js';
 import { sql } from 'drizzle-orm';
-import { env } from '$env/dynamic/private';
+import { ADMIN_PASSWORD } from '$app/env/private';
 
 const handleAdmin: Handle = async ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/admin')) {
 		return resolve(event);
 	}
 
-	const adminPassword = env.ADMIN_PASSWORD;
+	const adminPassword = ADMIN_PASSWORD;
 	if (!adminPassword) {
 		return new Response('Admin not configured', { status: 503 });
 	}
@@ -117,8 +117,16 @@ export const handleError = ({
 	error: unknown;
 	event: import('@sveltejs/kit').RequestEvent;
 }) => {
-	const message = error instanceof Error ? error.message : String(error);
+	const expected = isHttpError(error);
+	const status = expected ? (error as { status: number }).status : 500;
+	const message = expected
+		? error.body.message
+		: error instanceof Error
+			? error.message
+			: String(error);
 	const stack = error instanceof Error ? error.stack : undefined;
-	console.error(`[500] ${event.url.pathname}`, stack ?? message);
+	if (!expected || status >= 500) {
+		console.error(`[${status}] ${event.url.pathname}`, stack ?? message);
+	}
 	return { message };
 };

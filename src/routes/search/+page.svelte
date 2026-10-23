@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { Search, SlidersHorizontal, Package, ShoppingCart } from '@lucide/svelte';
-	import { ProductType } from '$lib/types';
+	import { ProductType } from '#lib/types.js';
 
 	let { data } = $props();
 
@@ -29,7 +29,7 @@
 
 	function buildUrl(params: { type?: string | null; sort?: string; q?: string }) {
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const u = new URLSearchParams(page.url.searchParams);
+		const u = new URLSearchParams(page.url.searchParams.toString());
 		if ('type' in params) {
 			if (params.type) u.set('type', params.type);
 			else u.delete('type');

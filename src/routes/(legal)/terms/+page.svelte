@@ -10,7 +10,7 @@
 		Package,
 		RefreshCcw
 	} from '@lucide/svelte';
-	import { phone, email, legalAddress } from '$lib/config';
+	import { phone, email, legalAddress } from '#lib/config.js';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -234,6 +234,7 @@
 					<p>
 						(1) Lieferungen erfolgen an die vom Kunden angegebene Lieferadresse innerhalb der EU.
 					</p>
+
 					<p>
 						(2) Die Lieferfrist beträgt in der Regel 2–5 Werktage innerhalb Deutschlands. Für
 						EU-Auslandslieferungen gelten abweichende Fristen, die im Bestellprozess angezeigt
@@ -283,10 +284,11 @@
 					</div>
 					<p>(2) Für zulässige Rücksendungen trägt der Kunde die unmittelbaren Rücksendekosten.</p>
 					<p>
-						(3) Die vollständige Widerrufsbelehrung mit Muster-Widerrufsformular ist unter <a
-							href={resolve('/cancellation')}
-							class="link link-secondary">Widerrufsrecht</a
-						> abrufbar.
+						(3) Die vollständige Widerrufsbelehrung mit Muster-Widerrufsformular ist unter
+
+						<a href={resolve('cancellation')} class="link link-secondary">Widerrufsrecht</a>
+
+						abrufbar.
 					</p>
 				</div>
 			</div>
@@ -359,9 +361,11 @@
 				<div class="prose prose-sm max-w-none space-y-3">
 					<p>
 						Informationen zur Erhebung, Verarbeitung und Nutzung personenbezogener Daten entnehmen
-						Sie bitte unserer <a href={resolve('/privacy')} class="link link-secondary"
-							>Datenschutzerklärung</a
-						>.
+						Sie bitte unserer
+
+						<a href={resolve('privacy')} class="link link-secondary">Datenschutzerklärung</a>
+
+						.
 					</p>
 				</div>
 			</div>

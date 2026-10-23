@@ -1,9 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-import db from '$lib/server/db';
-import { productTable, producerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { productTable, producerTable } from '#lib/server/db/schema/index.js';
 import { eq, inArray } from 'drizzle-orm';
-import { getCart, setCart, addToCart, removeFromCart, updateCartQty } from '$lib/server/cart';
+import { getCart, setCart, addToCart, removeFromCart, updateCartQty } from '#lib/server/cart.js';
 
 export const load: PageServerLoad = async ({ cookies }) => {
 	const cartItems = getCart(cookies);

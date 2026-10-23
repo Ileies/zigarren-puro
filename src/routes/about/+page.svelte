@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { MapPin, Phone, Mail, Heart, Star, Target } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
-	import { storeAddress, location, facebook, instagram, phone, email } from '$lib/config';
-	import Picture from '$lib/components/Picture.svelte';
+	import { storeAddress, location, facebook, instagram, phone, email } from '#lib/config.js';
+	import Picture from '#lib/components/Picture.svelte';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -268,10 +268,12 @@
 				Lassen Sie sich von unserem Expertenteam beraten und entdecken Sie Ihre neue
 				Lieblingszigarre.
 			</p>
+
 			<div class="flex flex-col justify-center gap-4 sm:flex-row">
-				<a href={resolve('/contact')} class="btn btn-lg btn-secondary"> Kontakt aufnehmen </a>
+				<a href={resolve('contact')} class="btn btn-lg btn-secondary">Kontakt aufnehmen</a>
+
 				<a
-					href={resolve('/tastings')}
+					href={resolve('tastings')}
 					class="btn border-primary-content text-primary-content btn-outline btn-lg hover:bg-primary-content hover:text-primary"
 				>
 					Tasting buchen

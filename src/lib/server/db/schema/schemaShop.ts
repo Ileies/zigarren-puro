@@ -2,7 +2,13 @@ import { integer, sqliteTable, primaryKey, text, real, unique } from 'drizzle-or
 import { productTable } from './schemaProducts';
 import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
-import type { Gender, OrderStatus, PaymentMethod, PaymentStatus, ShippingMethod } from '$lib/types';
+import type {
+	Gender,
+	OrderStatus,
+	PaymentMethod,
+	PaymentStatus,
+	ShippingMethod
+} from '#lib/types.js';
 
 export const customerTable = sqliteTable('customers', {
 	id: text('id')

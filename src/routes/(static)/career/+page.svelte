@@ -12,9 +12,9 @@
 		Send,
 		Phone
 	} from '@lucide/svelte';
-	import { email, phone, storeAddress } from '$lib/config';
+	import { email, phone, storeAddress } from '#lib/config.js';
 	import { enhance } from '$app/forms';
-	import * as m from '$lib/messages';
+	import * as m from '#lib/messages.js';
 
 	let { form }: { form: { success?: boolean; error?: string } | null } = $props();
 

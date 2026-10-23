@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CheckCircle, Package, Building2, CreditCard, Truck, ArrowRight } from '@lucide/svelte';
-	import * as m from '$lib/messages';
-	import { bankAccount } from '$lib/config';
+	import * as m from '#lib/messages.js';
+	import { bankAccount } from '#lib/config.js';
 
 	let { data } = $props();
 

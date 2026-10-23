@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
+import db from '#lib/server/db/index.js';
 import {
 	productTable,
 	producerTable,
@@ -7,10 +7,10 @@ import {
 	cigarilloDetailsTable,
 	beverageDetailsTable,
 	toolDetailsTable
-} from '$lib/server/db/schema';
+} from '#lib/server/db/schema/index.js';
 import { asc } from 'drizzle-orm';
 import { redirect } from '@sveltejs/kit';
-import type { BeverageType, CigarStrength, FilterType, ProductType } from '$lib/types';
+import type { BeverageType, CigarStrength, FilterType, ProductType } from '#lib/types.js';
 
 export const load: PageServerLoad = async () => {
 	const producers = await db.query.producerTable.findMany({ orderBy: asc(producerTable.name) });

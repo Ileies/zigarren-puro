@@ -1,7 +1,7 @@
 import type { Actions } from '@sveltejs/kit';
 import { z } from 'zod';
-import { sendMail } from '$lib/server/functions';
-import { email as shopEmail } from '$lib/config';
+import { sendMail } from '#lib/server/functions.js';
+import { email as shopEmail } from '#lib/config.js';
 
 const applicationSchema = z.object({
 	name: z.string().min(2, 'Bitte geben Sie Ihren Namen ein.'),

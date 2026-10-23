@@ -1,8 +1,13 @@
 import { redirect } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import db from '$lib/server/db';
-import { orderTable, orderItemTable, productTable, addressTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import {
+	orderTable,
+	orderItemTable,
+	productTable,
+	addressTable
+} from '#lib/server/db/schema/index.js';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.user) redirect(302, '/login');

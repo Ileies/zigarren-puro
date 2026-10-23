@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Globe, Award, Mail, ArrowRight } from '@lucide/svelte';
-	import { email } from '$lib/config';
+	import { email } from '#lib/config.js';
 
 	const brands = [
 		{

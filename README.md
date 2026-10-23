@@ -6,9 +6,9 @@ Premium-Webshop für Zigarren, Zigarillos, Spirituosen und Zubehör.
 
 | Bereich   | Technologie                           |
 | --------- | ------------------------------------- |
-| Framework | SvelteKit 2 + Svelte 5                |
+| Framework | SvelteKit 3 + Svelte 5                |
 | Styling   | Tailwind CSS 4 + DaisyUI 5            |
-| Datenbank | PostgreSQL (Supabase) via Drizzle ORM |
+| Datenbank | SQLite via Bun SQLite + Drizzle ORM   |
 | Laufzeit  | Bun                                   |
 | E-Mail    | Nodemailer (netcup SMTP)              |
 | Auth      | crypto.scrypt, eigenes Session-System |
@@ -16,14 +16,12 @@ Premium-Webshop für Zigarren, Zigarillos, Spirituosen und Zubehör.
 
 ## Voraussetzungen
 
-- Bun
-- PostgreSQL-Datenbank (Supabase-Projekt)
+- Bun 1.4 oder neuer
 
 ## Setup
 
 ```bash
 bun install
-cp .env.example .env   # Variablen befüllen
 bun run db:push        # Schema in DB pushen
 bun run dev
 ```
@@ -38,11 +36,13 @@ bun run db:push   # Schema auf DB pushen
 bun run format    # Prettier
 ```
 
+Der Produktions-Build läuft mit Bun. Starte ihn mit `bun run build` und den Server anschließend mit `bun ./build`.
+
 ## Umgebungsvariablen
 
 | Variable                   | Beschreibung                                |
 | -------------------------- | ------------------------------------------- |
-| `DATABASE_URL`             | PostgreSQL-Verbindungsstring                |
+| `DATABASE_PATH`            | SQLite-Datei, Standard `./local.db`         |
 | `PUBLIC_ORIGIN`            | Produktions-Domain                          |
 | `PUBLIC_APP_NAME`          | App-Name                                    |
 | `ADMIN_PASSWORD`           | Passwort für `/admin`                       |

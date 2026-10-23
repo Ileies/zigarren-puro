@@ -1,15 +1,11 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { siteContentTable } from '$lib/server/db/schema';
-import { getSiteContent, contentDefaults } from '$lib/server/content';
+import db from '#lib/server/db/index.js';
+import { siteContentTable } from '#lib/server/db/schema/index.js';
+import { getSiteContent, contentDefaults } from '#lib/server/content.js';
 import { writeFile, mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const CONTENT_IMAGES_DIR = join(
-	process.cwd(),
-	process.env.NODE_ENV === 'production' ? 'client' : 'static',
-	'content-images'
-);
+const CONTENT_IMAGES_DIR = join(process.cwd(), 'data', 'uploads', 'content-images');
 
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024;

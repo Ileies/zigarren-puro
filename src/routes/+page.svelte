@@ -1,13 +1,13 @@
 <script lang="ts">
-	import Hero from '$lib/components/homepage/Hero.svelte';
-	import HeroCarousel from '$lib/components/homepage/HeroCarousel.svelte';
-	import FeaturedBrands from '$lib/components/homepage/FeaturedBrands.svelte';
-	import AllBrandsCarousel from '$lib/components/homepage/AllBrandsCarousel.svelte';
-	import CallToAction from '$lib/components/homepage/CallToAction.svelte';
-	import Recommendations from '$lib/components/homepage/Recommendations.svelte';
-	import About from '$lib/components/homepage/About.svelte';
-	import Tasting from '$lib/components/homepage/Tasting.svelte';
-	import Spirits from '$lib/components/homepage/Spirits.svelte';
+	import Hero from '#lib/components/homepage/Hero.svelte';
+	import HeroCarousel from '#lib/components/homepage/HeroCarousel.svelte';
+	import FeaturedBrands from '#lib/components/homepage/FeaturedBrands.svelte';
+	import AllBrandsCarousel from '#lib/components/homepage/AllBrandsCarousel.svelte';
+	import CallToAction from '#lib/components/homepage/CallToAction.svelte';
+	import Recommendations from '#lib/components/homepage/Recommendations.svelte';
+	import About from '#lib/components/homepage/About.svelte';
+	import Tasting from '#lib/components/homepage/Tasting.svelte';
+	import Spirits from '#lib/components/homepage/Spirits.svelte';
 
 	let { data } = $props();
 </script>

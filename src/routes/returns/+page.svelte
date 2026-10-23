@@ -10,7 +10,7 @@
 		Clock,
 		CreditCard
 	} from '@lucide/svelte';
-	import { email, phone } from '$lib/config';
+	import { email, phone } from '#lib/config.js';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -249,10 +249,13 @@
 			<div class="card border border-secondary/30 bg-base-100 shadow-lg">
 				<div class="card-body">
 					<p class="text-sm">
-						Vollständige rechtliche Informationen finden Sie in unserer <a
-							href={resolve('/cancellation')}
-							class="link font-medium link-secondary">Widerrufsbelehrung</a
-						>.
+						Vollständige rechtliche Informationen finden Sie in unserer
+
+						<a href={resolve('cancellation')} class="link font-medium link-secondary"
+							>Widerrufsbelehrung</a
+						>
+
+						.
 					</p>
 				</div>
 			</div>

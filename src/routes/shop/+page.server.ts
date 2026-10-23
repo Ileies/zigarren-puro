@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types';
-import db from '$lib/server/db';
-import { productTable, producerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { productTable, producerTable } from '#lib/server/db/schema/index.js';
 import { asc, desc, eq, and } from 'drizzle-orm';
-import { ProductType } from '$lib/types';
+import { ProductType } from '#lib/types.js';
 
 const VALID_TYPES = Object.values(ProductType) as string[];
 

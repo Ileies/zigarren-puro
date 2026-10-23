@@ -1,6 +1,6 @@
 import type { LayoutServerLoad } from './$types';
-import { getCartCount } from '$lib/server/cart';
-import { getSiteContent } from '$lib/server/content';
+import { getCartCount } from '#lib/server/cart.js';
+import { getSiteContent } from '#lib/server/content.js';
 
 export const load: LayoutServerLoad = async ({ locals, cookies }) => {
 	const showWelcome = cookies.get('show_welcome') === '1';

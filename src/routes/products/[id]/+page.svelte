@@ -12,7 +12,7 @@
 		Pencil,
 		Trash2
 	} from '@lucide/svelte';
-	import { ProductType, CigarStrength } from '$lib/types';
+	import { ProductType, CigarStrength } from '#lib/types.js';
 	import type { ActionData, PageData } from './$types';
 
 	let addedFeedback = $state(false);

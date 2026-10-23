@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
+import db from '#lib/server/db/index.js';
 import {
 	productTable,
 	producerTable,
@@ -7,19 +7,14 @@ import {
 	cigarilloDetailsTable,
 	beverageDetailsTable,
 	toolDetailsTable
-} from '$lib/server/db/schema';
+} from '#lib/server/db/schema/index.js';
 import { eq, asc } from 'drizzle-orm';
 import { error, redirect } from '@sveltejs/kit';
-import type { BeverageType, CigarStrength, FilterType } from '$lib/types';
+import type { BeverageType, CigarStrength, FilterType } from '#lib/types.js';
 import { writeFile, unlink, mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-// adapter-node serves static files from build/client/ at runtime; in dev they live in static/
-const PRODUCT_IMAGES_DIR = join(
-	process.cwd(),
-	process.env.NODE_ENV === 'production' ? 'client' : 'static',
-	'product-images'
-);
+const PRODUCT_IMAGES_DIR = join(process.cwd(), 'data', 'uploads', 'product-images');
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 5 * 1024 * 1024;
 

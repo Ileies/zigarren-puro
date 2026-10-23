@@ -1,9 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { productTable, producerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { productTable, producerTable } from '#lib/server/db/schema/index.js';
 import { asc, eq, desc, or, like, and } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
-import type { ProductType } from '$lib/types';
+import type { ProductType } from '#lib/types.js';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const search = (url.searchParams.get('search') || '').trim();

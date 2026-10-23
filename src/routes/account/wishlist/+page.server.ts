@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { productTable, producerTable, wishlistTable } from '$lib/server/db/schema';
-import { addToCart } from '$lib/server/cart';
+import db from '#lib/server/db/index.js';
+import { productTable, producerTable, wishlistTable } from '#lib/server/db/schema/index.js';
+import { addToCart } from '#lib/server/cart.js';
 import { and, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals }) => {

@@ -1,7 +1,7 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { customerTable } from './schemaShop';
 import { relations } from 'drizzle-orm';
-import type { TokenType } from '$lib/types';
+import type { TokenType } from '#lib/types.js';
 
 export const authCredentialsTable = sqliteTable('auth_credentials', {
 	customerId: text('customer_id')

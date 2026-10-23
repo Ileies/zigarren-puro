@@ -2,10 +2,10 @@
 	import { untrack } from 'svelte';
 	import { enhance } from '$app/forms';
 	import { Lock, Truck, Package, CreditCard, Building2, AlertCircle } from '@lucide/svelte';
-	import * as m from '$lib/messages';
-	import { freeShippingThreshold, shippingCosts } from '$lib/config';
+	import * as m from '#lib/messages.js';
+	import { freeShippingThreshold, shippingCosts } from '#lib/config.js';
 	import { loadStripe, type StripeEmbeddedCheckout } from '@stripe/stripe-js';
-	import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$env/static/public';
+	import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$app/env/public';
 
 	let { data, form } = $props();
 
@@ -506,11 +506,17 @@
 					class="space-y-6"
 				>
 					<!-- Hidden: step 1 data -->
+
 					<input type="hidden" name="shippingAddressId" value={capturedShippingId} />
+
 					<input type="hidden" name="shippingStreet" value={capturedShippingStreet} />
+
 					<input type="hidden" name="shippingCity" value={capturedShippingCity} />
+
 					<input type="hidden" name="shippingPostalCode" value={capturedShippingPostalCode} />
+
 					<input type="hidden" name="shippingState" value={capturedShippingState} />
+
 					<input
 						type="hidden"
 						name="billingSameAsShipping"
@@ -546,10 +552,8 @@
 									<button
 										type="button"
 										class="btn shrink-0 btn-ghost btn-xs"
-										onclick={() => (step = 1)}
+										onclick={() => (step = 1)}>{m.checkoutBack()}</button
 									>
-										{m.checkoutBack()}
-									</button>
 								</div>
 							</div>
 						</div>

@@ -1,18 +1,22 @@
 // Exception to the no-+server.ts convention: Stripe sends raw POST requests
 // to this endpoint that cannot be handled via SvelteKit form actions.
 import { eq } from 'drizzle-orm';
-import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import Stripe from 'stripe';
-import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from '$env/static/private';
-import db from '$lib/server/db';
-import { orderTable, orderItemTable, productTable, customerTable } from '$lib/server/db/schema';
-import { OrderStatus, PaymentStatus } from '$lib/types';
-import { sendOrderConfirmationEmail } from '$lib/server/functions';
+import { STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET } from '$app/env/private';
+import db from '#lib/server/db/index.js';
+import {
+	orderTable,
+	orderItemTable,
+	productTable,
+	customerTable
+} from '#lib/server/db/schema/index.js';
+import { OrderStatus, PaymentStatus } from '#lib/types.js';
+import { sendOrderConfirmationEmail } from '#lib/server/functions.js';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const sig = request.headers.get('stripe-signature');
-	if (!sig) return json({ error: 'No signature' }, { status: 400 });
+	if (!sig) return Response.json({ error: 'No signature' }, { status: 400 });
 
 	const rawBody = await request.text();
 	const stripe = new Stripe(STRIPE_SECRET_KEY);
@@ -21,7 +25,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		event = stripe.webhooks.constructEvent(rawBody, sig, STRIPE_WEBHOOK_SECRET);
 	} catch {
-		return json({ error: 'Invalid signature' }, { status: 400 });
+		return Response.json({ error: 'Invalid signature' }, { status: 400 });
 	}
 
 	if (
@@ -92,5 +96,5 @@ export const POST: RequestHandler = async ({ request }) => {
 			.where(eq(orderTable.stripeSessionId, session.id));
 	}
 
-	return json({ received: true });
+	return Response.json({ received: true });
 };

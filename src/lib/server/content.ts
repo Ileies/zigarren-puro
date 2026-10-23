@@ -1,5 +1,5 @@
-import db from '$lib/server/db';
-import { siteContentTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { siteContentTable } from '#lib/server/db/schema/index.js';
 
 export const contentDefaults: Record<string, string> = {
 	hero_bg_image: '/gallery/cohiba-linea.png',

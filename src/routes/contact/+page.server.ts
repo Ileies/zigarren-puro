@@ -1,6 +1,6 @@
 import type { Actions } from '@sveltejs/kit';
 import { z } from 'zod';
-import { sendMail } from '$lib/server/functions';
+import { sendMail } from '#lib/server/functions.js';
 
 const validTopics = [
 	'info',

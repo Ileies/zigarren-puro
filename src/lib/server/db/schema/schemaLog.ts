@@ -1,5 +1,5 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import type { LogLevel } from '$lib/types';
+import type { LogLevel } from '#lib/types.js';
 
 export const logTable = sqliteTable('logs', {
 	id: integer('id').primaryKey({ autoIncrement: true }),

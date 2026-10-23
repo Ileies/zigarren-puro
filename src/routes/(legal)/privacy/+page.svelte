@@ -12,7 +12,7 @@
 		AlertTriangle,
 		Eye
 	} from '@lucide/svelte';
-	import { phone, email, legalAddress } from '$lib/config';
+	import { phone, email, legalAddress } from '#lib/config.js';
 	import { resolve } from '$app/paths';
 </script>
 
@@ -73,14 +73,24 @@
 					</p>
 					<p>Rechtsgrundlagen für die Verarbeitung sind insbesondere:</p>
 					<ul>
-						<li><strong>Art. 6 Abs. 1 lit. a DSGVO</strong> – Einwilligung</li>
 						<li>
-							<strong>Art. 6 Abs. 1 lit. b DSGVO</strong> – Vertragserfüllung oder vorvertragliche Maßnahmen
+							<strong>Art. 6 Abs. 1 lit. a DSGVO</strong>
+							– Einwilligung
 						</li>
 						<li>
-							<strong>Art. 6 Abs. 1 lit. c DSGVO</strong> – Erfüllung einer rechtlichen Verpflichtung
+							<strong>Art. 6 Abs. 1 lit. b DSGVO</strong>
+							– Vertragserfüllung oder vorvertragliche Maßnahmen
 						</li>
-						<li><strong>Art. 6 Abs. 1 lit. f DSGVO</strong> – Berechtigte Interessen</li>
+
+						<li>
+							<strong>Art. 6 Abs. 1 lit. c DSGVO</strong>
+							– Erfüllung einer rechtlichen Verpflichtung
+						</li>
+
+						<li>
+							<strong>Art. 6 Abs. 1 lit. f DSGVO</strong>
+							– Berechtigte Interessen
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -239,9 +249,13 @@
 					<p>
 						Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Ihre Einwilligung können Sie
 						jederzeit widerrufen – entweder über den Abmeldelink in jeder Newsletter-E-Mail oder
-						unter <a href={resolve('/unsubscribe')} class="link link-secondary"
+						unter
+
+						<a href={resolve('unsubscribe')} class="link link-secondary"
 							>zigarren-puro.de/unsubscribe</a
-						>.
+						>
+
+						.
 					</p>
 					<p>
 						Nach Abmeldung wird Ihre E-Mail-Adresse unverzüglich aus dem Verteiler entfernt. Wir

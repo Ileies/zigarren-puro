@@ -8,8 +8,8 @@
 		instagram as defaultInstagram,
 		phone,
 		email
-	} from '$lib/config';
-	import * as m from '$lib/messages';
+	} from '#lib/config.js';
+	import * as m from '#lib/messages.js';
 	import { enhance } from '$app/forms';
 
 	interface Props {
@@ -111,7 +111,7 @@
 										subscribeSuccess = true;
 										customerEmail = '';
 									} else {
-										await update();
+										await update({ navigate: false });
 									}
 								};
 							}}

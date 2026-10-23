@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { MapPin, Mail, Phone, Clock, Send, Car, Train } from '@lucide/svelte';
-	import Map from '$lib/components/Map.svelte';
+	import Map from '#lib/components/Map.svelte';
 	import type { ActionData } from './$types';
 	let { form }: { form: ActionData } = $props();
 

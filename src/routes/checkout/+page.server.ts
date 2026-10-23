@@ -1,7 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { eq, inArray, and } from 'drizzle-orm';
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
+import db from '#lib/server/db/index.js';
 import {
 	addressTable,
 	customerTable,
@@ -9,14 +9,14 @@ import {
 	orderItemTable,
 	productTable,
 	producerTable
-} from '$lib/server/db/schema';
-import { getCart, setCart } from '$lib/server/cart';
-import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '$lib/types';
-import { sendOrderConfirmationEmail } from '$lib/server/functions';
-import { freeShippingThreshold, shippingCosts } from '$lib/config';
+} from '#lib/server/db/schema/index.js';
+import { getCart, setCart } from '#lib/server/cart.js';
+import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '#lib/types.js';
+import { sendOrderConfirmationEmail } from '#lib/server/functions.js';
+import { freeShippingThreshold, shippingCosts } from '#lib/config.js';
 import Stripe from 'stripe';
-import { STRIPE_SECRET_KEY } from '$env/static/private';
-import { PUBLIC_ORIGIN } from '$env/static/public';
+import { STRIPE_SECRET_KEY } from '$app/env/private';
+import { PUBLIC_ORIGIN } from '$app/env/public';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	if (!locals.user) redirect(302, '/login?redirect=/checkout');

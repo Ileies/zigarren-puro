@@ -1,15 +1,11 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { producerTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { producerTable } from '#lib/server/db/schema/index.js';
 import { asc, eq } from 'drizzle-orm';
 import { writeFile, unlink, mkdir, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const PRODUCER_IMAGES_DIR = join(
-	process.cwd(),
-	process.env.NODE_ENV === 'production' ? 'client' : 'static',
-	'producer-images'
-);
+const PRODUCER_IMAGES_DIR = join(process.cwd(), 'data', 'uploads', 'producer-images');
 const ALLOWED_MIME = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_SIZE = 2 * 1024 * 1024;
 

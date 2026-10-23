@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { ProductType } from '$lib/types';
+	import { ProductType } from '#lib/types.js';
 
 	import type { PageData } from './$types';
 	let { data, form }: { data: PageData; form: Record<string, unknown> | null } = $props();

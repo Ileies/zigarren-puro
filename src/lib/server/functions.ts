@@ -1,12 +1,12 @@
 import nodemailer from 'nodemailer';
-import { SMTP_HOST, SMTP_USER, SMTP_PASSWORD } from '$env/static/private';
-import { PUBLIC_APP_NAME, PUBLIC_ORIGIN } from '$env/static/public';
+import { SMTP_HOST, SMTP_USER, SMTP_PASSWORD } from '$app/env/private';
+import { PUBLIC_APP_NAME, PUBLIC_ORIGIN } from '$app/env/public';
 import type { Options } from 'nodemailer/lib/mailer';
-import Logger from '$lib/server/Logger';
-import db from '$lib/server/db';
-import { tokenTable } from '$lib/server/db/schema';
-import { TokenType } from '$lib/types';
-import { bankAccount, companyName } from '$lib/config';
+import Logger from '#lib/server/Logger.js';
+import db from '#lib/server/db/index.js';
+import { tokenTable } from '#lib/server/db/schema/index.js';
+import { TokenType } from '#lib/types.js';
+import { bankAccount, companyName } from '#lib/config.js';
 import { and, eq, isNull } from 'drizzle-orm';
 
 function generateToken(): string {

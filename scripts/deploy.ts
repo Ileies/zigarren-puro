@@ -3,13 +3,14 @@ import { $ } from 'bun';
 const REMOTE_DIR = `/zigarren-puro.de/httpdocs/`;
 
 try {
-	console.log('Creating entry.cjs in build directory');
-	await $`echo 'import("./index.js");' > ./build/entry.cjs`;
+	console.log('Preparing the Bun server entrypoint');
+	await $`cp ./scripts/entry.cjs ./build/entry.cjs`;
 	await $`cp ./package.json ./build`;
+	await $`cp ./bun.lock ./build`;
 
-	// Install production dependencies (including native addons like better-sqlite3)
+	// Install production dependencies required by the Bun server.
 	console.log('Installing production dependencies in build directory...');
-	await $`npm install --omit=dev`.cwd('./build');
+	await $`bun install --production --frozen-lockfile`.cwd('./build');
 
 	// Compress build directory
 	console.log('Compressing build directory...');

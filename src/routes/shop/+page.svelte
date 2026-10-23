@@ -3,15 +3,19 @@
 	import { goto } from '$app/navigation';
 	import { enhance } from '$app/forms';
 	import { Package, ShoppingCart, SlidersHorizontal, Check } from '@lucide/svelte';
-	import * as m from '$lib/messages';
-	import { ProductType } from '$lib/types';
+	import * as m from '#lib/messages.js';
+	import { ProductType } from '#lib/types.js';
 
 	let justAdded = $state<string | null>(null);
 
 	function handleAddToCart(productId: string) {
 		return () => {
-			return async ({ update }: { update: (opts?: { reset?: boolean }) => Promise<void> }) => {
-				await update({ reset: false });
+			return async ({
+				update
+			}: {
+				update: (opts?: { reset?: boolean; navigate?: boolean }) => Promise<void>;
+			}) => {
+				await update({ reset: false, navigate: false });
 				justAdded = productId;
 				setTimeout(() => {
 					if (justAdded === productId) justAdded = null;
@@ -39,7 +43,7 @@
 
 	function buildUrl(type: string | null, sort?: string) {
 		// eslint-disable-next-line svelte/prefer-svelte-reactivity
-		const u = new URLSearchParams(page.url.searchParams);
+		const u = new URLSearchParams(page.url.searchParams.toString());
 		if (type) u.set('type', type);
 		else u.delete('type');
 		if (sort) u.set('sort', sort);

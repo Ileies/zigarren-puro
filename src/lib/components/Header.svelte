@@ -2,9 +2,9 @@
 	import { BadgePercent, CircleUser, Menu, Search, ShoppingCart, Truck, X } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
 	import LanguageSelector from './LanguageSelector.svelte';
-	import { facebook, instagram } from '$lib/config';
-	import * as m from '$lib/messages';
-	import type { SessionValidationResult } from '$lib/server/auth';
+	import { facebook, instagram } from '#lib/config.js';
+	import * as m from '#lib/messages.js';
+	import type { SessionValidationResult } from '#lib/server/auth.js';
 
 	let { user, cartCount = 0 }: { user: SessionValidationResult['user']; cartCount?: number } =
 		$props();

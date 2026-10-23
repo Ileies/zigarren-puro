@@ -10,7 +10,7 @@
 		Shield,
 		Phone
 	} from '@lucide/svelte';
-	import { phone, email } from '$lib/config';
+	import { phone, email } from '#lib/config.js';
 </script>
 
 <svelte:head>

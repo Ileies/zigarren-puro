@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import db from '$lib/server/db';
-import { orderTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { orderTable } from '#lib/server/db/schema/index.js';
 import { eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async ({ locals, params }) => {

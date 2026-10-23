@@ -1,9 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
-import db from '$lib/server/db';
-import { orderTable } from '$lib/server/db/schema';
+import db from '#lib/server/db/index.js';
+import { orderTable } from '#lib/server/db/schema/index.js';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
-import { OrderStatus, PaymentStatus } from '$lib/types';
+import { OrderStatus, PaymentStatus } from '#lib/types.js';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const order = await db.query.orderTable.findFirst({

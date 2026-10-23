@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { untrack } from 'svelte';
-	import Header from '$lib/components/Header.svelte';
+	import Header from '#lib/components/Header.svelte';
 	import '../app.css';
-	import Footer from '$lib/components/Footer.svelte';
-	import WelcomeModal from '$lib/components/WelcomeModal.svelte';
+	import Footer from '#lib/components/Footer.svelte';
+	import WelcomeModal from '#lib/components/WelcomeModal.svelte';
 
 	let { children, data } = $props();
 
