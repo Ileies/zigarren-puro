@@ -4,7 +4,7 @@ const REMOTE_DIR = `/zigarren-puro.de/httpdocs/`;
 const REMOTE_BUN_BIN = `${REMOTE_DIR}data/runtime/bun`;
 const BUN_ARCHIVE_URL =
 	'https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-baseline.zip';
-const BUN_ARCHIVE_SHA256 = '1fc2edac843102909e3a1be1d8d9802cc6071cf074e67e88231f4ffe0f8b397b';
+const BUN_ARCHIVE_SHA256 = 'e0446eb55995772eb9894bebae9a6be368d985a8b9271ee124486f9946eedd76';
 
 try {
 	console.log('Checking the remote Bun runtime');
