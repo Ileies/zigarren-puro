@@ -8,7 +8,7 @@ const BUN_ARCHIVE_SHA256 = 'e0446eb55995772eb9894bebae9a6be368d985a8b9271ee12448
 
 try {
 	console.log('Checking the remote Bun runtime');
-	await $`ssh zp "if [ ! -x '${REMOTE_BUN_BIN}' ]; then mkdir -p '${REMOTE_DIR}data/runtime' && curl -fsSL '${BUN_ARCHIVE_URL}' -o /tmp/bun-linux-x64-baseline.zip && printf '%s  %s\\n' '${BUN_ARCHIVE_SHA256}' /tmp/bun-linux-x64-baseline.zip | sha256sum -c - && unzip -p /tmp/bun-linux-x64-baseline.zip bun > '${REMOTE_BUN_BIN}' && chmod 755 '${REMOTE_BUN_BIN}' && rm /tmp/bun-linux-x64-baseline.zip; fi && '${REMOTE_BUN_BIN}' --version"`;
+	await $`ssh zp "if [ ! -x '${REMOTE_BUN_BIN}' ]; then mkdir -p '${REMOTE_DIR}data/runtime' && curl -fsSL '${BUN_ARCHIVE_URL}' -o /tmp/bun-linux-x64-baseline.zip && printf '%s  %s\\n' '${BUN_ARCHIVE_SHA256}' /tmp/bun-linux-x64-baseline.zip | sha256sum -c - && unzip -p /tmp/bun-linux-x64-baseline.zip bun-linux-x64-baseline/bun > '${REMOTE_BUN_BIN}' && chmod 755 '${REMOTE_BUN_BIN}' && rm /tmp/bun-linux-x64-baseline.zip; fi && '${REMOTE_BUN_BIN}' --version"`;
 
 	console.log('Preparing the Bun server entrypoint');
 	await $`cp ./scripts/entry.cjs ./build/entry.cjs`;
