@@ -36,7 +36,7 @@ bun run db:push   # Schema auf DB pushen
 bun run format    # Prettier
 ```
 
-Der Produktions-Build läuft mit Bun. Starte ihn mit `bun run build` und den Server anschließend mit `bun ./build`.
+Der Produktions-Build läuft mit Bun. `bun run build` erzeugt den Server unter `build`; starte ihn mit `bun ./build`.
 
 ## Umgebungsvariablen
 

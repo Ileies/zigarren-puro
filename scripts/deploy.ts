@@ -1,16 +1,17 @@
 import { $ } from 'bun';
 
 const REMOTE_DIR = `/zigarren-puro.de/httpdocs/`;
+const REMOTE_BUN_BIN = `${REMOTE_DIR}data/runtime/bun`;
+const BUN_ARCHIVE_URL =
+	'https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64-baseline.zip';
+const BUN_ARCHIVE_SHA256 = '1fc2edac843102909e3a1be1d8d9802cc6071cf074e67e88231f4ffe0f8b397b';
 
 try {
+	console.log('Checking the remote Bun runtime');
+	await $`ssh zp "if [ ! -x '${REMOTE_BUN_BIN}' ]; then mkdir -p '${REMOTE_DIR}data/runtime' && curl -fsSL '${BUN_ARCHIVE_URL}' -o /tmp/bun-linux-x64-baseline.zip && printf '%s  %s\\n' '${BUN_ARCHIVE_SHA256}' /tmp/bun-linux-x64-baseline.zip | sha256sum -c - && unzip -p /tmp/bun-linux-x64-baseline.zip bun > '${REMOTE_BUN_BIN}' && chmod 755 '${REMOTE_BUN_BIN}' && rm /tmp/bun-linux-x64-baseline.zip; fi && '${REMOTE_BUN_BIN}' --version"`;
+
 	console.log('Preparing the Bun server entrypoint');
 	await $`cp ./scripts/entry.cjs ./build/entry.cjs`;
-	await $`cp ./package.json ./build`;
-	await $`cp ./bun.lock ./build`;
-
-	// Install production dependencies required by the Bun server.
-	console.log('Installing production dependencies in build directory...');
-	await $`bun install --production --frozen-lockfile`.cwd('./build');
 
 	// Compress build directory
 	console.log('Compressing build directory...');
