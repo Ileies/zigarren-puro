@@ -1,11 +1,12 @@
 import { sequence, type Handle } from '@sveltejs/kit/hooks';
-import { isHttpError } from '@sveltejs/kit';
+import { error, isHttpError } from '@sveltejs/kit';
 import * as auth from '#lib/server/auth.js';
 import { cookieName, getTextDirection, locales, runWithLocale } from '#lib/messages.js';
 import Logger from '#lib/server/Logger.js';
 import db from '#lib/server/db/index.js';
 import { sql } from 'drizzle-orm';
 import { ADMIN_PASSWORD } from '$app/env/private';
+import errorTemplate from './error.html?raw';
 
 const handleAdmin: Handle = async ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/admin')) {
@@ -14,7 +15,7 @@ const handleAdmin: Handle = async ({ event, resolve }) => {
 
 	const adminPassword = ADMIN_PASSWORD;
 	if (!adminPassword) {
-		return new Response('Admin not configured', { status: 503 });
+		error(503, 'Admin not configured');
 	}
 
 	const authHeader = event.request.headers.get('Authorization');
@@ -34,9 +35,12 @@ const handleAdmin: Handle = async ({ event, resolve }) => {
 		}
 	}
 
-	return new Response('Unauthorized', {
+	return new Response(errorTemplate.replaceAll('%sveltekit.status%', '401'), {
 		status: 401,
-		headers: { 'WWW-Authenticate': 'Basic realm="Admin"' }
+		headers: {
+			'Content-Type': 'text/html; charset=utf-8',
+			'WWW-Authenticate': 'Basic realm="Admin"'
+		}
 	});
 };
 
@@ -51,7 +55,7 @@ const handleChecks: Handle = async ({ event, resolve }) => {
 	) {
 		const requestOrigin = headers.get('origin');
 		if (requestOrigin && requestOrigin !== origin) {
-			return new Response('Forbidden', { status: 403 });
+			error(403, 'Forbidden');
 		}
 	}
 	console.log(new Date().toISOString(), event.url.href);

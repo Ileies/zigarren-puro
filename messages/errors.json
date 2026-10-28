@@ -1,0 +1,117 @@
+{
+	"errorNotFoundTitle": [
+		"Eine kleine Abzweigung.",
+		"A little detour.",
+		"منعطف صغير.",
+		"小小的岔路。",
+		"Небольшое отклонение от пути."
+	],
+	"errorNotFoundDescription": [
+		"Diese Seite konnten wir leider nicht finden. Vielleicht wurde sie verschoben oder die Adresse ist nicht mehr aktuell.",
+		"We couldn't find this page. It may have moved, or the address may no longer be up to date.",
+		"لم نتمكن من العثور على هذه الصفحة. ربما تم نقلها أو لم يعد عنوانها صالحاً.",
+		"很抱歉，未能找到此页面。它可能已被移动，或地址已失效。",
+		"Нам не удалось найти эту страницу. Возможно, она была перемещена или адрес устарел."
+	],
+	"errorUnauthorizedTitle": [
+		"Ein geschützter Bereich.",
+		"A private space.",
+		"منطقة محمية.",
+		"受保护的区域。",
+		"Защищённый раздел."
+	],
+	"errorUnauthorizedDescription": [
+		"Für diese Seite ist eine Anmeldung erforderlich. Bitte melden Sie sich mit einem berechtigten Konto an.",
+		"This page requires you to sign in. Please use an account with permission to access it.",
+		"تتطلب هذه الصفحة تسجيل الدخول. يرجى استخدام حساب لديه صلاحية الوصول إليها.",
+		"访问此页面需要登录。请使用具有访问权限的账户。",
+		"Для просмотра этой страницы необходимо войти в аккаунт с соответствующими правами доступа."
+	],
+	"errorForbiddenTitle": [
+		"Diese Tür bleibt geschlossen.",
+		"This door is closed.",
+		"هذا الباب مغلق.",
+		"此处暂不开放。",
+		"Эта дверь закрыта."
+	],
+	"errorForbiddenDescription": [
+		"Sie haben keine Berechtigung, diese Seite aufzurufen. Unser Team hilft Ihnen bei Fragen gerne weiter.",
+		"You don't have permission to view this page. Our team will be happy to help if you have any questions.",
+		"ليس لديك إذن لعرض هذه الصفحة. يسعد فريقنا مساعدتك إذا كانت لديك أي أسئلة.",
+		"您没有访问此页面的权限。如有疑问，我们的团队很乐意为您提供帮助。",
+		"У вас нет доступа к этой странице. Наша команда будет рада помочь, если у вас возникли вопросы."
+	],
+	"errorGoneTitle": [
+		"Diese Seite hat sich verabschiedet.",
+		"This page has said goodbye.",
+		"هذه الصفحة لم تعد متاحة.",
+		"此页面已下线。",
+		"Эта страница больше недоступна."
+	],
+	"errorGoneDescription": [
+		"Die gesuchte Seite ist nicht mehr verfügbar. In unserem Sortiment gibt es weiterhin viel zu entdecken.",
+		"The page you're looking for is no longer available. There is still plenty to discover in our collection.",
+		"الصفحة التي تبحث عنها لم تعد متاحة. لا يزال هناك الكثير لاكتشافه في مجموعتنا.",
+		"您寻找的页面已不再可用。我们的精选系列中仍有许多值得探索的好物。",
+		"Страница, которую вы ищете, больше недоступна. В нашем ассортименте по-прежнему много интересного."
+	],
+	"errorRateLimitTitle": [
+		"Einen Augenblick Geduld.",
+		"A moment of patience.",
+		"لحظة من فضلك.",
+		"请稍候片刻。",
+		"Немного терпения."
+	],
+	"errorRateLimitDescription": [
+		"Es sind zu viele Anfragen in kurzer Zeit eingegangen. Bitte warten Sie einen Moment, bevor Sie es erneut versuchen.",
+		"We've received too many requests in a short time. Please wait a moment before trying again.",
+		"تلقينا عدداً كبيراً من الطلبات في وقت قصير. يرجى الانتظار قليلاً قبل المحاولة مرة أخرى.",
+		"短时间内收到的请求过多。请稍等片刻后重试。",
+		"За короткое время поступило слишком много запросов. Пожалуйста, немного подождите и попробуйте снова."
+	],
+	"errorServerTitle": [
+		"Ein Moment der Ruhe.",
+		"A brief interlude.",
+		"استراحة قصيرة.",
+		"片刻休息。",
+		"Небольшая пауза."
+	],
+	"errorServerDescription": [
+		"Unser Service ist gerade nicht wie gewohnt erreichbar. Bitte versuchen Sie es in wenigen Augenblicken erneut. Vielen Dank für Ihre Geduld.",
+		"Our service is temporarily unavailable. Please try again in a few moments. Thank you for your patience.",
+		"خدمتنا غير متاحة مؤقتاً. يرجى المحاولة مرة أخرى بعد قليل. شكراً لصبرك.",
+		"我们的服务暂时无法使用。请稍后重试，感谢您的耐心等候。",
+		"Наш сервис временно недоступен. Пожалуйста, попробуйте снова через некоторое время. Спасибо за терпение."
+	],
+	"errorRequestTitle": [
+		"Hier geht es gerade nicht weiter.",
+		"We couldn't complete your request.",
+		"تعذّر إكمال طلبك.",
+		"暂时无法完成您的请求。",
+		"Не удалось выполнить ваш запрос."
+	],
+	"errorRequestDescription": [
+		"Diese Anfrage konnte nicht verarbeitet werden. Kehren Sie zur Startseite zurück oder entdecken Sie unser Sortiment.",
+		"This request could not be processed. Return to our homepage or explore our collection.",
+		"لم نتمكن من معالجة هذا الطلب. يمكنك العودة إلى الصفحة الرئيسية أو استكشاف مجموعتنا.",
+		"此请求无法处理。您可以返回首页或浏览我们的精选系列。",
+		"Этот запрос не удалось обработать. Вернитесь на главную страницу или ознакомьтесь с нашим ассортиментом."
+	],
+	"errorHome": ["Zur Startseite", "Back to home", "الصفحة الرئيسية", "返回首页", "На главную"],
+	"errorShop": [
+		"Sortiment entdecken",
+		"Explore the collection",
+		"اكتشف المجموعة",
+		"探索精选系列",
+		"Смотреть ассортимент"
+	],
+	"errorRetry": ["Erneut versuchen", "Try again", "حاول مرة أخرى", "重试", "Попробовать снова"],
+	"errorHelp": [
+		"Wir sind gerne für Sie da.",
+		"We're here to help.",
+		"نحن هنا لمساعدتك.",
+		"我们随时为您提供帮助。",
+		"Мы всегда рады помочь."
+	],
+	"errorContact": ["Schreiben Sie uns", "Get in touch", "تواصل معنا", "联系我们", "Напишите нам"]
+}

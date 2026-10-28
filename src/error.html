@@ -1,28 +1,185 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
 		<meta charset="UTF-8" />
 		<meta content="width=device-width, initial-scale=1.0" name="viewport" />
-		<title>%sveltekit.error.message%</title>
-		<link
-			href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css"
-			rel="stylesheet"
-			type="text/css"
-		/>
-		<script src="https://cdn.tailwindcss.com"></script>
+		<meta name="robots" content="noindex, nofollow" />
+		<title>%sveltekit.status% · Seite nicht erreichbar | Zigarren Puro</title>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+
+			body {
+				display: grid;
+				min-height: 100vh;
+				min-height: 100svh;
+				place-items: center;
+				margin: 0;
+				padding: clamp(2rem, 6vw, 5rem) 1rem;
+				background: #f7f4ee;
+				color: #302a23;
+				font-family: system-ui, sans-serif;
+			}
+
+			main {
+				position: relative;
+				width: 100%;
+				max-width: 58rem;
+				border: 1px solid #d9cdbb;
+				padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 5vw, 4rem);
+				text-align: center;
+			}
+
+			main::before {
+				position: absolute;
+				inset: 6px;
+				border: 1px solid #e8dfd2;
+				pointer-events: none;
+				content: '';
+			}
+
+			.brand {
+				margin: 0;
+				font-size: 0.75rem;
+				font-weight: 600;
+				letter-spacing: 0.25em;
+				text-transform: uppercase;
+			}
+
+			.ornament {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 0.75rem;
+				margin: 1.5rem auto 2rem;
+				color: #947347;
+			}
+
+			.ornament::before,
+			.ornament::after {
+				width: 3rem;
+				height: 1px;
+				background: #c9b797;
+				content: '';
+			}
+
+			.ornament span {
+				width: 6px;
+				height: 6px;
+				border: 1px solid currentColor;
+				transform: rotate(45deg);
+			}
+
+			.status {
+				margin: 0 0 1.5rem;
+				color: #947347;
+				font-family: Georgia, serif;
+				font-size: clamp(6rem, 16vw, 10rem);
+				line-height: 1;
+				letter-spacing: -0.04em;
+			}
+
+			h1 {
+				margin: 0;
+				font-family: Georgia, serif;
+				font-size: clamp(1.75rem, 4vw, 2.75rem);
+				font-weight: 400;
+				line-height: 1.25;
+				text-wrap: balance;
+			}
+
+			.description {
+				max-width: 31rem;
+				margin: 1.25rem auto 0;
+				color: #6c6257;
+				line-height: 1.8;
+				text-wrap: pretty;
+			}
+
+			.actions {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 0.75rem;
+				margin-top: 2rem;
+			}
+
+			.button {
+				display: inline-flex;
+				min-height: 3.25rem;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid #b7a68d;
+				padding: 0.75rem 1.5rem;
+				color: #302a23;
+				font-weight: 600;
+				text-decoration: none;
+			}
+
+			.button:hover {
+				background: #ece5d9;
+			}
+
+			.primary {
+				border-color: #302a23;
+				background: #302a23;
+				color: #fffaf2;
+			}
+
+			.primary:hover {
+				border-color: #514334;
+				background: #514334;
+			}
+
+			a:focus-visible {
+				outline: 2px solid #947347;
+				outline-offset: 4px;
+			}
+
+			.help {
+				margin: 2.25rem 0 0;
+				color: #6c6257;
+				font-size: 0.875rem;
+				line-height: 1.8;
+			}
+
+			.help a {
+				display: inline-block;
+				color: #59462f;
+				font-size: 1rem;
+				text-underline-offset: 4px;
+			}
+
+			.help a:hover {
+				color: #302a23;
+			}
+
+			@media (max-width: 480px) {
+				.actions {
+					flex-direction: column;
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<main class="grid min-h-full place-items-center px-6 py-24 sm:py-32">
-				<!-- Beispiel mit Status 404 -->
-				<h1 class="text-center text-4xl font-bold text-error">%sveltekit.status%</h1>
-				<div>
-					<p class="mt-4 text-center text-lg text-base-content/80">%sveltekit.error.message%</p>
-					<p class="mt-10 text-center">
-						<a class="btn" href="/">Go back home</a>
-					</p>
-				</div>
-			</main>
-		</div>
+		<main>
+			<p class="brand">Zigarren Puro</p>
+			<div class="ornament" aria-hidden="true"><span></span></div>
+			<p class="status">%sveltekit.status%</p>
+			<h1>Diese Seite ist gerade nicht erreichbar.</h1>
+			<p class="description">
+				Die gewünschte Seite konnte nicht geladen werden. Bitte prüfen Sie die Adresse oder
+				versuchen Sie es in wenigen Augenblicken erneut.
+			</p>
+			<div class="actions">
+				<a class="button primary" href="/">Zur Startseite</a>
+				<a class="button" href="/shop">Sortiment entdecken</a>
+			</div>
+			<p class="help">
+				Wir sind gerne für Sie da.
+				<a href="mailto:info@zigarren-puro.de">Schreiben Sie uns</a>
+			</p>
+		</main>
 	</body>
 </html>
