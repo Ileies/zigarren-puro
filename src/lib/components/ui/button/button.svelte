@@ -1,38 +1,42 @@
 <script lang="ts" module>
-	import { type VariantProps, tv } from "tailwind-variants";
-	import { cn, type WithElementRef } from "#lib/utils.js";
-	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from "svelte/elements";
+	import { type VariantProps, tv } from 'tailwind-variants';
+	import { cn, type WithElementRef } from '#lib/utils.js';
+	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
 	export const buttonVariants = tv({
 		base: "focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive rounded-md border border-transparent bg-clip-padding text-base font-medium focus-visible:ring-3 aria-invalid:ring-3 [&_svg:not([class*='size-'])]:size-4 group/button inline-flex shrink-0 items-center justify-center whitespace-nowrap transition-colors motion-reduce:transition-none outline-none select-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0",
 		variants: {
 			variant: {
-				default: "bg-primary text-primary-foreground hover:bg-primary/80",
-				outline: "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-				secondary: "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-				ghost: "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-				destructive: "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
-				link: "text-primary underline-offset-4 hover:underline",
+				default: 'bg-primary text-primary-foreground hover:bg-primary/80',
+				outline:
+					'border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground',
+				secondary:
+					'bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
+				ghost:
+					'hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground',
+				destructive:
+					'bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30',
+				link: 'text-primary underline-offset-4 hover:underline'
 			},
 			size: {
-				default: "min-h-11 gap-2 px-5 py-2",
+				default: 'min-h-11 gap-2 px-5 py-2',
 				xs: "min-h-11 gap-1 px-2 py-2 [&_svg:not([class*='size-'])]:size-3",
 				sm: "min-h-11 gap-1.5 px-3 py-2 [&_svg:not([class*='size-'])]:size-3.5",
-				lg: "min-h-12 gap-2 px-6 py-3",
-				icon: "size-11",
-				"icon-xs": "size-11 [&_svg:not([class*='size-'])]:size-3",
-				"icon-sm": "size-11 [&_svg:not([class*='size-'])]:size-3.5",
-				"icon-lg": "size-12",
-			},
+				lg: 'min-h-12 gap-2 px-6 py-3',
+				icon: 'size-11',
+				'icon-xs': "size-11 [&_svg:not([class*='size-'])]:size-3",
+				'icon-sm': "size-11 [&_svg:not([class*='size-'])]:size-3.5",
+				'icon-lg': 'size-12'
+			}
 		},
 		defaultVariants: {
-			variant: "default",
-			size: "default",
-		},
+			variant: 'default',
+			size: 'default'
+		}
 	});
 
-	export type ButtonVariant = VariantProps<typeof buttonVariants>["variant"];
-	export type ButtonSize = VariantProps<typeof buttonVariants>["size"];
+	export type ButtonVariant = VariantProps<typeof buttonVariants>['variant'];
+	export type ButtonSize = VariantProps<typeof buttonVariants>['size'];
 
 	export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 		WithElementRef<HTMLAnchorAttributes> & {
@@ -44,11 +48,11 @@
 <script lang="ts">
 	let {
 		class: className,
-		variant = "default",
-		size = "default",
+		variant = 'default',
+		size = 'default',
 		ref = $bindable(null),
 		href = undefined,
-		type = "button",
+		type = 'button',
 		disabled,
 		children,
 		...restProps
@@ -62,7 +66,7 @@
 		class={cn(buttonVariants({ variant, size }), className)}
 		href={disabled ? undefined : href}
 		aria-disabled={disabled}
-		role={disabled ? "link" : undefined}
+		role={disabled ? 'link' : undefined}
 		tabindex={disabled ? -1 : undefined}
 		{...restProps}
 	>

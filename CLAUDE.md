@@ -4,6 +4,15 @@ Premium-Webshop für Zigarren und Spirituosen. SvelteKit 3 + Drizzle ORM + SQLit
 
 Offene Tasks: [`TODO.md`](./TODO.md)
 
+## Design und UI Migration
+
+Bei Änderungen an Gestaltung und UI diese Dokumente beachten:
+
+- [Designentscheidungen](./docs/design-direction.md): Zielgruppe, Gestaltungsprinzipien und Seitenaufbau für den Zigarren-Fachhandel.
+- [Migrationsplan](./docs/ui-migration-plan.md): shadcn-svelte-Einrichtung, schrittweise Ablösung von DaisyUI und konkrete Aufgaben mit Abnahmekriterien.
+
+Den bestehenden Footer als gestalterischen Anker erhalten; seine Migration soll optisch gleichwertig bleiben.
+
 ---
 
 ## Tech Stack

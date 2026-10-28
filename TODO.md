@@ -8,7 +8,8 @@
 
 ## Soon
 
-- **[DEBT]** Migrate UI framework from DaisyUI to shadcn-svelte - better base for a premium brand in a regulated commerce context
+- **[FEATURE]** Implement reliable identity and age verification to enforce the 18+ requirement before users can purchase age-restricted products.
+- **[DESIGN]** Rework the storefront as a modern specialist cigar shop, preserving the existing footer. shadcn-svelte foundation is installed; follow the [design direction](docs/design-direction.md) and the [route-by-route migration plan](docs/ui-migration-plan.md) to replace DaisyUI and apply the new principles.
 
 ## Later
 
