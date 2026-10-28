@@ -33,6 +33,25 @@
 	}
 </script>
 
+{#snippet awards()}
+	<div class="flex shrink-0 items-center justify-center gap-3">
+		<img
+			src="/awards/davidoff.png"
+			alt="Davidoff Ambassador"
+			width="250"
+			height="166"
+			class="h-12 w-auto object-contain lg:h-16 xl:h-20"
+		/>
+		<img
+			src="/awards/habanos.png"
+			alt="Habanos Specialist"
+			width="897"
+			height="1200"
+			class="h-12 w-auto object-contain lg:h-16 xl:h-20"
+		/>
+	</div>
+{/snippet}
+
 <!-- Mobile Drawer -->
 <div class="drawer">
 	<input id="mobile-drawer" type="checkbox" class="drawer-toggle" bind:checked={mobileMenuOpen} />
@@ -50,6 +69,10 @@
 						<div class="absolute top-2 right-2">
 							<LanguageSelector />
 						</div>
+					</div>
+
+					<div class="px-4 pb-4">
+						{@render awards()}
 					</div>
 
 					<!-- Search bar with account and cart buttons -->
@@ -135,13 +158,16 @@
 				<!-- Desktop Header -->
 				<div class="block">
 					<div class="flex items-center justify-between gap-2 px-3 py-2 sm:gap-4 sm:px-6">
-						<!-- Logo -->
-						<a class="flex flex-shrink-0 items-center space-x-4" href="/">
-							<img src="/logo.png" alt="Zigarren Puro" class="h-32 xl:h-36" />
-						</a>
+						<!-- Logo and awards -->
+						<div class="flex shrink-0 items-center gap-4">
+							<a class="shrink-0" href="/">
+								<img src="/logo.png" alt="Zigarren Puro" class="h-32 xl:h-36" />
+							</a>
+							{@render awards()}
+						</div>
 
 						<label
-							class="input-bordered border-neutral-focus input w-48 bg-neutral text-neutral-content transition-colors focus-within:border-secondary sm:w-64 lg:w-96 xl:w-[500px] 2xl:w-[600px]"
+							class="input-bordered border-neutral-focus input min-w-0 flex-1 bg-neutral text-neutral-content transition-colors focus-within:border-secondary lg:max-w-96 xl:max-w-[500px] 2xl:max-w-[600px]"
 						>
 							<Search class="h-4 w-4 opacity-70" />
 							<input
