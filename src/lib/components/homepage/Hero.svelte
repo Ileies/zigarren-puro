@@ -43,7 +43,7 @@
 		</p>
 		<a
 			href={ctaLink}
-			class="btn border-2 border-white bg-transparent px-10 text-sm font-semibold tracking-widest text-white uppercase transition-all duration-300 btn-lg hover:bg-white hover:text-black"
+			class="btn border-2 border-white bg-transparent px-8 font-semibold tracking-widest text-white uppercase transition-all duration-300 btn-lg hover:bg-white hover:text-black sm:px-10"
 		>
 			{ctaText}
 		</a>

@@ -159,7 +159,7 @@
 								aria-label={user ? 'Mein Konto' : 'Anmelden'}
 							>
 								<CircleUser class="h-7 w-7" />
-								<span class="hidden text-base tracking-wide xl:block"
+								<span class="hidden text-lg tracking-wide xl:block"
 									>{user ? user.firstName : 'Anmelden'}</span
 								>
 							</a>
@@ -169,7 +169,7 @@
 								aria-label="Warenkorb"
 							>
 								<ShoppingCart class="h-7 w-7" />
-								<span class="hidden text-base tracking-wide xl:block">Warenkorb</span>
+								<span class="hidden text-lg tracking-wide xl:block">Warenkorb</span>
 								{#if cartCount > 0}<span class="text-base font-semibold text-accent"
 										>{cartCount > 99 ? '99+' : cartCount}</span
 									>{/if}
@@ -184,7 +184,7 @@
 								<li class="flex-1">
 									<a
 										href={navItem.href}
-										class="flex h-full items-center justify-center px-1 py-2 text-xs font-normal whitespace-nowrap transition-colors hover:bg-white/10 sm:text-sm md:text-base"
+										class="flex h-full items-center justify-center px-3 py-3 text-lg font-medium whitespace-nowrap transition-colors hover:bg-white/10"
 									>
 										{navItem.title}
 									</a>

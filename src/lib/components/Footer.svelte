@@ -86,7 +86,7 @@
 			<!-- Company Info & Newsletter -->
 			<div class="lg:col-span-1">
 				<div class="mb-6">
-					<img src="/logo.png" alt="Zigarren Puro" class="mb-4 h-16" />
+					<img src="/logo-footer.png" alt="Zigarren Puro" class="mb-4 h-16" />
 					<p class="mb-4 text-sm text-neutral-content/80">
 						{m.expertCurated()} - {m.companyDescription()}
 					</p>
@@ -102,7 +102,7 @@
 						<form
 							action="/newsletter?/subscribe"
 							method="POST"
-							class="flex gap-2"
+							class="flex flex-col gap-2 sm:flex-row lg:flex-col 2xl:flex-row"
 							use:enhance={() => {
 								isSubscribing = true;
 								return async ({ result, update }) => {
@@ -116,7 +116,9 @@
 								};
 							}}
 						>
-							<label class="input-bordered input input-sm flex-1 bg-base-100 text-base-content">
+							<label
+								class="input-bordered input input-sm w-full min-w-0 flex-none bg-base-100 text-base-content sm:flex-1 lg:flex-none 2xl:flex-1"
+							>
 								<Mail class="h-4 w-4 opacity-70" />
 								<input
 									type="email"
@@ -170,7 +172,7 @@
 				<ul class="space-y-2">
 					{#each customerServiceLinks as link (link.title)}
 						<li>
-							<a href={link.href} class="text-sm transition-colors hover:text-secondary">
+							<a href={link.href} class="text-base transition-colors hover:text-secondary">
 								{link.title}
 							</a>
 						</li>
@@ -180,7 +182,7 @@
 				<!-- Contact Info -->
 				<div class="mt-6">
 					<h4 class="mb-3 font-medium">{m.contact()}</h4>
-					<div class="space-y-2 text-sm text-neutral-content/80">
+					<div class="space-y-2 text-base text-neutral-content/80">
 						<a class="flex items-center gap-2" href={`tel:${phone.replace(/[^+\d]/g, '')}`}>
 							<Phone class="h-4 w-4" />
 							<span>{phone}</span>
@@ -207,7 +209,7 @@
 				<ul class="space-y-2">
 					{#each companyLinks as link (link.title)}
 						<li>
-							<a href={link.href} class="text-sm transition-colors hover:text-secondary">
+							<a href={link.href} class="text-base transition-colors hover:text-secondary">
 								{link.title}
 							</a>
 						</li>
@@ -236,7 +238,7 @@
 				<ul class="space-y-2">
 					{#each legalLinks as link (link.title)}
 						<li>
-							<a href={link.href} class="text-sm transition-colors hover:text-secondary">
+							<a href={link.href} class="text-base transition-colors hover:text-secondary">
 								{link.title}
 							</a>
 						</li>
