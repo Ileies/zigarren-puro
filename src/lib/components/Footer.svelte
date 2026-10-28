@@ -230,6 +230,19 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Awards & Partners -->
+				<div class="mt-6">
+					<h4 class="mb-3 font-medium">{m.awards()}</h4>
+					<div class="flex items-center gap-4">
+						<div>
+							<img src="/awards/davidoff.png" alt="Davidoff" class="h-16 object-contain" />
+						</div>
+						<div>
+							<img src="/awards/habanos.png" alt="Habanos" class="h-16 object-contain" />
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<!-- Legal -->
@@ -244,19 +257,6 @@
 						</li>
 					{/each}
 				</ul>
-
-				<!-- Awards & Partners -->
-				<div class="mt-6">
-					<h4 class="mb-3 font-medium">{m.awards()}</h4>
-					<div class="flex items-center gap-4">
-						<div class="grayscale transition-all duration-300 hover:grayscale-0">
-							<img src="/awards/davidoff.png" alt="Davidoff" class="h-16 object-contain" />
-						</div>
-						<div class="grayscale transition-all duration-300 hover:grayscale-0">
-							<img src="/awards/habanos.png" alt="Habanos" class="h-16 object-contain" />
-						</div>
-					</div>
-				</div>
 
 				<!-- Payment Methods -->
 				<div class="mt-6">
