@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Hero from '#lib/components/homepage/Hero.svelte';
-	import HeroCarousel from '#lib/components/homepage/HeroCarousel.svelte';
+	import Gallery from '#lib/components/homepage/Gallery.svelte';
+	import GalleryCarousel from '#lib/components/homepage/GalleryCarousel.svelte';
 	import FeaturedBrands from '#lib/components/homepage/FeaturedBrands.svelte';
 	import AllBrandsCarousel from '#lib/components/homepage/AllBrandsCarousel.svelte';
 	import CallToAction from '#lib/components/homepage/CallToAction.svelte';
@@ -8,8 +8,6 @@
 	import About from '#lib/components/homepage/About.svelte';
 	import Tasting from '#lib/components/homepage/Tasting.svelte';
 	import Spirits from '#lib/components/homepage/Spirits.svelte';
-
-	let { data } = $props();
 </script>
 
 <svelte:head>
@@ -20,14 +18,8 @@
 	/>
 </svelte:head>
 
-<Hero
-	bgImage={data.content.hero_bg_image}
-	subtitle={data.content.hero_subtitle}
-	tagline={data.content.hero_tagline}
-	ctaText={data.content.hero_cta_text}
-	ctaLink={data.content.hero_cta_link}
-/>
-<HeroCarousel />
+<GalleryCarousel />
+<Gallery />
 <FeaturedBrands />
 <AllBrandsCarousel />
 <CallToAction />
