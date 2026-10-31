@@ -5,6 +5,6 @@ export const logTable = sqliteTable('logs', {
 	id: integer('id').primaryKey({ autoIncrement: true }),
 	type: text('type').notNull().$type<LogLevel>(),
 	message: text('message').notNull(),
-	createdAt: integer('timestamp', { mode: 'timestamp' }).notNull().defaultNow(),
+	createdAt: integer('timestamp', { mode: 'timestamp_ms' }).notNull().defaultNow(),
 	data: text('data', { mode: 'json' })
 });

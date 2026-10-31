@@ -32,8 +32,8 @@ export const customerTable = sqliteTable('customers', {
 	preferredLanguage: text('preferred_language'),
 	marketingConsent: integer('marketing_consent', { mode: 'boolean' }).default(false).notNull(),
 	isVerified: integer('is_verified', { mode: 'boolean' }).default(false).notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
 	metadata: text('metadata', { mode: 'json' }) // For any additional customer data
 });
 
@@ -80,20 +80,40 @@ export const orderTable = sqliteTable(
 		shippingAmount: real('shipping_amount').notNull(),
 		taxAmount: real('tax_amount').notNull(),
 		totalAmount: real('total_amount').notNull(),
+		// Written by the customer at checkout
 		notes: text('notes'),
+		// Written by staff, never shown to the customer
+		internalNote: text('internal_note'),
 		stripeSessionId: text('stripe_session_id'),
 		// Unpaid orders are cancelled after this moment and their stock is released.
 		// Null for orders created before deadlines existed, the sweep leaves those alone.
-		paymentDueAt: integer('payment_due_at', { mode: 'timestamp' }),
+		paymentDueAt: integer('payment_due_at', { mode: 'timestamp_ms' }),
 		// Set when the reminder before the deadline went out, so it is sent only once per deadline.
-		paymentReminderSentAt: integer('payment_reminder_sent_at', { mode: 'timestamp' }),
-		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-		updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
-		placedAt: integer('placed_at', { mode: 'timestamp' }),
-		cancelledAt: integer('cancelled_at', { mode: 'timestamp' })
+		paymentReminderSentAt: integer('payment_reminder_sent_at', { mode: 'timestamp_ms' }),
+		createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+		updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+		placedAt: integer('placed_at', { mode: 'timestamp_ms' }),
+		cancelledAt: integer('cancelled_at', { mode: 'timestamp_ms' })
 	},
 	(table) => [uniqueIndex('orders_order_number_unique').on(table.orderNumber)]
 );
+
+/** One row per status change of an order: who changed what, and when. */
+export const orderEventTable = sqliteTable('order_events', {
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
+	orderId: text('order_id')
+		.references(() => orderTable.id, { onDelete: 'cascade' })
+		.notNull(),
+	fromOrderStatus: text('from_order_status').notNull().$type<OrderStatus>(),
+	toOrderStatus: text('to_order_status').notNull().$type<OrderStatus>(),
+	fromPaymentStatus: text('from_payment_status').notNull().$type<PaymentStatus>(),
+	toPaymentStatus: text('to_payment_status').notNull().$type<PaymentStatus>(),
+	// "admin" for the admin area, "system" for the unpaid order sweep and checkout retries
+	actor: text('actor').notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
+});
 
 export const orderItemTable = sqliteTable('order_items', {
 	id: text('id')
@@ -131,7 +151,7 @@ export const productReviewTable = sqliteTable(
 		rating: integer('rating').notNull(), // 1-5
 		title: text('title'),
 		body: text('body'),
-		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+		createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 	},
 	(table) => [unique('product_review_per_user').on(table.productId, table.customerId)]
 );
@@ -145,7 +165,7 @@ export const wishlistTable = sqliteTable(
 		productId: text('product_id')
 			.references(() => productTable.id, { onDelete: 'cascade' })
 			.notNull(),
-		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+		createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 	},
 	(table) => [primaryKey({ columns: [table.customerId, table.productId] })]
 );
@@ -159,12 +179,12 @@ export const newsletterSubscriberTable = sqliteTable('newsletter_subscribers', {
 	status: text('status').notNull().$type<NewsletterStatus>(),
 	language: text('language'),
 	confirmToken: text('confirm_token').unique(), // cleared once confirmed
-	confirmExpiresAt: integer('confirm_expires_at', { mode: 'timestamp' }),
+	confirmExpiresAt: integer('confirm_expires_at', { mode: 'timestamp_ms' }),
 	unsubscribeToken: text('unsubscribe_token').notNull().unique(),
-	requestedAt: integer('requested_at', { mode: 'timestamp' }).defaultNow().notNull(), // last confirmation mail
-	confirmedAt: integer('confirmed_at', { mode: 'timestamp' }), // proof of consent
-	unsubscribedAt: integer('unsubscribed_at', { mode: 'timestamp' }),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+	requestedAt: integer('requested_at', { mode: 'timestamp_ms' }).defaultNow().notNull(), // last confirmation mail
+	confirmedAt: integer('confirmed_at', { mode: 'timestamp_ms' }), // proof of consent
+	unsubscribedAt: integer('unsubscribed_at', { mode: 'timestamp_ms' }),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 });
 
 export const customerRelations = relations(customerTable, ({ one, many }) => ({
@@ -199,7 +219,15 @@ export const orderRelations = relations(orderTable, ({ one, many }) => ({
 		fields: [orderTable.billingAddressId],
 		references: [addressTable.id]
 	}),
-	items: many(orderItemTable)
+	items: many(orderItemTable),
+	events: many(orderEventTable)
+}));
+
+export const orderEventRelations = relations(orderEventTable, ({ one }) => ({
+	order: one(orderTable, {
+		fields: [orderEventTable.orderId],
+		references: [orderTable.id]
+	})
 }));
 
 export const orderItemRelations = relations(orderItemTable, ({ one }) => ({

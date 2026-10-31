@@ -9,9 +9,9 @@ export const authCredentialsTable = sqliteTable('auth_credentials', {
 		.primaryKey(),
 	passwordHash: text('password_hash').notNull(),
 	failedAttempts: integer('failed_attempts').default(0).notNull(),
-	lockedUntil: integer('locked_until', { mode: 'timestamp' }),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull()
+	lockedUntil: integer('locked_until', { mode: 'timestamp_ms' }),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 });
 
 export const sessionTable = sqliteTable('sessions', {
@@ -19,8 +19,8 @@ export const sessionTable = sqliteTable('sessions', {
 	customerId: text('customer_id')
 		.references(() => customerTable.id, { onDelete: 'cascade' })
 		.notNull(),
-	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+	expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 });
 
 // One-time tokens for newsletter unsubscribe, password reset, email verification, etc.
@@ -31,10 +31,10 @@ export const tokenTable = sqliteTable('tokens', {
 		.notNull(),
 	type: text('type').notNull().$type<TokenType>(),
 	metadata: text('metadata'), // JSON string for additional data (e.g. new email for EMAIL_CHANGE)
-	usedAt: integer('used_at', { mode: 'timestamp' }),
-	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	revokedAt: integer('revoked_at', { mode: 'timestamp' })
+	usedAt: integer('used_at', { mode: 'timestamp_ms' }),
+	expiresAt: integer('expires_at', { mode: 'timestamp_ms' }).notNull(),
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+	revokedAt: integer('revoked_at', { mode: 'timestamp_ms' })
 });
 
 export const authCredentialsRelations = relations(authCredentialsTable, ({ one }) => ({

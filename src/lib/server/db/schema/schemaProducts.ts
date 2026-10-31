@@ -11,7 +11,7 @@ export const producerTable = sqliteTable('producers', {
 	country: text('country').notNull(),
 	contactInfo: text('contact_info'),
 	imageUrl: text('image_url'),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 });
 
 export const productTable = sqliteTable('products', {
@@ -29,8 +29,8 @@ export const productTable = sqliteTable('products', {
 	sku: text('sku').notNull().unique(),
 	productType: text('product_type').notNull().$type<ProductType>(),
 	tags: text('tags').default('[]').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull()
+	createdAt: integer('created_at', { mode: 'timestamp_ms' }).defaultNow().notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp_ms' }).defaultNow().notNull()
 });
 
 export const cigarDetailsTable = sqliteTable('cigar_details', {
