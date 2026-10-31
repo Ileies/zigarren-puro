@@ -7,6 +7,7 @@ import {
 	cigarilloDetailsTable,
 	customerTable,
 	newsletterSubscriberTable,
+	orderEventTable,
 	orderItemTable,
 	orderTable,
 	producerTable,
@@ -25,6 +26,7 @@ export async function resetDb() {
 	await db.delete(siteContentTable);
 	await db.delete(wishlistTable);
 	await db.delete(productReviewTable);
+	await db.delete(orderEventTable);
 	await db.delete(orderItemTable);
 	await db.delete(orderTable);
 	await db.delete(addressTable);

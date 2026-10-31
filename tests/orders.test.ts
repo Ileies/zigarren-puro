@@ -5,12 +5,16 @@ import { orderItemTable, orderTable, productTable } from '#lib/server/db/schema/
 import {
 	FIRST_ORDER_NUMBER,
 	InsufficientStockError,
+	InvalidTransitionError,
 	applyOrderStatus,
 	cancelPendingCardOrders,
 	cancelUnpaidOrder,
 	createOrderReservingStock,
+	customerNotices,
 	expireStaleCardOrders,
-	markOrderPaid
+	markOrderPaid,
+	orderHistory,
+	transitionProblem
 } from '#lib/server/orders.js';
 import { formatOrderNumber } from '#lib/orderNumber.js';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '#lib/types.js';
@@ -205,11 +209,125 @@ describe('applyOrderStatus', () => {
 		const id = create(baseOrder({ paymentMethod: PaymentMethod.BANK_TRANSFER }), [
 			line('cigar-1', 2)
 		]);
+		applyOrderStatus(id, OrderStatus.CONFIRMED, PaymentStatus.PAID);
 		applyOrderStatus(id, OrderStatus.SHIPPED, PaymentStatus.PAID);
 		expect(await stock('cigar-1')).toBe(3);
 	});
 
 	test('unknown order', () => {
-		expect(applyOrderStatus('nope', OrderStatus.SHIPPED, PaymentStatus.PAID)).toBe(false);
+		expect(applyOrderStatus('nope', OrderStatus.CONFIRMED, PaymentStatus.PAID)).toBe(false);
+	});
+
+	test('returns the status the order had and records who changed it', async () => {
+		const id = create(baseOrder({ paymentMethod: PaymentMethod.BANK_TRANSFER }), [
+			line('cigar-1', 1)
+		]);
+		expect(applyOrderStatus(id, OrderStatus.CONFIRMED, PaymentStatus.PAID, 'anna')).toEqual({
+			from: { orderStatus: OrderStatus.PENDING, paymentStatus: PaymentStatus.PENDING }
+		});
+		expect(orderHistory(id)).toMatchObject([{ actor: 'anna', toOrderStatus: 'confirmed' }]);
+	});
+
+	test('a refused change leaves stock, status and history untouched', async () => {
+		const id = create(baseOrder({ paymentMethod: PaymentMethod.BANK_TRANSFER }), [
+			line('cigar-1', 2)
+		]);
+		expect(() => applyOrderStatus(id, OrderStatus.SHIPPED, PaymentStatus.PAID)).toThrow(
+			InvalidTransitionError
+		);
+		expect((await order(id)).orderStatus).toBe(OrderStatus.PENDING);
+		expect(await stock('cigar-1')).toBe(3);
+		expect(orderHistory(id)).toEqual([]);
+	});
+});
+
+describe('order history', () => {
+	test('the unpaid order sweep and checkout retries are recorded as the system', async () => {
+		const id = create(baseOrder({ paymentMethod: PaymentMethod.BANK_TRANSFER }), [
+			line('cigar-1', 1)
+		]);
+		cancelUnpaidOrder(eq(orderTable.id, id));
+		expect(orderHistory(id)).toMatchObject([
+			{
+				actor: 'system',
+				fromOrderStatus: 'pending',
+				toOrderStatus: 'cancelled',
+				toPaymentStatus: 'failed'
+			}
+		]);
+		// Running it again finds nothing to cancel and adds nothing
+		cancelUnpaidOrder(eq(orderTable.id, id));
+		expect(orderHistory(id)).toHaveLength(1);
+	});
+});
+
+describe('transition rules', () => {
+	const pair = (orderStatus: OrderStatus, paymentStatus: PaymentStatus) => ({
+		orderStatus,
+		paymentStatus
+	});
+	const { PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED } = OrderStatus;
+	const { PAID, FAILED, AUTHORIZED } = PaymentStatus;
+
+	test('the usual way through an order is allowed step by step', () => {
+		const steps = [
+			[pair(PENDING, PaymentStatus.PENDING), pair(CONFIRMED, PAID)],
+			[pair(CONFIRMED, PAID), pair(PROCESSING, PAID)],
+			[pair(PROCESSING, PAID), pair(SHIPPED, PAID)],
+			[pair(SHIPPED, PAID), pair(DELIVERED, PAID)],
+			[pair(DELIVERED, PAID), pair(REFUNDED, PaymentStatus.REFUNDED)]
+		] as const;
+		for (const [from, to] of steps) expect(transitionProblem(from, to)).toBeNull();
+	});
+
+	test('a status that does not change is never a problem on its own', () => {
+		for (const status of Object.values(OrderStatus)) {
+			expect(transitionProblem(pair(status, PAID), pair(status, PAID))).toBeNull();
+		}
+	});
+
+	test('cancelling is possible until the order is shipped, not afterwards', () => {
+		for (const from of [PENDING, CONFIRMED, PROCESSING]) {
+			expect(transitionProblem(pair(from, PAID), pair(CANCELLED, PAID))).toBeNull();
+		}
+		for (const from of [SHIPPED, DELIVERED]) {
+			expect(transitionProblem(pair(from, PAID), pair(CANCELLED, PAID))).not.toBeNull();
+		}
+	});
+
+	test('a cancelled order can be revived, a refunded one cannot', () => {
+		expect(
+			transitionProblem(pair(CANCELLED, FAILED), pair(PENDING, PaymentStatus.PENDING))
+		).toBeNull();
+		expect(transitionProblem(pair(CANCELLED, FAILED), pair(CONFIRMED, PAID))).toBeNull();
+		expect(
+			transitionProblem(
+				pair(REFUNDED, PaymentStatus.REFUNDED),
+				pair(PENDING, PaymentStatus.PENDING)
+			)
+		).not.toBeNull();
+	});
+
+	test('an order that is worked on needs money that is paid or authorized', () => {
+		for (const status of [CONFIRMED, PROCESSING, SHIPPED, DELIVERED]) {
+			expect(
+				transitionProblem(pair(status, PAID), pair(status, PaymentStatus.PENDING))
+			).not.toBeNull();
+		}
+		expect(transitionProblem(pair(PENDING, AUTHORIZED), pair(CONFIRMED, AUTHORIZED))).toBeNull();
+	});
+
+	test('the customer is mailed about a cancellation and a payment, not about anything else', () => {
+		const open = pair(PENDING, PaymentStatus.PENDING);
+		expect(customerNotices(open, pair(CANCELLED, FAILED))).toEqual(['cancelled']);
+		expect(customerNotices(open, pair(CONFIRMED, PAID))).toEqual(['paid']);
+		expect(customerNotices(pair(CANCELLED, FAILED), pair(CONFIRMED, PAID))).toEqual(['paid']);
+		// Paid and cancelled in one step: the cancellation is what the customer needs to hear
+		expect(customerNotices(open, pair(CANCELLED, PAID))).toEqual(['cancelled']);
+		expect(customerNotices(pair(CONFIRMED, PAID), pair(SHIPPED, PAID))).toEqual([]);
+		expect(customerNotices(pair(CANCELLED, FAILED), pair(PENDING, PaymentStatus.PENDING))).toEqual(
+			[]
+		);
+		expect(customerNotices(pair(CANCELLED, FAILED), pair(CANCELLED, FAILED))).toEqual([]);
 	});
 });

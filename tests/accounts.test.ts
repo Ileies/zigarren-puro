@@ -423,7 +423,7 @@ describe('sessions', () => {
 		const stored = async (id: string) =>
 			(await db.select().from(sessionTable).where(eq(sessionTable.id, id)))[0].expiresAt;
 		expect((await stored('soon')).getTime() - Date.now()).toBeGreaterThan(29 * DAY);
-		expect((await stored('later')).getTime()).toBe(Math.floor(later.getTime() / 1000) * 1000);
+		expect((await stored('later')).getTime()).toBe(later.getTime());
 	});
 
 	test('invalidating a session ends it', async () => {

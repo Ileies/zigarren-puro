@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, mock, test } from 'bun:test';
+import { beforeEach, describe, expect, test } from 'bun:test';
 import { eq } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import {
@@ -18,15 +18,11 @@ import { parseProfileForm } from '#lib/server/profile.js';
 import { NewsletterStatus, TokenType } from '#lib/types.js';
 import * as m from '#lib/messages.js';
 import { baseOrder, resetDb, seedCatalogue, seedCustomer } from './fixtures.ts';
+import { sent } from './mail.ts';
 
-// The profile page sends mail through a module that needs the SvelteKit runtime, so the mail
-// sender is replaced by one that records what would have been sent.
-const sentChangeMails: unknown[][] = [];
-mock.module('#lib/server/functions.js', () => ({
-	sendEmailChangeConfirmation: async (...args: unknown[]) => {
-		sentChangeMails.push(args);
-	}
-}));
+// The profile page sends mail through a module that needs the SvelteKit runtime, so tests use
+// the stand-in from `mail.ts`, which records what would have been sent.
+const sentChangeMails = sent.emailChange;
 
 const profile = await import('../src/routes/account/+page.server.ts');
 const confirmEmail = await import('../src/routes/account/confirm-email/+page.server.ts');
