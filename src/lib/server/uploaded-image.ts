@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
+import { uploadsDir } from '#lib/server/uploads.js';
 
 const contentTypes: Record<string, string> = {
 	'.jpg': 'image/jpeg',
@@ -14,7 +15,7 @@ export async function getUploadedImage(folder: string, filename: string) {
 	}
 
 	try {
-		const image = await readFile(join(process.cwd(), 'data', 'uploads', folder, filename));
+		const image = await readFile(join(uploadsDir(folder), filename));
 		return new Response(image, {
 			headers: {
 				'Content-Type': contentType,
