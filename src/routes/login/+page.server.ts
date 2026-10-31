@@ -1,9 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { eq } from 'drizzle-orm';
-import db from '#lib/server/db/index.js';
-import { authCredentialsTable, customerTable } from '#lib/server/db/schema/index.js';
 import * as auth from '#lib/server/auth.js';
+import { authenticate, type LoginError } from '#lib/server/accounts.js';
 import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
@@ -11,63 +9,32 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	return { passwordReset: url.searchParams.get('reset') === '1' };
 };
 
+function errorResponse(error: LoginError) {
+	switch (error.code) {
+		case 'credentialsRequired':
+			return { status: 400, message: m.errCredentialsRequired() };
+		case 'locked':
+			return { status: 429, message: m.errAccountLocked({ minutes: error.minutes }) };
+		case 'invalidCredentials':
+			return { status: 401, message: m.errInvalidCredentials() };
+	}
+}
+
 export const actions: Actions = {
 	default: async (event) => {
 		const data = await event.request.formData();
 		const email = data.get('email')?.toString().trim().toLowerCase();
-		const password = data.get('password')?.toString();
 
-		if (!email || !password) {
-			return fail(400, { email, error: m.errCredentialsRequired() });
+		const result = await authenticate(email, data.get('password')?.toString());
+		if (!result.ok) {
+			const { status, message } = errorResponse(result.error);
+			return fail(status, { email, error: message });
 		}
-
-		const [customer] = await db
-			.select({ id: customerTable.id, isVerified: customerTable.isVerified })
-			.from(customerTable)
-			.where(eq(customerTable.email, email));
-
-		if (!customer) {
-			return fail(401, { email, error: m.errInvalidCredentials() });
-		}
-
-		const [credentials] = await db
-			.select()
-			.from(authCredentialsTable)
-			.where(eq(authCredentialsTable.customerId, customer.id));
-
-		if (!credentials) {
-			return fail(401, { email, error: m.errInvalidCredentials() });
-		}
-
-		if (credentials.lockedUntil && credentials.lockedUntil > new Date()) {
-			const minutes = Math.ceil((credentials.lockedUntil.getTime() - Date.now()) / 60000);
-			return fail(429, {
-				email,
-				error: m.errAccountLocked({ minutes })
-			});
-		}
-
-		const valid = await auth.verifyPassword(password, credentials.passwordHash);
-
-		if (!valid) {
-			const attempts = credentials.failedAttempts + 1;
-			const lockedUntil = attempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000) : null;
-			await db
-				.update(authCredentialsTable)
-				.set({ failedAttempts: attempts, lockedUntil, updatedAt: new Date() })
-				.where(eq(authCredentialsTable.customerId, customer.id));
-			return fail(401, { email, error: m.errInvalidCredentials() });
-		}
-
-		await db
-			.update(authCredentialsTable)
-			.set({ failedAttempts: 0, lockedUntil: null, updatedAt: new Date() })
-			.where(eq(authCredentialsTable.customerId, customer.id));
 
 		const token = auth.generateSessionToken();
-		const session = await auth.createSession(token, customer.id);
+		const session = await auth.createSession(token, result.customer.id);
 		auth.setSessionTokenCookie(event, token, session.expiresAt);
 
-		redirect(302, customer.isVerified ? '/' : '/verify-email');
+		redirect(302, result.customer.isVerified ? '/' : '/verify-email');
 	}
 };

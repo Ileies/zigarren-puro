@@ -1,77 +1,38 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { and, eq, gt, isNull } from 'drizzle-orm';
-import db from '#lib/server/db/index.js';
-import { tokenTable, authCredentialsTable } from '#lib/server/db/schema/index.js';
-import { TokenType } from '#lib/types.js';
-import { hashPassword } from '#lib/server/auth.js';
+import { resetLinkStatus, resetPassword, type PasswordResetError } from '#lib/server/accounts.js';
 import * as m from '#lib/messages.js';
-
-async function resolveToken(token: string) {
-	const [row] = await db
-		.select({
-			token: tokenTable.token,
-			customerId: tokenTable.customerId,
-			usedAt: tokenTable.usedAt
-		})
-		.from(tokenTable)
-		.where(
-			and(
-				eq(tokenTable.token, token),
-				eq(tokenTable.type, TokenType.PASSWORD_RESET),
-				gt(tokenTable.expiresAt, new Date()),
-				isNull(tokenTable.revokedAt)
-			)
-		);
-	return row ?? null;
-}
 
 export const load: PageServerLoad = async ({ url, locals }) => {
 	if (locals.user) redirect(302, '/');
 
 	const token = url.searchParams.get('token');
-	if (!token) return { status: 'missing' as const };
-
-	const row = await resolveToken(token);
-	if (!row) return { status: 'invalid' as const };
-	if (row.usedAt) return { status: 'used' as const };
-
-	return { status: 'valid' as const, token };
+	const status = await resetLinkStatus(token);
+	return status === 'valid' ? { status, token: token! } : { status };
 };
+
+function errorMessage(error: PasswordResetError) {
+	switch (error.code) {
+		case 'fieldsRequired':
+			return m.errFieldsRequired();
+		case 'passwordTooShort':
+			return m.errPasswordTooShort();
+		case 'passwordMismatch':
+			return m.errPasswordMismatch();
+		case 'linkInvalid':
+			return m.errLinkInvalid();
+	}
+}
 
 export const actions: Actions = {
 	default: async ({ request }) => {
 		const data = await request.formData();
-		const token = data.get('token')?.toString();
-		const password = data.get('password')?.toString();
-		const confirmPassword = data.get('confirmPassword')?.toString();
-
-		if (!token || !password || !confirmPassword) {
-			return fail(400, { error: m.errFieldsRequired() });
-		}
-
-		if (password.length < 8) {
-			return fail(400, { error: m.errPasswordTooShort() });
-		}
-
-		if (password !== confirmPassword) {
-			return fail(400, { error: m.errPasswordMismatch() });
-		}
-
-		const row = await resolveToken(token);
-		if (!row || row.usedAt) {
-			return fail(400, { error: m.errLinkInvalid() });
-		}
-
-		const passwordHash = await hashPassword(password);
-
-		db.transaction((tx) => {
-			tx.update(authCredentialsTable)
-				.set({ passwordHash, failedAttempts: 0, lockedUntil: null, updatedAt: new Date() })
-				.where(eq(authCredentialsTable.customerId, row.customerId))
-				.run();
-			tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
-		});
+		const result = await resetPassword(
+			data.get('token')?.toString(),
+			data.get('password')?.toString(),
+			data.get('confirmPassword')?.toString()
+		);
+		if (!result.ok) return fail(400, { error: errorMessage(result.error) });
 
 		redirect(302, '/login?reset=1');
 	}

@@ -1,9 +1,9 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { and, eq, gt, isNull } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
-import { tokenTable, customerTable } from '#lib/server/db/schema/index.js';
-import { TokenType } from '#lib/types.js';
+import { customerTable } from '#lib/server/db/schema/index.js';
+import { confirmEmail } from '#lib/server/accounts.js';
 import { sendVerificationEmail } from '#lib/server/functions.js';
 
 export const load: PageServerLoad = async ({ url, locals, cookies }) => {
@@ -21,41 +21,18 @@ export const load: PageServerLoad = async ({ url, locals, cookies }) => {
 		return { status: 'pending' as const };
 	}
 
-	const [row] = await db
-		.select({
-			token: tokenTable.token,
-			usedAt: tokenTable.usedAt,
-			customerId: tokenTable.customerId
-		})
-		.from(tokenTable)
-		.where(
-			and(
-				eq(tokenTable.token, token),
-				eq(tokenTable.type, TokenType.EMAIL_VERIFICATION),
-				gt(tokenTable.expiresAt, new Date()),
-				isNull(tokenTable.revokedAt)
-			)
-		);
+	const status = await confirmEmail(token);
 
-	if (!row) return { status: 'invalid' as const };
-	if (row.usedAt) return { status: 'already_verified' as const };
+	if (status === 'success') {
+		cookies.set('show_welcome', '1', {
+			path: '/',
+			httpOnly: false,
+			maxAge: 60 * 10,
+			sameSite: 'lax'
+		});
+	}
 
-	db.transaction((tx) => {
-		tx.update(customerTable)
-			.set({ isVerified: true, updatedAt: new Date() })
-			.where(eq(customerTable.id, row.customerId))
-			.run();
-		tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
-	});
-
-	cookies.set('show_welcome', '1', {
-		path: '/',
-		httpOnly: false,
-		maxAge: 60 * 10,
-		sameSite: 'lax'
-	});
-
-	return { status: 'success' as const };
+	return { status };
 };
 
 export const actions: Actions = {

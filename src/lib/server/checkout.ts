@@ -16,10 +16,10 @@ import {
 	vatRates
 } from '#lib/config.js';
 import { calculateTax } from '#lib/vat.js';
+import { ageOn, MINIMUM_AGE } from '#lib/age.js';
 
 /** New addresses are German until the shipping countries are decided (D2 in the plan). */
 const ADDRESS_COUNTRY = 'DE';
-const MINIMUM_AGE = 18;
 
 export type CartLine = { id: string; qty: number };
 
@@ -85,15 +85,6 @@ export function parseCheckoutForm(data: FormData): CheckoutForm {
 		paymentMethod: data.get('paymentMethod')?.toString() ?? 'bank_transfer',
 		notes: data.get('notes')?.toString().trim() || null
 	};
-}
-
-/** Whole years between `birthDate` and `now`. */
-export function ageOn(birthDate: Date | string | number, now: Date = new Date()): number {
-	const birth = new Date(birthDate);
-	let age = now.getFullYear() - birth.getFullYear();
-	const months = now.getMonth() - birth.getMonth();
-	if (months < 0 || (months === 0 && now.getDate() < birth.getDate())) age--;
-	return age;
 }
 
 /** An address the customer picked (must be theirs) or typed in (saved as a new address). */
