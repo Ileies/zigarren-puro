@@ -16,7 +16,8 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
 		"test": "bun test",
-		"db:push": "drizzle-kit push"
+		"db:push": "drizzle-kit push",
+		"db:seed": "bun scripts/seed.ts"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
