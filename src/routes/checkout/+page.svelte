@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
 	import { enhance } from '$app/forms';
-	import { Lock, Truck, Package, CreditCard, Building2, AlertCircle } from '@lucide/svelte';
+	import { Lock, Truck, Package, Building2, AlertCircle } from '@lucide/svelte';
 	import * as m from '#lib/messages.js';
 	import { freeShippingThreshold, shippingCosts } from '#lib/config.js';
-	import { loadStripe, type StripeEmbeddedCheckout } from '@stripe/stripe-js';
-	import { PUBLIC_STRIPE_PUBLISHABLE_KEY } from '$app/env/public';
 
 	let { data, form } = $props();
 
@@ -46,7 +44,7 @@
 	let newBilling = $state({ street: '', city: '', postalCode: '', state: '' });
 
 	// Navigation
-	let step = $state<1 | 2 | 3>(1);
+	let step = $state<1 | 2>(1);
 	let step1Errors = $state<Record<string, string>>({});
 	let submitting = $state(false);
 
@@ -71,12 +69,6 @@
 	} | null>(null);
 
 	let shippingMethod = $state<'standard' | 'express'>('standard');
-	let paymentMethod = $state<'bank_transfer' | 'credit_card'>('bank_transfer');
-
-	// Stripe state
-	let stripePaymentElement: HTMLDivElement | undefined = $state();
-	let stripeError = $state('');
-	let stripeCheckout: StripeEmbeddedCheckout | null = $state(null);
 
 	// Totals
 	const subtotal = $derived(data.items.reduce((sum, item) => sum + item.price * item.qty, 0));
@@ -143,30 +135,6 @@
 
 		step = 2;
 	}
-
-	// When the server returns a clientSecret, mount the Stripe embedded checkout
-	$effect(() => {
-		if (form && 'clientSecret' in form && form.clientSecret && stripePaymentElement) {
-			step = 3;
-			mountStripeElement(form.clientSecret as string);
-		}
-	});
-
-	async function mountStripeElement(clientSecret: string) {
-		const stripe = await loadStripe(PUBLIC_STRIPE_PUBLISHABLE_KEY);
-		if (!stripe) {
-			stripeError = 'Stripe konnte nicht geladen werden.';
-			return;
-		}
-		stripeCheckout = await stripe.createEmbeddedCheckoutPage({ clientSecret });
-		stripeCheckout.mount('#stripe-payment-element');
-	}
-
-	$effect(() => {
-		return () => {
-			stripeCheckout?.destroy();
-		};
-	});
 </script>
 
 <svelte:head>
@@ -191,11 +159,7 @@
 		<div class="flex items-center gap-2">
 			<div
 				class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold
-				{step === 2
-					? 'bg-secondary text-secondary-content'
-					: step > 2
-						? 'bg-secondary/20 text-secondary'
-						: 'bg-base-300 text-base-content/40'}"
+				{step === 2 ? 'bg-secondary text-secondary-content' : 'bg-base-300 text-base-content/40'}"
 			>
 				2
 			</div>
@@ -203,20 +167,6 @@
 				>{m.checkoutStep2()}</span
 			>
 		</div>
-		{#if paymentMethod === 'credit_card' || step === 3}
-			<div class="h-px flex-1 bg-base-300"></div>
-			<div class="flex items-center gap-2">
-				<div
-					class="flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold
-					{step === 3 ? 'bg-secondary text-secondary-content' : 'bg-base-300 text-base-content/40'}"
-				>
-					3
-				</div>
-				<span class="text-sm {step === 3 ? 'font-medium' : 'text-base-content/40'}"
-					>{m.checkoutStep3()}</span
-				>
-			</div>
-		{/if}
 	</div>
 
 	<div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
@@ -527,7 +477,7 @@
 					<input type="hidden" name="billingCity" value={capturedBillingCity} />
 					<input type="hidden" name="billingPostalCode" value={capturedBillingPostalCode} />
 					<input type="hidden" name="billingState" value={capturedBillingState} />
-					<input type="hidden" name="paymentMethod" value={paymentMethod} />
+					<input type="hidden" name="paymentMethod" value="bank_transfer" />
 
 					<!-- Delivery address summary -->
 					{#if displayShippingAddress}
@@ -618,50 +568,35 @@
 						<div class="card-body">
 							<h2 class="card-title text-base">{m.checkoutPaymentMethod()}</h2>
 							<div class="space-y-2">
-								<label
-									class="flex cursor-pointer items-start gap-3 rounded-lg border border-base-200 p-4 transition-colors hover:border-secondary {paymentMethod ===
-									'bank_transfer'
-										? 'border-secondary bg-secondary/5'
-										: ''}"
-								>
-									<input
-										type="radio"
-										class="radio mt-0.5 shrink-0 radio-sm radio-secondary"
-										bind:group={paymentMethod}
-										value="bank_transfer"
-									/>
-									<div class="flex items-start gap-3">
-										<Building2 class="mt-0.5 h-5 w-5 shrink-0 text-base-content/50" />
-										<div>
-											<p class="text-sm font-semibold">{m.checkoutBankTransfer()}</p>
-											<p class="mt-0.5 text-xs text-base-content/60">
-												{m.checkoutBankTransferDesc()}
-											</p>
+								{#if data.bankTransferAvailable}
+									<label
+										class="flex cursor-pointer items-start gap-3 rounded-lg border border-secondary bg-secondary/5 p-4"
+									>
+										<input
+											type="radio"
+											class="radio mt-0.5 shrink-0 radio-sm radio-secondary"
+											checked
+											value="bank_transfer"
+										/>
+										<div class="flex items-start gap-3">
+											<Building2 class="mt-0.5 h-5 w-5 shrink-0 text-base-content/50" />
+											<div>
+												<p class="text-sm font-semibold">{m.checkoutBankTransfer()}</p>
+												<p class="mt-0.5 text-xs text-base-content/60">
+													{m.checkoutBankTransferDesc()}
+												</p>
+											</div>
 										</div>
+									</label>
+								{:else}
+									<div class="alert alert-warning">
+										<AlertCircle class="h-4 w-4 shrink-0" />
+										<span class="text-sm">
+											Online-Bestellungen sind derzeit noch nicht möglich. Bitte kontaktieren Sie
+											uns direkt.
+										</span>
 									</div>
-								</label>
-								<label
-									class="flex cursor-pointer items-start gap-3 rounded-lg border border-base-200 p-4 transition-colors hover:border-secondary {paymentMethod ===
-									'credit_card'
-										? 'border-secondary bg-secondary/5'
-										: ''}"
-								>
-									<input
-										type="radio"
-										class="radio mt-0.5 shrink-0 radio-sm radio-secondary"
-										bind:group={paymentMethod}
-										value="credit_card"
-									/>
-									<div class="flex items-start gap-3">
-										<CreditCard class="mt-0.5 h-5 w-5 shrink-0 text-base-content/50" />
-										<div>
-											<p class="text-sm font-semibold">{m.checkoutCreditCard()}</p>
-											<p class="mt-0.5 text-xs text-base-content/60">
-												{m.checkoutCreditCardDesc()}
-											</p>
-										</div>
-									</div>
-								</label>
+								{/if}
 							</div>
 						</div>
 					</div>
@@ -693,7 +628,11 @@
 						</div>
 					{/if}
 
-					<button type="submit" class="btn w-full gap-2 btn-primary" disabled={submitting}>
+					<button
+						type="submit"
+						class="btn w-full gap-2 btn-primary"
+						disabled={submitting || !data.bankTransferAvailable}
+					>
 						{#if submitting}
 							<span class="loading loading-sm loading-spinner"></span>
 						{:else}
@@ -704,25 +643,6 @@
 
 					<p class="text-center text-xs text-base-content/40">{m.checkoutVatNote()}</p>
 				</form>
-
-				<!-- STEP 3: Stripe Payment Element -->
-			{:else if step === 3}
-				<div class="space-y-6">
-					<!-- Stripe embedded checkout container -->
-					{#if stripeError}
-						<div class="alert alert-error">
-							<AlertCircle class="h-4 w-4 shrink-0" />
-							<span class="text-sm">{stripeError}</span>
-						</div>
-					{/if}
-					<div bind:this={stripePaymentElement}>
-						<div id="stripe-payment-element" class="min-h-40">
-							<div class="flex items-center justify-center py-12">
-								<span class="loading loading-md loading-spinner text-secondary"></span>
-							</div>
-						</div>
-					</div>
-				</div>
 			{/if}
 		</div>
 
