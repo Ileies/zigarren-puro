@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { BadgePercent, CircleUser, Menu, Search, ShoppingCart, Truck, X } from '@lucide/svelte';
 	import { SiFacebook, SiInstagram } from '@icons-pack/svelte-simple-icons';
-	import LanguageSelector from './LanguageSelector.svelte';
+	import LanguageSelector from '#lib/components/LanguageSelector.svelte';
 	import { facebook, instagram } from '#lib/config.js';
 	import * as m from '#lib/messages.js';
 	import type { SessionValidationResult } from '#lib/server/auth.js';
@@ -124,33 +124,33 @@
 			{:else}
 				<!-- Top bar - Desktop only -->
 				<div
-					class="flex items-center justify-between bg-secondary px-6 py-1 text-sm text-secondary-content"
+					class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-secondary px-6 py-1 text-base text-secondary-content"
 				>
 					<span class="flex items-center gap-1"
-						><BadgePercent class="h-4 w-4" /> {m.benefit1()}</span
+						><BadgePercent class="h-4 w-4 shrink-0" /> {m.benefit1()}</span
 					>
 					<span>{m.benefit2()}</span>
 					<span class="hidden items-center gap-1 xl:flex"
-						><Truck class="h-4 w-4" /> {m.benefit3()}</span
+						><Truck class="h-4 w-4 shrink-0" /> {m.benefit3()}</span
 					>
-					<div class="flex items-center gap-4">
+					<div class="flex shrink-0 items-center gap-2">
 						<a
 							href={facebook}
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="Facebook"
-							class="transition-colors hover:text-accent"
+							class="flex h-7 w-7 items-center justify-center transition-colors hover:text-accent"
 						>
-							<SiFacebook size={16} />
+							<SiFacebook size={18} />
 						</a>
 						<a
 							href={instagram}
 							target="_blank"
 							rel="noopener noreferrer"
 							aria-label="Instagram"
-							class="transition-colors hover:text-accent"
+							class="flex h-7 w-7 items-center justify-center transition-colors hover:text-accent"
 						>
-							<SiInstagram size={16} />
+							<SiInstagram size={18} />
 						</a>
 						<LanguageSelector />
 					</div>

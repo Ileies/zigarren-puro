@@ -47,14 +47,12 @@
 
 <div class="language-selector relative">
 	<button
-		class="btn flex h-8 min-h-0 items-center gap-1 px-3 btn-ghost transition-colors btn-sm hover:bg-white/10 lg:h-5 lg:gap-0.5 lg:px-1 lg:btn-xs"
+		class="btn flex h-8 min-h-0 items-center gap-1 px-3 btn-ghost transition-colors btn-sm hover:bg-white/10 lg:h-7 lg:px-2"
 		onclick={toggleDropdown}
 		aria-label="Select language"
 	>
-		<span class="text-lg lg:text-sm">{getFlagEmoji(currentLocale)}</span>
-		<ChevronDown
-			class="h-4 w-4 transition-transform lg:h-2.5 lg:w-2.5 {isOpen ? 'rotate-180' : ''}"
-		/>
+		<span class="text-lg">{getFlagEmoji(currentLocale)}</span>
+		<ChevronDown class="h-4 w-4 transition-transform {isOpen ? 'rotate-180' : ''}" />
 	</button>
 
 	{#if isOpen}
@@ -65,12 +63,12 @@
 				{#each supportedLanguages as locale (locale)}
 					<li>
 						<button
-							class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-base-content transition-colors hover:bg-base-200"
+							class="flex min-h-10 w-full items-center gap-2 px-3 py-2 text-left text-base text-base-content transition-colors hover:bg-base-200"
 							onclick={() => handleLanguageChange(locale)}
 							class:bg-base-200={locale === currentLocale}
 						>
-							<span class="text-base">{getFlagEmoji(locale)}</span>
-							<span class="text-sm text-base-content">{locale.toUpperCase()}</span>
+							<span class="text-lg">{getFlagEmoji(locale)}</span>
+							<span>{locale.toUpperCase()}</span>
 						</button>
 					</li>
 				{/each}
