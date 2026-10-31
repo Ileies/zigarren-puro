@@ -1,6 +1,11 @@
-import { and, eq, lt, ne, sql, type SQL } from 'drizzle-orm';
+import { and, eq, gt, isNull, lt, lte, ne, sql, type SQL } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
-import { orderTable, orderItemTable, productTable } from '#lib/server/db/schema/index.js';
+import {
+	customerTable,
+	orderTable,
+	orderItemTable,
+	productTable
+} from '#lib/server/db/schema/index.js';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '#lib/types.js';
 import { bankAccount } from '#lib/config.js';
 
@@ -23,9 +28,42 @@ export type OrderLine = {
 
 export const FIRST_ORDER_NUMBER = 10001;
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** How long before the deadline the payment reminder goes out (never more than half the period). */
+export const PAYMENT_REMINDER_LEAD_MS = Math.min(2, bankAccount.paymentDeadlineDays / 2) * DAY_MS;
+
 /** The moment an unpaid bank-transfer order created at `from` expires. */
 export function paymentDeadline(from: Date = new Date()): Date {
-	return new Date(from.getTime() + bankAccount.paymentDeadlineDays * 24 * 60 * 60 * 1000);
+	return new Date(from.getTime() + bankAccount.paymentDeadlineDays * DAY_MS);
+}
+
+/** What the unpaid-order emails need to know about an order and its customer. */
+export type OrderNotice = {
+	id: string;
+	orderNumber: number | null;
+	customerId: string;
+	email: string;
+	firstName: string;
+	totalAmount: number;
+	paymentDueAt: Date | null;
+};
+
+export function loadOrderNotice(orderId: string): OrderNotice | undefined {
+	return db
+		.select({
+			id: orderTable.id,
+			orderNumber: orderTable.orderNumber,
+			customerId: orderTable.customerId,
+			email: customerTable.email,
+			firstName: customerTable.firstName,
+			totalAmount: orderTable.totalAmount,
+			paymentDueAt: orderTable.paymentDueAt
+		})
+		.from(orderTable)
+		.innerJoin(customerTable, eq(orderTable.customerId, customerTable.id))
+		.where(eq(orderTable.id, orderId))
+		.get();
 }
 
 function nextOrderNumber(tx: Tx) {
@@ -151,9 +189,9 @@ export function expireStaleCardOrders(maxAgeMs: number) {
 
 /**
  * Cancels every unpaid order whose payment deadline has passed and gives its stock back.
- * Orders without a deadline are left alone. Returns how many orders were cancelled.
+ * Orders without a deadline are left alone. Returns the ids of the orders it cancelled.
  */
-export function expireOverdueOrders(now: Date = new Date()): number {
+export function expireOverdueOrders(now: Date = new Date()): string[] {
 	const overdue = db
 		.select({ id: orderTable.id })
 		.from(orderTable)
@@ -165,11 +203,44 @@ export function expireOverdueOrders(now: Date = new Date()): number {
 			)
 		)
 		.all();
-	let cancelled = 0;
+	const cancelled: string[] = [];
 	for (const { id } of overdue) {
-		if (cancelUnpaidOrder(eq(orderTable.id, id))) cancelled++;
+		if (cancelUnpaidOrder(eq(orderTable.id, id))) cancelled.push(id);
 	}
 	return cancelled;
+}
+
+/**
+ * Picks the unpaid bank-transfer orders that are close to their deadline and have not been
+ * reminded yet, and marks them as reminded. Each order is returned once per deadline, even if
+ * several processes run this at the same time. Overdue orders are not reminded.
+ */
+export function claimPaymentReminders(now: Date = new Date()): string[] {
+	const candidates = db
+		.select({ id: orderTable.id })
+		.from(orderTable)
+		.where(
+			and(
+				eq(orderTable.orderStatus, OrderStatus.PENDING),
+				eq(orderTable.paymentStatus, PaymentStatus.PENDING),
+				eq(orderTable.paymentMethod, PaymentMethod.BANK_TRANSFER),
+				isNull(orderTable.paymentReminderSentAt),
+				gt(orderTable.paymentDueAt, now),
+				lte(orderTable.paymentDueAt, new Date(now.getTime() + PAYMENT_REMINDER_LEAD_MS))
+			)
+		)
+		.all();
+	const claimed: string[] = [];
+	for (const { id } of candidates) {
+		const row = db
+			.update(orderTable)
+			.set({ paymentReminderSentAt: now })
+			.where(and(eq(orderTable.id, id), isNull(orderTable.paymentReminderSentAt)))
+			.returning({ id: orderTable.id })
+			.get();
+		if (row) claimed.push(row.id);
+	}
+	return claimed;
 }
 
 /**
@@ -214,7 +285,7 @@ export function applyOrderStatus(
 				paymentStatus,
 				updatedAt: new Date(),
 				...(isCancelled && !wasCancelled ? { cancelledAt: new Date() } : {}),
-				...(revivedUnpaid ? { paymentDueAt: paymentDeadline() } : {})
+				...(revivedUnpaid ? { paymentDueAt: paymentDeadline(), paymentReminderSentAt: null } : {})
 			})
 			.where(eq(orderTable.id, orderId))
 			.run();

@@ -85,6 +85,8 @@ export const orderTable = sqliteTable(
 		// Unpaid orders are cancelled after this moment and their stock is released.
 		// Null for orders created before deadlines existed, the sweep leaves those alone.
 		paymentDueAt: integer('payment_due_at', { mode: 'timestamp' }),
+		// Set when the reminder before the deadline went out, so it is sent only once per deadline.
+		paymentReminderSentAt: integer('payment_reminder_sent_at', { mode: 'timestamp' }),
 		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
 		updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
 		placedAt: integer('placed_at', { mode: 'timestamp' }),

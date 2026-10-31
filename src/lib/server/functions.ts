@@ -7,6 +7,8 @@ import db from '#lib/server/db/index.js';
 import { tokenTable } from '#lib/server/db/schema/index.js';
 import { TokenType } from '#lib/types.js';
 import { bankAccount, companyName } from '#lib/config.js';
+import { formatOrderNumber } from '#lib/orderNumber.js';
+import type { OrderNotice } from '#lib/server/orders.js';
 import { and, eq, isNull } from 'drizzle-orm';
 
 function generateToken(): string {
@@ -485,6 +487,96 @@ export async function sendOrderConfirmationEmail(
 					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nBitte überweisen Sie den Betrag innerhalb von ${bankAccount.paymentDeadlineDays} Tagen mit dem Verwendungszweck ${orderLabel}. Geht die Zahlung nicht rechtzeitig ein, wird die Bestellung storniert.\n\nZigarren Puro`
 		},
 		customerId
+	);
+}
+
+const euro = (n: number) => n.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' });
+const germanDate = (d: Date) =>
+	d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+function paymentReminderEmailHtml(notice: OrderNotice, orderLabel: string): string {
+	const due = notice.paymentDueAt ? germanDate(notice.paymentDueAt) : '';
+	const content = `
+      <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Zahlungserinnerung zu Ihrer Bestellung
+      </h2>
+      <p style="margin:0 0 28px;color:#444;font-size:15px;line-height:1.8">
+        Guten Tag ${notice.firstName},<br/>
+        für Ihre Bestellung <strong>${orderLabel}</strong> haben wir noch keinen Zahlungseingang
+        verbuchen können. Bitte überweisen Sie den Betrag bis zum <strong>${due}</strong>,
+        sonst wird die Bestellung automatisch storniert.
+      </p>
+
+      <div style="background:#fffbf0;border:1px solid #d4af37;border-radius:4px;padding:20px;margin-bottom:28px">
+        <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:13px;color:#444;line-height:2">
+          <tr><td style="padding-right:16px;color:#888">Betrag</td><td><strong>${euro(notice.totalAmount)}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>${bankAccount.accountHolder}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">IBAN</td><td><strong>${bankAccount.iban}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>${bankAccount.bic}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>${orderLabel}</strong></td></tr>
+        </table>
+      </div>
+
+      <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
+        Haben Sie bereits überwiesen, können Sie diese E-Mail ignorieren. Bei Fragen erreichen Sie uns unter
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesem Link</a>.
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+function orderCancelledEmailHtml(notice: OrderNotice, orderLabel: string): string {
+	const content = `
+      <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Ihre Bestellung wurde storniert
+      </h2>
+      <p style="margin:0 0 20px;color:#444;font-size:15px;line-height:1.8">
+        Guten Tag ${notice.firstName},<br/>
+        für Ihre Bestellung <strong>${orderLabel}</strong> ist innerhalb der Zahlungsfrist
+        keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder
+        freigegeben.
+      </p>
+      <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
+        Haben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesen Link</a>, damit wir
+        Ihre Bestellung wiederherstellen können. Sie können jederzeit eine neue Bestellung aufgeben.
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+export async function sendPaymentReminderEmail(notice: OrderNotice): Promise<void> {
+	const label = formatOrderNumber(notice);
+	const due = notice.paymentDueAt ? germanDate(notice.paymentDueAt) : '';
+	await sendMail(
+		{
+			to: notice.email,
+			subject: `Zahlungserinnerung zu Ihrer Bestellung ${label} – Zigarren Puro`,
+			html: paymentReminderEmailHtml(notice, label),
+			text: `Guten Tag ${notice.firstName},\n\nfür Ihre Bestellung ${label} haben wir noch keinen Zahlungseingang verbuchen können. Bitte überweisen Sie ${euro(notice.totalAmount)} bis zum ${due}, sonst wird die Bestellung automatisch storniert.\n\nKontoinhaber: ${bankAccount.accountHolder}\nIBAN: ${bankAccount.iban}\nBIC: ${bankAccount.bic}\nVerwendungszweck: ${label}\n\nHaben Sie bereits überwiesen, können Sie diese E-Mail ignorieren.\n\nZigarren Puro`
+		},
+		notice.customerId
+	);
+}
+
+export async function sendOrderCancelledEmail(notice: OrderNotice): Promise<void> {
+	const label = formatOrderNumber(notice);
+	await sendMail(
+		{
+			to: notice.email,
+			subject: `Ihre Bestellung ${label} wurde storniert – Zigarren Puro`,
+			html: orderCancelledEmailHtml(notice, label),
+			text: `Guten Tag ${notice.firstName},\n\nfür Ihre Bestellung ${label} ist innerhalb der Zahlungsfrist keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder freigegeben.\n\nHaben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über https://${PUBLIC_ORIGIN}/contact, damit wir Ihre Bestellung wiederherstellen können.\n\nZigarren Puro`
+		},
+		notice.customerId
 	);
 }
 
