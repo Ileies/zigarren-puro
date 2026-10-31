@@ -1,11 +1,12 @@
 import { beforeEach, describe, expect, test } from 'bun:test';
 import db from '#lib/server/db/index.js';
-import { productReviewTable } from '#lib/server/db/schema/index.js';
+import { orderTable, productReviewTable } from '#lib/server/db/schema/index.js';
+import { load as loadAdmin } from '../src/routes/admin/+page.server.ts';
 import { load as loadSearch } from '../src/routes/search/+page.server.ts';
 import { load as loadShop } from '../src/routes/shop/+page.server.ts';
 import { load as loadProduct } from '../src/routes/products/[id]/+page.server.ts';
 import { load as loadCart } from '../src/routes/cart/+page.server.ts';
-import { cartCookies, resetDb, seedCatalogue, seedCustomer } from './fixtures.ts';
+import { baseOrder, cartCookies, resetDb, seedCatalogue, seedCustomer } from './fixtures.ts';
 
 // These tests run the real queries against SQLite. The type checker cannot catch SQL
 // that SQLite does not support (ILIKE, LEFT), so every route loader needs a smoke test.
@@ -19,6 +20,36 @@ beforeEach(async () => {
 	await resetDb();
 	await seedCatalogue();
 	await seedCustomer();
+});
+
+describe('admin dashboard', () => {
+	test('loads inventory counts without orders', async () => {
+		const result = await loadAdmin({} as never);
+		expect(result).toMatchObject({
+			totalProducts: 3,
+			outOfStock: 1,
+			lowStock: 1,
+			orderCounts: [],
+			recentOrders: []
+		});
+	});
+
+	test('loads numbered and legacy orders with customer names', async () => {
+		await db
+			.insert(orderTable)
+			.values([
+				baseOrder({ id: 'legacy', orderNumber: null }),
+				baseOrder({ id: 'numbered', orderNumber: 10001 })
+			]);
+		const result = await loadAdmin({} as never);
+		expect(result).toMatchObject({ orderCounts: [{ status: 'pending', total: 2 }] });
+		expect(result?.recentOrders).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ id: 'legacy', orderNumber: null, customerFirstName: 'Max' }),
+				expect.objectContaining({ id: 'numbered', orderNumber: 10001, customerLastName: 'Meier' })
+			])
+		);
+	});
 });
 
 describe('search', () => {
