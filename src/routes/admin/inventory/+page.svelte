@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { page } from '$app/state';
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 	import { lowStockThreshold } from '#lib/config.js';
+	import Pagination from '../Pagination.svelte';
 
 	let { data } = $props();
 
@@ -20,11 +21,10 @@
 		{ value: 'tool', label: 'Zubehör' }
 	];
 
-	const sortOptions = [
-		{ value: 'name', label: 'Name' },
-		{ value: 'sku', label: 'SKU' },
-		{ value: 'price', label: 'Preis' },
-		{ value: 'stock', label: 'Bestand' }
+	const stockOptions = [
+		{ value: '', label: 'Jeder Bestand' },
+		{ value: 'low', label: 'Geringer Bestand' },
+		{ value: 'out', label: 'Ausverkauft' }
 	];
 
 	let editingId: string | null = $state(null);
@@ -35,52 +35,35 @@
 		editStock = stock;
 	}
 
-	function buildUrl(params: Record<string, string>) {
-		const url = new URL(page.url.href);
-		Object.entries(params).forEach(([key, value]) => {
-			if (value) {
-				url.searchParams.set(key, value);
-			} else {
-				url.searchParams.delete(key);
-			}
-		});
-		return url.toString();
+	/** The filters and the sort as query parameters, so every link and the pager keep them. */
+	const listParams = $derived({
+		...data.filters,
+		sort: data.sort === 'name' ? '' : data.sort,
+		order: data.order === 'asc' ? '' : data.order
+	});
+
+	/** A header link: the first click sorts ascending, the next one reverses. Back to page 1. */
+	function sortHref(column: string) {
+		const reverse = data.sort === column && data.order === 'asc';
+		const query = new SvelteURLSearchParams();
+		for (const [key, value] of Object.entries(data.filters)) if (value) query.set(key, value);
+		query.set('sort', column);
+		if (reverse) query.set('order', 'desc');
+		return `/admin/inventory?${query}`;
 	}
 
-	function toggleSort(column: string) {
-		const isCurrentSort = data.sortBy === column;
-		const newOrder = isCurrentSort && data.sortOrder === 'asc' ? 'desc' : 'asc';
-		const url = buildUrl({
-			search: data.search,
-			type: data.filterType,
-			sort: column,
-			order: newOrder
-		});
-		window.location.href = url;
-	}
+	const arrow = (column: string) =>
+		data.sort === column ? (data.order === 'asc' ? '↑' : '↓') : '';
+	const ariaSort = (column: string) =>
+		data.sort !== column ? 'none' : data.order === 'asc' ? 'ascending' : 'descending';
+	const filtered = $derived(
+		Boolean(data.filters.search || data.filters.type || data.filters.stock)
+	);
 
-	function handleFilterChange(e: Event) {
-		const target = e.target as HTMLSelectElement;
-		const url = buildUrl({
-			search: data.search,
-			type: target.value,
-			sort: data.sortBy,
-			order: data.sortOrder
-		});
-		window.location.href = url;
-	}
-
-	function handleSearch(e: Event) {
-		const target = e.target as HTMLFormElement;
-		const searchInput = new FormData(target).get('search') as string;
-		const url = buildUrl({
-			search: searchInput,
-			type: data.filterType,
-			sort: data.sortBy,
-			order: data.sortOrder
-		});
-		window.location.href = url;
-	}
+	const headClass = 'px-4 py-3 text-xs font-medium tracking-wide text-zinc-500 uppercase';
+	const fieldClass =
+		'w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none';
+	const labelClass = 'mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase';
 </script>
 
 <div class="p-6">
@@ -94,14 +77,18 @@
 		</a>
 	</div>
 
-	<!-- Search and filters -->
-	<div class="mb-6 space-y-3">
-		<form onsubmit={handleSearch} class="flex gap-2">
+	<!-- Search and filters: a plain GET form, so the result can be bookmarked and shared -->
+	<form method="GET" action="/admin/inventory" class="mb-6 space-y-3">
+		<input type="hidden" name="sort" value={listParams.sort} />
+		<input type="hidden" name="order" value={listParams.order} />
+		<div class="flex gap-2">
+			<label class="sr-only" for="search">Suche</label>
 			<input
-				type="text"
+				id="search"
+				type="search"
 				name="search"
 				placeholder="Nach Name oder SKU suchen..."
-				value={data.search}
+				value={data.filters.search}
 				class="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 			/>
 			<button
@@ -110,67 +97,47 @@
 			>
 				Suchen
 			</button>
-		</form>
+		</div>
 
-		<div class="flex gap-3">
-			<div class="flex-1">
-				<label
-					class="mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase"
-					for="filter-type">Produkttyp</label
-				>
-				<select
-					id="filter-type"
-					value={data.filterType}
-					onchange={handleFilterChange}
-					class="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
-				>
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+			<div>
+				<label class={labelClass} for="filter-type">Produkttyp</label>
+				<select id="filter-type" name="type" class={fieldClass}>
 					{#each typeOptions as option (option.value)}
-						<option value={option.value}>{option.label}</option>
+						<option value={option.value} selected={data.filters.type === option.value}>
+							{option.label}
+						</option>
 					{/each}
 				</select>
 			</div>
-
-			<div class="flex-1">
-				<label
-					class="mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase"
-					for="sort-by">Sortieren nach</label
-				>
-				<div class="flex gap-2">
-					<select
-						id="sort-by"
-						value={data.sortBy}
-						onchange={(e) => {
-							const url = buildUrl({
-								search: data.search,
-								type: data.filterType,
-								sort: (e.target as HTMLSelectElement).value,
-								order: data.sortOrder
-							});
-							window.location.href = url;
-						}}
-						class="flex-1 rounded-md border border-zinc-300 px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
-					>
-						{#each sortOptions as option (option.value)}
-							<option value={option.value}>{option.label}</option>
-						{/each}
-					</select>
-					<button
-						onclick={() => toggleSort(data.sortBy)}
-						class="rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50"
-						title={data.sortOrder === 'asc' ? 'Absteigend' : 'Aufsteigend'}
-					>
-						{data.sortOrder === 'asc' ? '↑' : '↓'}
-					</button>
-				</div>
+			<div>
+				<label class={labelClass} for="filter-stock">Bestand</label>
+				<select id="filter-stock" name="stock" class={fieldClass}>
+					{#each stockOptions as option (option.value)}
+						<option value={option.value} selected={data.filters.stock === option.value}>
+							{option.label}
+						</option>
+					{/each}
+				</select>
 			</div>
 		</div>
-	</div>
+		<p class="text-xs text-zinc-400">
+			Die Auswahl wird mit "Suchen" angewendet. Sortiert wird über die Spaltenköpfe.
+		</p>
+	</form>
 
-	<div class="mb-4 text-sm text-zinc-500">
-		{data.products.length}
-		{data.products.length === 1 ? 'Produkt' : 'Produkte'}
-		{#if data.search || data.filterType}
-			(gefiltert)
+	<div class="mb-4 flex items-center justify-between text-sm text-zinc-500">
+		<span>
+			{data.paging.total}
+			{data.paging.total === 1 ? 'Produkt' : 'Produkte'}
+			{#if filtered}
+				(gefiltert)
+			{/if}
+		</span>
+		{#if filtered}
+			<a href="/admin/inventory" class="underline underline-offset-2 hover:text-zinc-800">
+				Zurücksetzen
+			</a>
 		{/if}
 	</div>
 
@@ -178,47 +145,19 @@
 		<table class="w-full text-sm">
 			<thead>
 				<tr class="border-b border-zinc-200 bg-zinc-50">
-					<th
-						onclick={() => toggleSort('name')}
-						class="cursor-pointer px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
-					>
-						Name
-						{#if data.sortBy === 'name'}
-							<span class="text-zinc-400">{data.sortOrder === 'asc' ? '↑' : '↓'}</span>
-						{/if}
+					<th class="{headClass} text-left" aria-sort={ariaSort('name')}>
+						<a href={sortHref('name')} class="hover:text-zinc-800">Name {arrow('name')}</a>
 					</th>
-					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
-						>Hersteller</th
-					>
-					<th class="px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase"
-						>Typ</th
-					>
-					<th
-						onclick={() => toggleSort('sku')}
-						class="cursor-pointer px-4 py-3 text-left text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
-					>
-						SKU
-						{#if data.sortBy === 'sku'}
-							<span class="text-zinc-400">{data.sortOrder === 'asc' ? '↑' : '↓'}</span>
-						{/if}
+					<th class="{headClass} text-left">Hersteller</th>
+					<th class="{headClass} text-left">Typ</th>
+					<th class="{headClass} text-left" aria-sort={ariaSort('sku')}>
+						<a href={sortHref('sku')} class="hover:text-zinc-800">SKU {arrow('sku')}</a>
 					</th>
-					<th
-						onclick={() => toggleSort('price')}
-						class="cursor-pointer px-4 py-3 text-right text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
-					>
-						Preis
-						{#if data.sortBy === 'price'}
-							<span class="text-zinc-400">{data.sortOrder === 'asc' ? '↑' : '↓'}</span>
-						{/if}
+					<th class="{headClass} text-right" aria-sort={ariaSort('price')}>
+						<a href={sortHref('price')} class="hover:text-zinc-800">Preis {arrow('price')}</a>
 					</th>
-					<th
-						onclick={() => toggleSort('stock')}
-						class="cursor-pointer px-4 py-3 text-right text-xs font-medium tracking-wide text-zinc-500 uppercase transition-colors hover:bg-zinc-100"
-					>
-						Bestand
-						{#if data.sortBy === 'stock'}
-							<span class="text-zinc-400">{data.sortOrder === 'asc' ? '↑' : '↓'}</span>
-						{/if}
+					<th class="{headClass} text-right" aria-sort={ariaSort('stock')}>
+						<a href={sortHref('stock')} class="hover:text-zinc-800">Bestand {arrow('stock')}</a>
 					</th>
 					<th class="px-4 py-3"></th>
 				</tr>
@@ -314,13 +253,13 @@
 				{:else}
 					<tr>
 						<td colspan="7" class="px-4 py-10 text-center text-sm text-zinc-400">
-							{data.search || data.filterType
-								? 'Keine Produkte gefunden'
-								: 'Keine Produkte vorhanden'}
+							{filtered ? 'Keine Produkte gefunden' : 'Keine Produkte vorhanden'}
 						</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
 	</div>
+
+	<Pagination paging={data.paging} path="/admin/inventory" params={listParams} />
 </div>

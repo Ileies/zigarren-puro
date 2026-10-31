@@ -1,27 +1,15 @@
 <script lang="ts">
 	import { formatOrderNumber } from '#lib/orderNumber.js';
+	import {
+		orderStatusLabels,
+		paymentStatusLabels,
+		shippingMethodLabels
+	} from '#lib/orderLabels.js';
+	import Pagination from '../Pagination.svelte';
 
 	let { data } = $props();
 
 	const now = new Date();
-
-	const orderStatusLabels: Record<string, string> = {
-		pending: 'Ausstehend',
-		confirmed: 'Bestätigt',
-		processing: 'In Bearbeitung',
-		shipped: 'Versandt',
-		delivered: 'Geliefert',
-		cancelled: 'Storniert',
-		refunded: 'Erstattet'
-	};
-
-	const paymentStatusLabels: Record<string, string> = {
-		pending: 'Ausstehend',
-		authorized: 'Autorisiert',
-		paid: 'Bezahlt',
-		failed: 'Fehlgeschlagen',
-		refunded: 'Erstattet'
-	};
 
 	const orderStatusColors: Record<string, string> = {
 		pending: 'bg-yellow-100 text-yellow-800',
@@ -33,37 +21,114 @@
 		refunded: 'bg-zinc-100 text-zinc-600'
 	};
 
-	const filters = [
+	// "Needs action" shortcuts. A shortcut link drops the other filters, so it shows exactly this list.
+	const presets = [
 		{ label: 'Alle', value: '' },
-		{ label: 'Ausstehend', value: 'pending' },
-		{ label: 'Bestätigt', value: 'confirmed' },
-		{ label: 'In Bearbeitung', value: 'processing' },
-		{ label: 'Versandt', value: 'shipped' },
-		{ label: 'Geliefert', value: 'delivered' },
-		{ label: 'Storniert', value: 'cancelled' },
-		{ label: 'Erstattet', value: 'refunded' }
+		{ label: 'Zu versenden', value: 'toShip' },
+		{ label: 'Zahlung überfällig', value: 'overdue' }
 	];
+
+	const fieldClass =
+		'w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none';
+	const labelClass = 'mb-1 block text-xs font-medium tracking-wide text-zinc-500 uppercase';
+
+	const active = $derived(Object.values(data.filters).some(Boolean));
 </script>
 
 <div class="p-6">
 	<div class="mb-5 flex items-center justify-between">
 		<h1 class="text-xl font-bold text-zinc-900">Bestellungen</h1>
-		<span class="text-sm text-zinc-400">{data.orders.length} Bestellungen</span>
+		<span class="text-sm text-zinc-400">
+			{data.paging.total}
+			{data.paging.total === 1 ? 'Bestellung' : 'Bestellungen'}{active ? ' (gefiltert)' : ''}
+		</span>
 	</div>
 
-	<div class="mb-5 flex flex-wrap gap-1.5">
-		{#each filters as f (f.value)}
+	<div class="mb-4 flex flex-wrap gap-1.5">
+		{#each presets as preset (preset.value)}
 			<a
-				href="/admin/orders{f.value ? '?status=' + f.value : ''}"
+				href="/admin/orders{preset.value ? '?preset=' + preset.value : ''}"
 				class="rounded-full px-3 py-1.5 text-xs font-medium transition-colors
-				       {(data.statusFilter ?? '') === f.value
+				       {data.filters.preset === preset.value
 					? 'bg-zinc-900 text-white'
 					: 'border border-zinc-200 bg-white text-zinc-600 hover:border-zinc-400'}"
 			>
-				{f.label}
+				{preset.label}
 			</a>
 		{/each}
 	</div>
+
+	<form
+		method="GET"
+		action="/admin/orders"
+		class="mb-5 rounded-lg border border-zinc-200 bg-white p-4"
+	>
+		<input type="hidden" name="preset" value={data.filters.preset} />
+		<div class="grid grid-cols-1 gap-3 md:grid-cols-3">
+			<div class="md:col-span-3">
+				<label class={labelClass} for="q">Suche</label>
+				<input
+					id="q"
+					type="search"
+					name="q"
+					value={data.filters.q}
+					placeholder="Bestellnummer, Name oder E-Mail"
+					class={fieldClass}
+				/>
+			</div>
+			<div>
+				<label class={labelClass} for="status">Bestellstatus</label>
+				<select id="status" name="status" class={fieldClass}>
+					<option value="">Alle</option>
+					{#each Object.entries(orderStatusLabels) as [value, label] (value)}
+						<option {value} selected={data.filters.status === value}>{label}</option>
+					{/each}
+				</select>
+			</div>
+			<div>
+				<label class={labelClass} for="payment">Zahlungsstatus</label>
+				<select id="payment" name="payment" class={fieldClass}>
+					<option value="">Alle</option>
+					{#each Object.entries(paymentStatusLabels) as [value, label] (value)}
+						<option {value} selected={data.filters.payment === value}>{label}</option>
+					{/each}
+				</select>
+			</div>
+			<div>
+				<label class={labelClass} for="shipping">Versandart</label>
+				<select id="shipping" name="shipping" class={fieldClass}>
+					<option value="">Alle</option>
+					{#each Object.entries(shippingMethodLabels) as [value, label] (value)}
+						<option {value} selected={data.filters.shipping === value}>{label}</option>
+					{/each}
+				</select>
+			</div>
+			<div>
+				<label class={labelClass} for="from">Bestellt ab</label>
+				<input id="from" type="date" name="from" value={data.filters.from} class={fieldClass} />
+			</div>
+			<div>
+				<label class={labelClass} for="to">Bestellt bis</label>
+				<input id="to" type="date" name="to" value={data.filters.to} class={fieldClass} />
+			</div>
+			<div class="flex items-end gap-2">
+				<button
+					type="submit"
+					class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
+				>
+					Filtern
+				</button>
+				{#if active}
+					<a
+						href="/admin/orders"
+						class="px-2 py-2 text-sm text-zinc-500 underline underline-offset-2 hover:text-zinc-800"
+					>
+						Zurücksetzen
+					</a>
+				{/if}
+			</div>
+		</div>
+	</form>
 
 	<div class="overflow-hidden rounded-lg border border-zinc-200 bg-white">
 		<table class="w-full text-sm">
@@ -156,4 +221,6 @@
 			</tbody>
 		</table>
 	</div>
+
+	<Pagination paging={data.paging} path="/admin/orders" params={data.filters} />
 </div>
