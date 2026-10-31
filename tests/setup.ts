@@ -4,6 +4,8 @@ import { join } from 'node:path';
 
 // Every test run gets its own SQLite file. This must run before `#lib/server/db` is imported.
 process.env.DATABASE_PATH = join(mkdtempSync(join(tmpdir(), 'zigarren-test-')), 'test.db');
+// Uploaded images land in a temporary folder too
+process.env.UPLOADS_DIR = mkdtempSync(join(tmpdir(), 'zigarren-uploads-'));
 
 const { Database } = await import('bun:sqlite');
 const { drizzle } = await import('drizzle-orm/bun-sqlite');

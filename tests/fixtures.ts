@@ -13,13 +13,17 @@ import {
 	productReviewTable,
 	productTable,
 	sessionTable,
+	siteContentTable,
 	toolDetailsTable,
-	tokenTable
+	tokenTable,
+	wishlistTable
 } from '#lib/server/db/schema/index.js';
 import { ProductType } from '#lib/types.js';
 
 export async function resetDb() {
 	await db.delete(newsletterSubscriberTable);
+	await db.delete(siteContentTable);
+	await db.delete(wishlistTable);
 	await db.delete(productReviewTable);
 	await db.delete(orderItemTable);
 	await db.delete(orderTable);
