@@ -84,7 +84,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			body: productReviewTable.body,
 			createdAt: productReviewTable.createdAt,
 			customerId: productReviewTable.customerId,
-			reviewerName: sql<string>`${customerTable.firstName} || ' ' || LEFT(${customerTable.lastName}, 1) || '.'`
+			reviewerName: sql<string>`${customerTable.firstName} || ' ' || substr(${customerTable.lastName}, 1, 1) || '.'`
 		})
 		.from(productReviewTable)
 		.leftJoin(customerTable, eq(productReviewTable.customerId, customerTable.id))
