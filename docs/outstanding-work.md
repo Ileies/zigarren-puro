@@ -9,7 +9,7 @@ Status as of 2026-10-31. This document consolidates what is still open. It is ba
 
 It does not replace the UI migration plan. The migration plan stays the detailed spec for the visual rework (workstream D below). This document adds everything around it: bugs, payments, compliance, catalogue data, features from the customer's concept, operations and content.
 
-**Payment decision:** the payment provider is **Mollie**, not Stripe. All Stripe items in `TODO.md` are obsolete (see workstream A).
+**Payment decision:** the payment provider is **Mollie**, not Stripe. Stripe does not stay live and has been removed from the code (checkout, webhook route, env schema, packages). All Stripe items in `TODO.md` are obsolete (see workstream A).
 
 ## How to read this
 
@@ -31,7 +31,7 @@ The shop has solid foundations: accounts, sessions, addresses, a cart, bank-tran
 It is not launchable yet, for five reasons:
 
 1. **Two core pages are broken at runtime** (search and product detail), because they use SQL functions SQLite does not have. The type checker cannot see this.
-2. **Payments are wired to Stripe**, which is no longer the plan, and the Mollie plan has an unresolved risk: it is not confirmed that Mollie accepts a tobacco and Cuban-cigar merchant.
+2. **There is no working payment path.** Stripe has been removed, bank transfer is switched off until the real IBAN is entered, and the Mollie plan has an unresolved risk: it is not confirmed that Mollie accepts a tobacco and Cuban-cigar merchant.
 3. **Compliance is thin.** Age verification relies on a self-declared birth date, and German online tobacco advertising rules may conflict with parts of the customer's concept and with some UI that already exists.
 4. **The catalogue is empty and the data model is too small** for what the customer wants to offer (filters by aroma, smoking time, pack sizes, and so on).
 5. **Order handling is incomplete:** stock is never decremented, VAT is hardcoded to 0, there are no invoices, no shipping notification and no tracking.
@@ -137,21 +137,44 @@ Source: `_Webshop.pdf`. "Done" means present in the code. It does not mean polis
 
 Found by reading code and running the queries against SQLite 3.53 through `bun:sqlite`.
 
-- [ ] **P0 Search is broken.** `src/routes/search/+page.server.ts` uses drizzle's `ilike`, which emits `... ilike ?`. SQLite has no `ILIKE`, so any request with `q` fails with `near "ilike": syntax error`. Replace with `lower(col) like lower(?)` (or `like` with `COLLATE NOCASE`) and escape `%` and `_` in the user input. Consider FTS5 for ranking and umlaut/diacritic folding later.
-- [ ] **P0 Product detail page is broken.** `src/routes/products/[id]/+page.server.ts` builds `reviewerName` with `LEFT(...)`. SQLite has no `LEFT`, so the review query fails with `no such function: LEFT` on every product page, even without reviews. Use `substr(last_name, 1, 1)`.
-- [ ] **P0 Add regression tests that execute the real queries** against a temporary SQLite file (search, product detail, shop filters). Type checks and builds pass today despite both bugs.
-- [ ] **P0 Stock is never decremented.** `checkout/+page.server.ts` validates stock but never reduces it, neither at order creation nor in the payment webhook. Overselling is possible. Decrement atomically (`UPDATE ... SET stock = stock - ? WHERE id = ? AND stock >= ?`) inside one transaction with order creation, and release stock when an unpaid order expires or fails.
-- [ ] **P0 Cart is cleared before payment succeeds.** `setCart(cookies, [])` runs when the order is created. If the card payment is abandoned, the cart is gone and an orphaned `pending` order stays forever. Clear the cart only after confirmed payment (or on return from a paid status), and expire stale pending orders with a scheduled job.
-- [ ] **P0 Placeholder bank data.** `src/lib/config.ts` still has `DE00 0000 ...` and `XXXXXXXX`. Orders paid by bank transfer would show these.
-- [ ] **P1 VAT is hardcoded to 0.** Orders store `taxAmount: 0`. Prices must include VAT and orders need the VAT split. Cigars, cigarillos, accessories and spirits are normally 19 %, but confirm with the tax adviser.
-- [ ] **P1 Order identifiers are UUIDs.** Customers and staff need a short, sequential order number (for emails, invoices, phone calls).
+- [x] **P0 Search is broken.** `src/routes/search/+page.server.ts` uses drizzle's `ilike`, which emits `... ilike ?`. SQLite has no `ILIKE`, so any request with `q` fails with `near "ilike": syntax error`. Replace with `lower(col) like lower(?)` (or `like` with `COLLATE NOCASE`) and escape `%` and `_` in the user input. Consider FTS5 for ranking and umlaut/diacritic folding later.
+- [x] **P0 Product detail page is broken.** `src/routes/products/[id]/+page.server.ts` builds `reviewerName` with `LEFT(...)`. SQLite has no `LEFT`, so the review query fails with `no such function: LEFT` on every product page, even without reviews. Use `substr(last_name, 1, 1)`.
+- [x] **P0 Add regression tests that execute the real queries** against a temporary SQLite file (search, product detail, shop filters). Type checks and builds pass today despite both bugs.
+- [x] **P0 Stock is never decremented.** `checkout/+page.server.ts` validates stock but never reduces it, neither at order creation nor in the payment webhook. Overselling is possible. Decrement atomically (`UPDATE ... SET stock = stock - ? WHERE id = ? AND stock >= ?`) inside one transaction with order creation, and release stock when an unpaid order expires or fails.
+- [x] **P0 Cart is cleared before payment succeeds.** `setCart(cookies, [])` runs when the order is created. If the card payment is abandoned, the cart is gone and an orphaned `pending` order stays forever. Clear the cart only after confirmed payment (or on return from a paid status), and expire stale pending orders with a scheduled job.
+- [ ] **P0 Placeholder bank data.** `src/lib/config.ts` still has `DE00 0000 ...` and `XXXXXXXX`. Mitigated: bank transfer is hidden at checkout and rejected by the server while the IBAN is a placeholder (`bankTransferAvailable`). Still open: enter the real IBAN and BIC (D11), which switches bank transfer on.
+- [x] **P1 VAT is hardcoded to 0.** Orders now store the VAT contained in the gross prices (`taxAmount`), and every order item stores its VAT rate. Rates live in `vatRates` in `src/lib/config.ts` (19 % for all four product types). Still open: confirm the rates with the tax adviser, and show the VAT split per rate on invoices (workstream F).
+- [x] **P1 Order identifiers are UUIDs.** Orders get a sequential number starting at `ZP-10001`, shown in emails, the bank transfer reference, the confirmation page, the account and the admin. Orders created before this change have none and show a short id.
 - [ ] **P1 Server messages are hardcoded German** in checkout, product, admin and auth actions (for example "Ungültige Versandart.", "Produkt nicht gefunden"). Move to message keys (section 8).
 - [ ] **P1 Checkout hardcodes `country: 'DE'`** for new addresses, while `/shipping` advertises EU delivery with transit times and carriers. Align after D2.
 - [ ] **P1 Payment marks in the footer** list Nachnahme, Klarna and SEPA, which are not implemented. Show only enabled methods.
 - [ ] **P1 Header and nav links point to nothing:** `/search?t=pipes+tobacco`, `/search?t=gifts`, `/search?flag=sale`. Remove or implement. The existing migration plan already says this.
 - [ ] **P1 Newsletter subscription silently does nothing for guests.** The form reports success for any valid email but only updates existing customers. See B4.
 - [ ] **P2 Admin dashboard and tables are German only and DaisyUI based.** Acceptable for staff, but note it for workstream D.
-- [ ] **P2 Repo hygiene:** `TODO.md` moved to `docs/TODO.md` (uncommitted), while `CLAUDE.md` still links `./TODO.md`. `README.md` and `CLAUDE.md` mention Stripe. Update when Mollie lands.
+- [ ] **P2 Repo hygiene:** `TODO.md` moved to `docs/TODO.md` (uncommitted), while `CLAUDE.md` still links `./TODO.md`. `README.md` and `CLAUDE.md` still mention Stripe, and so do `docs/TODO.md` and `docs/ui-migration-plan.md`. Update them in one pass (section 8).
+- [ ] **P1 No online payment path.** Stripe is removed and bank transfer is gated on the real IBAN (D11), so checkout currently shows a "not possible yet" notice and the submit button is disabled. Going live needs either the real IBAN (bank transfer only) or the Mollie integration (workstream A).
+- [ ] **P1 Unpaid bank-transfer orders hold their stock forever.** Stock is reserved when the order is created, and only an admin cancelling the order releases it. Add a payment deadline (for example 7 days, confirm with the customer in D1 or D11), store it on the order, mention it in the confirmation email, and cancel overdue unpaid orders with `cancelUnpaidOrder` from `src/lib/server/orders.ts`. Also send a reminder before the deadline. The admin order list should show overdue orders.
+- [ ] **P1 No scheduled expiry sweep.** `expireStaleCardOrders` and `cancelPendingCardOrders` exist in `orders.ts` but nothing calls them since Stripe was removed, and the old design only swept lazily when someone started a checkout. Add one scheduled job (systemd timer, cron or an in-process interval under `adapter-bun`) that expires unpaid orders of every payment method. Reuse it for Mollie payment expiry (A2). Add a test that runs the sweep against seeded old orders.
+- [ ] **P1 Checkout UI is still DaisyUI and has one payment method.** The page still uses the old two-step DaisyUI layout with a hardcoded bank-transfer option. Phase 4 of the UI migration (workstream D) rewrites it with shadcn-svelte, the age-verification step (B1) and the Mollie redirect (A2). Until then only fix defects there, do not restyle.
+- [ ] **P1 Test coverage is partial.** There are tests for search, shop, product page, cart loader and the stock and order logic. Missing: admin loaders and actions (orders, inventory, customers), auth routes (register, login, lockout, password reset), the checkout `placeOrder` action (stock failure, age check, address resolution, bank-transfer gate), the confirmation loader, and an end-to-end purchase test (Playwright, workstream I).
+
+---
+
+**Milestone 0 implementation notes (2026-10-31):**
+
+- Search and product page queries fixed. `bun test` runs tests against a temporary SQLite file (`tests/`): search, shop, product page, cart loader, and the stock and order logic in `src/lib/server/orders.ts` (25 at the end of Milestone 0, 42 after Milestone 1). The missing coverage is listed above as a task.
+- Stock is taken in the same transaction that creates the order. It is returned when an unpaid order is cancelled (`cancelUnpaidOrder`) or an admin cancels an order. Reviving a cancelled order takes the stock again and fails if it is gone.
+- The cart is cleared when a bank-transfer order is created. The confirmation page also clears it for any order that is not cancelled or failed, which the Mollie return flow will rely on.
+- **Stripe removed (2026-10-31):** the embedded checkout and step 3, the webhook route `src/routes/api/stripe/webhook`, the `CSRF_EXEMPT` list in `hooks.server.ts`, the three Stripe variables in `src/env.ts`, and the `stripe` and `@stripe/stripe-js` packages. Left for the Mollie work on purpose, because they are provider-neutral or need a schema change: the `stripeSessionId` column and `markOrderPaid` (idempotent paid transition, looks the order up by that column), `cancelPendingCardOrders`, `expireStaleCardOrders`, and `PaymentMethod.CREDIT_CARD` with its message strings. Customer-facing copy that names Stripe (privacy section 6, terms, FAQ) is also unchanged, see the task in workstream A.
+- The four `STRIPE_*` lines in the local and server `.env` files are unused now and should be deleted by hand.
+
+**Milestone 1 implementation notes (2026-10-31), step 6 and the dev seed:**
+
+- Done: order numbers, VAT handling and order item snapshots (step 6), plus the development seed script (part of C1). `src/lib/vat.ts` splits gross prices into net and VAT per rate (shipping is spread over the rates in proportion to the goods), `src/lib/orderNumber.ts` formats the number, and `createOrderReservingStock` assigns the number and writes the snapshots inside the same transaction as the stock reservation.
+- **Schema change, apply with `db:push`:** four new nullable columns (`orders.order_number`, `order_items.product_name`, `sku`, `vat_rate`) and a unique index on `order_number`. A dry run on a copy of `local.db` produced only `ALTER TABLE ... ADD` and `CREATE UNIQUE INDEX`, with no data loss. Older orders keep null values and the pages fall back to the live product name and a short id. The `drizzle-kit push` CLI could not connect to SQLite in this environment ("Please install either better-sqlite3 or @libsql/client"), so run it where it works for you and check the output before confirming.
+- The VAT rates (19 %) are an assumption until the tax adviser confirms them. Prices are treated as gross, so the order total did not change, only the VAT part that is stored and shown ("Enthaltene MwSt." on the order pages and in the email).
+- Not done in Milestone 1: **variants and detail extensions (step 4, C2)** are waiting for D6 (which pack sizes exist) and the strength scale decision, and they break cart cookies, orders and the admin forms. The **catalogue import (step 5, C1)** is waiting for the customer's product list, and its CSV format depends on the variant model, so it should follow step 4. **Generated migrations** are still open (workstream I), and need a baseline for the existing live database before the variants change.
+- Tests: 42 in total, adding VAT maths, order numbers, snapshots and the seed (including that every seeded product opens on its product page). The checkout `placeOrder` action itself is still untested, because it imports SvelteKit-only modules (see the coverage task above).
 
 ---
 
@@ -172,13 +195,14 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 
 - [ ] Use the **Payments API**, not the Orders API (reported as deprecated). Payments accept `lines` and `billingAddress`.
 - [ ] SDK choice: `@mollie/api-client` is tested on Bun, but the legacy SDK is reported to enter maintenance mode between Nov 2026 and Feb 2027 (two sources disagree). The new generated `mollie-api-typescript` is installable but Bun support is unconfirmed. Plain `fetch` against the REST API is a safe, small alternative. Verify before choosing.
-- [ ] Replace the Stripe Embedded Checkout with **Mollie hosted checkout (redirect flow)**: create payment with `redirectUrl`, `webhookUrl`, `metadata.orderId`, `description`; redirect the customer; remove checkout step 3 and `@stripe/stripe-js`.
+- [ ] Add **Mollie hosted checkout (redirect flow)** to the checkout: create payment with `redirectUrl`, `webhookUrl`, `metadata.orderId`, `description`; redirect the customer. The Stripe embedded checkout, step 3 and `@stripe/stripe-js` are already removed.
 - [ ] Send an `Idempotency-Key` (UUID) on every POST (keys are cached for one hour; same key with different parameters returns 400).
-- [ ] **Webhook handler** (a `+server.ts` is already an accepted exception for Stripe): Mollie POSTs only a form-encoded `id` (`tr_...`). Fetch the payment from Mollie, map its status to the order, and respond `200` within 15 seconds, including for unknown IDs. Make it idempotent (the current Stripe handler would resend the confirmation email on every duplicate event). Add the new path to `CSRF_EXEMPT` in `hooks.server.ts`.
+- [ ] **Webhook handler** (a `+server.ts` is already an accepted exception for Stripe): Mollie POSTs only a form-encoded `id` (`tr_...`). Fetch the payment from Mollie, map its status to the order, and respond `200` within 15 seconds, including for unknown IDs. Make it idempotent: `markOrderPaid` in `orders.ts` already returns the order only on the first call, so duplicate deliveries send one confirmation email. Re-key it from `stripeSessionId` to the new `paymentReference`. The Stripe webhook route is deleted, and so is the `CSRF_EXEMPT` list in `hooks.server.ts`, so reintroduce an exemption for the new webhook path.
 - [ ] The return page must not trust the redirect: read the order status from the DB (set by the webhook) and show "payment pending" when the webhook has not arrived yet. Mollie's retries run up to about 26 hours.
-- [ ] Order data model: replace `stripeSessionId` with a provider-neutral `paymentProvider` and `paymentReference` column. Keep `PaymentStatus` and add `expired` and `canceled` states. Run `bun run db:push` carefully against production data.
-- [ ] Payment expiry: store the expiry and release reserved stock when a payment expires or fails (links to the stock defect in section 4).
-- [ ] Environment variables: `MOLLIE_API_KEY` (test and live), webhook base URL. Local testing needs a tunnel because Mollie cannot reach localhost. Remove the three Stripe variables and the Stripe dependency.
+- [ ] Order data model: replace the now unused `stripeSessionId` column with a provider-neutral `paymentProvider` and `paymentReference` column. Keep `PaymentStatus` and add `expired` and `canceled` states. Run `bun run db:push` carefully against production data.
+- [ ] Payment expiry: store the expiry and release reserved stock when a payment expires or fails. The release logic exists (`cancelUnpaidOrder`), the scheduled trigger is a separate task in section 4.
+- [ ] Environment variables: `MOLLIE_API_KEY` (test and live), webhook base URL. Local testing needs a tunnel because Mollie cannot reach localhost. The Stripe variables and dependency are already removed from the code.
+- [ ] **Customer-facing copy that names Stripe:** privacy policy section 6 ("Stripe (Kreditkarte)"), terms (payment methods) and the FAQ ("via Stripe"). It also lists PayPal and cryptocurrencies, which are not planned. Rewrite once A1 and A3 settle which methods and which processor apply. The privacy text needs Mollie's processor details and should be checked by the legal reviewer.
 
 **A3. Payment methods.**
 
@@ -258,7 +282,7 @@ Everything here comes from desk research and is not legal advice. Items marked "
 - The local database has no products and no producers. There is no seed or import path. The customer's inventory has to come from somewhere.
 - [ ] Obtain the full product list from the customer (CSV or supplier price lists), with SKU, producer, type, price, stock, dimensions, strength, origin, wrapper, pack size.
 - [ ] Build an **import script** (CSV to producers, products and detail tables, idempotent by SKU) and an admin CSV import and export. Validate with zod and report row errors.
-- [ ] Add a **seed script** for development with a dozen representative products (single, box, sold out, no image, long names, Cuban, spirit, accessory).
+- [x] Add a **seed script** for development with a dozen representative products (single, box, sold out, no image, long names, Cuban, spirit, accessory). Done: `bun run db:seed` (`scripts/seed.ts`), idempotent, refuses to run with `NODE_ENV=production`. The values are placeholders, not sourced data. Single and box are separate products until variants exist (C2).
 - [ ] Image workflow: upload exists for product and producer images. Add bulk upload and the admin image gallery already listed in `TODO.md`. Define image size, background and naming rules (see the design direction). Remember usage rights (D10).
 
 **C2. Schema extensions (P1).** Add fields deliberately and only with sourced data. The design direction forbids guessing strength or smoking time.
@@ -272,7 +296,7 @@ Everything here comes from desk research and is not legal advice. Items marked "
 - [ ] **Tags:** `products.tags` exists in the schema and admin, but nothing on the storefront reads it. Use it for curation (new, recommended) or drop it.
 - [ ] **Availability:** add a visible stock status model (available, low, sold out, expected) and optional "back in stock" subscriptions (E6).
 - [ ] **Price history** if reductions are ever shown (B2).
-- [ ] Order items should store a product snapshot (name, variant, SKU, VAT rate) so old orders stay correct after catalogue edits. `order_items.metadata` exists but is unused.
+- [x] Order items store a product snapshot (name, SKU, VAT rate) so old orders stay correct after catalogue edits. Still open: the variant label, once variants exist. `order_items.metadata` is still unused.
 
 ### D. Storefront UI migration (existing plan)
 
@@ -283,7 +307,7 @@ Not repeated here, but adjusted by this document:
 - [ ] **Sequence change:** do workstream 4 (defects) and C2 (schema: variants, strength, origin) before Phase 1 of the plan. The plan's Phase 1 asks for a verified "sold-quantity model" and listing filters. These cannot be built well on the current one-price-per-product schema.
 - [ ] **Phase 1 (shop) additions:** per-variant price and stock on cards, strength and ring gauge spec line, origin filter from the schema, URL-backed filters, server-side pagination. Also fix search (section 4) in the same slice because both pages share the listing contract.
 - [ ] **Phase 2 (homepage) adjustments:** the homepage content must pass the advertising review (B2). Prefer catalogue routes (origin, brand, category) over promotional tiles. The brand gallery carousel and awards in the header were added recently and conflict with the plan's "no automatic carousels" rule and with B2.
-- [ ] **Phase 4 (checkout) rewrite:** because Stripe Embedded Checkout is gone, the checkout plan changes: no step 3, no Stripe lifecycle. Add the age-verification step (B1) and the Mollie redirect (A2). Do not migrate the Stripe code to shadcn.
+- [ ] **Phase 4 (checkout) rewrite:** Stripe is already removed from the checkout, so the plan's step 3 and Stripe lifecycle items no longer apply. Add the age-verification step (B1) and the Mollie redirect (A2). Keep the `bankTransferAvailable` gate and the "no payment possible" notice behaviour until a payment method is live.
 - [ ] **Phase 5 and 6:** the account area and admin pages are as in the plan. Add the new admin screens from workstream F.
 - [ ] Capture the footer baseline screenshots (still unchecked) before touching shared layout.
 - [ ] The design direction says "Do not equate cigar smoking with ...". It should add a short advertising-law note linking to B2.
@@ -385,7 +409,7 @@ Not repeated here, but adjusted by this document:
 
 ### I. Quality, security and operations
 
-- [ ] **Automated tests:** there are none in the project (the only test files found are inside `coming-soon/node_modules`). Add Vitest for server logic (cart, totals, VAT, stock, webhook mapping) and Playwright for the purchase path (search, product, cart, checkout in Mollie test mode). The query bugs in section 4 would have been caught by a single smoke test per route.
+- [ ] **Automated tests:** `bun test` exists with 42 tests (see `tests/` and section 4). Extend it per the coverage task in section 4, add webhook-mapping tests when Mollie lands, and add Playwright for the purchase path (search, product, cart, checkout in Mollie test mode).
 - [ ] **CI:** run `bun run check`, `bun run lint`, tests and `bun run build` on every push.
 - [ ] **Backups:** the SQLite file lives on the server (`data/` and `local.db` are excluded from deploy cleanup). Add scheduled, tested backups with off-server copies and a restore drill. Order data is business-critical.
 - [ ] **Migrations:** the project uses `drizzle-kit push` against the live database. Move to generated migrations before the variants change in C2, so changes are reviewable and reversible.
@@ -463,9 +487,9 @@ From a look at Noblego, Cigarworld, Paul Bugge, Zigarrenversand.ch, Zigarrenscha
 
 ## 8. Open points about the existing documents
 
-- `docs/TODO.md`: its "Now" section (Stripe database push, keys, webhook) is obsolete. The "Soon" and "Later" items are covered by workstreams B1, C, D and H. Update it once the team agrees on this document, and keep one source of truth.
-- `CLAUDE.md` still lists Stripe as not implemented, links `./TODO.md` and does not mention the Mollie decision.
-- `ui-migration-plan.md`: add the sequencing note from workstream D and the Mollie-driven checkout change.
+- `docs/TODO.md`: its "Now" section (Stripe database push, keys, webhook) is obsolete, and the Stripe webhook route it refers to no longer exists. The "Soon" and "Later" items are covered by workstreams B1, C, D and H. Update it once the team agrees on this document, and keep one source of truth.
+- `CLAUDE.md` still lists `STRIPE_SECRET_KEY` as not implemented, links `./TODO.md` and does not mention the Mollie decision. `README.md` also mentions Stripe among the prepared variables.
+- `ui-migration-plan.md`: add the sequencing note from workstream D and the Mollie-driven checkout change. Its Phase 4 lines 128 and 130 still require preserving the "Stripe Embedded Checkout lifecycle" and testing Stripe success and cancellation, which no longer applies.
 - `design-direction.md`: add the advertising-law caveat (B2) next to the editorial and recommendations guidance.
 
 ## 9. Research limits

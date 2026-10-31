@@ -186,5 +186,7 @@ bun run dev          # Dev-Server
 bun run build        # Produktions-Build
 bun run check        # TypeScript + SvelteKit type check
 bun run db:push      # Schema auf DB pushen
+bun run db:seed      # Entwicklungs-Sortiment einspielen (idempotent, nie in Produktion)
+bun test             # Tests gegen eine temporäre SQLite-Datei (tests/)
 bun run format       # Prettier
 ```
