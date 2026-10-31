@@ -84,18 +84,20 @@
 								<Menu class="h-7 w-7" />
 							</label>
 
-							<div class="flex-1">
+							<form action="/search" method="GET" role="search" class="flex-1">
 								<label
 									class="input-bordered border-neutral-focus input w-full bg-neutral text-neutral-content transition-colors focus-within:border-secondary"
 								>
 									<Search class="h-5 w-5 opacity-70" />
 									<input
 										type="search"
+										name="q"
+										aria-label={m.search()}
 										placeholder={m.search()}
 										class="grow bg-transparent placeholder:text-neutral-content/60"
 									/>
 								</label>
-							</div>
+							</form>
 
 							<div class="flex flex-shrink-0 items-center gap-5">
 								<a
@@ -165,16 +167,25 @@
 							{@render awards()}
 						</div>
 
-						<label
-							class="input-bordered border-neutral-focus input min-w-0 flex-1 bg-neutral text-neutral-content transition-colors focus-within:border-secondary lg:max-w-96 xl:max-w-[500px] 2xl:max-w-[600px]"
+						<form
+							action="/search"
+							method="GET"
+							role="search"
+							class="min-w-0 flex-1 lg:max-w-96 xl:max-w-[500px] 2xl:max-w-[600px]"
 						>
-							<Search class="h-4 w-4 opacity-70" />
-							<input
-								type="search"
-								placeholder={m.search()}
-								class="grow bg-transparent placeholder:text-neutral-content/60"
-							/>
-						</label>
+							<label
+								class="input-bordered border-neutral-focus input w-full bg-neutral text-neutral-content transition-colors focus-within:border-secondary"
+							>
+								<Search class="h-4 w-4 opacity-70" />
+								<input
+									type="search"
+									name="q"
+									aria-label={m.search()}
+									placeholder={m.search()}
+									class="grow bg-transparent placeholder:text-neutral-content/60"
+								/>
+							</label>
+						</form>
 
 						<!-- Icons -->
 						<div class="flex flex-shrink-0 items-center gap-6">
@@ -251,9 +262,6 @@
 									onclick={() => (mobileMenuOpen = false)}
 								>
 									<span class="flex-1">{navItem.title}</span>
-									{#if navItem.title === 'Sale %'}
-										<span class="badge badge-sm badge-accent">NEU</span>
-									{/if}
 								</a>
 							</li>
 						{/each}
