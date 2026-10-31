@@ -153,7 +153,7 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 - [ ] **P2 Admin dashboard and tables are German only and DaisyUI based.** Acceptable for staff, but note it for workstream D.
 - [ ] **P2 Repo hygiene:** `TODO.md` moved to `docs/TODO.md` (uncommitted), while `CLAUDE.md` still links `./TODO.md`. `README.md` and `CLAUDE.md` still mention Stripe, and so do `docs/TODO.md` and `docs/ui-migration-plan.md`. Update them in one pass (section 8).
 - [ ] **P1 No online payment path.** Stripe is removed and bank transfer is gated on the real IBAN (D11), so checkout currently shows a "not possible yet" notice and the submit button is disabled. Going live needs either the real IBAN (bank transfer only) or the Mollie integration (workstream A).
-- [x] **P1 Unpaid bank-transfer orders hold their stock forever.** Bank-transfer orders now store `paymentDueAt` (created at + `bankAccount.paymentDeadlineDays`, 7 days, which the terms already state). The confirmation email and page show the deadline and say the order is cancelled after it, and the admin order list shows "Zahlbar bis" or "Überfällig seit". Still open: a reminder email before the deadline (needs a `reminderSentAt` column and a second sweep step), and a cancellation email to the customer when the sweep cancels (workstream F). Confirm the 7 days with the customer in D11.
+- [x] **P1 Unpaid bank-transfer orders hold their stock forever.** Bank-transfer orders now store `paymentDueAt` (created at + `bankAccount.paymentDeadlineDays`, 7 days, which the terms already state). The confirmation email and page show the deadline and say the order is cancelled after it, and the admin order list shows "Zahlbar bis" or "Überfällig seit". The sweep also sends a reminder two days before the deadline and a cancellation email when it cancels (see the notes below). Confirm the 7 days with the customer in D11.
 - [x] **P1 No scheduled expiry sweep.** `expireOverdueOrders` in `orders.ts` cancels every unpaid order past its deadline and returns the stock, through `cancelUnpaidOrder`. `startOrderSweep` (`src/lib/server/orderSweep.ts`) runs it at startup and every 15 minutes from the SvelteKit `init` hook in `hooks.server.ts`. It is guarded against double start (dev reloads) and logs failures to the console. Still open: the Mollie payment expiry (A2) should use the same function once online payments store a deadline, and `expireStaleCardOrders` and `cancelPendingCardOrders` are still unused until then.
 - [ ] **P1 Checkout UI is still DaisyUI and has one payment method.** The page still uses the old two-step DaisyUI layout with a hardcoded bank-transfer option. Phase 4 of the UI migration (workstream D) rewrites it with shadcn-svelte, the age-verification step (B1) and the Mollie redirect (A2). Until then only fix defects there, do not restyle.
 - [ ] **P1 Test coverage is partial.** There are tests for search, shop, product page, cart loader and the stock and order logic. Missing: admin loaders and actions (orders, inventory, customers), auth routes (register, login, lockout, password reset), the checkout `placeOrder` action (stock failure, age check, address resolution, bank-transfer gate), the confirmation loader, and an end-to-end purchase test (Playwright, workstream I).
@@ -192,9 +192,17 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 - **Schema change, apply with `db:push`:** one new nullable column, `orders.payment_due_at`. Orders created before this change have no deadline, so the sweep never cancels them. Cancel those by hand if they are stale.
 - Until `db:push` has run, the sweep fails every 15 minutes with a console error (it does not stop the server). Every query that selects whole orders (checkout confirmation, account, admin) fails without the column too, so push before deploying.
 - The sweep runs inside the web process. With more than one server process each runs it, which is harmless because `cancelUnpaidOrder` only acts on orders that are still unpaid, but it is wasted work. Under Passenger the process may be stopped when idle, in which case overdue orders wait until the next start. Move it to a systemd timer or cron job if that matters.
-- Not done: reminder email before the deadline, cancellation email, a "payment received" email. They are listed above and in workstream F.
-- Tests: 61 in total, nine new ones in `tests/orderExpiry.test.ts` (deadline length, cancel only overdue unpaid, paid and legacy orders untouched, repeat runs, injected clock, revived order). The scheduler itself and the `init` hook are not covered by `bun test`.
+- Not done in this chunk: a "payment received" email, which belongs to the admin status change and the Mollie webhook (workstream F).
+- Tests: nine in `tests/orderExpiry.test.ts` (deadline length, cancel only overdue unpaid, paid and legacy orders untouched, repeat runs, injected clock, revived order). The scheduler itself and the `init` hook are not covered by `bun test`.
 - Lint and build pass. `scripts/entry.cjs` is deleted in the working tree (not by me), which is why lint no longer reports it.
+
+**Milestone 2 implementation notes (2026-10-31), unpaid-order emails:**
+
+- Done: the sweep now also emails the customer. Two days before the deadline (or half the period if it is shorter) a bank-transfer order that is still unpaid gets a payment reminder with the bank details. When the sweep cancels an order, the customer gets a cancellation email. Both are German only like the other emails, and the reminder says to ignore it if the customer has already paid.
+- **Schema change, apply with `db:push`:** one new nullable column, `orders.payment_reminder_sent_at`. Without it the sweep fails and every query that selects whole orders fails too, same as for `payment_due_at`.
+- Behaviour: `claimPaymentReminders` marks an order as reminded before the email goes out, so an SMTP failure loses that one reminder instead of repeating it every 15 minutes (the failure is logged to the console). The same holds for several processes, only one of them gets the order. Orders without a deadline, paid, cancelled and card orders are not reminded, and an order that expires in the same run is cancelled, not reminded. An admin who revives a cancelled order resets the flag, so the new deadline gets its own reminder. `expireOverdueOrders` now returns the cancelled order ids instead of a count.
+- Not covered by `bun test`: the email templates and the sweep wiring, because `functions.ts` imports SvelteKit-only modules. The queries behind them are tested (six new tests, 67 in total).
+- Cancellation by an admin sends no email. That is the "cancelled" and "refunded" email in workstream F.
 
 ---
 
@@ -382,7 +390,7 @@ Not repeated here, but adjusted by this document:
 
 ### F. Orders, fulfilment and admin
 
-- [ ] **Order lifecycle emails** beyond confirmation: payment received, shipped (with tracking link), cancelled, refunded. The current set is confirmation, verification, reset, email change.
+- [ ] **Order lifecycle emails** beyond confirmation: payment received, shipped (with tracking link), cancelled by an admin, refunded. Done: the payment reminder and the cancellation after a missed deadline. The set is now confirmation, reminder, deadline cancellation, verification, reset, email change.
 - [ ] **Tracking:** add carrier and tracking number to orders, an admin action "mark as shipped" that sends the email, and show it in the customer's order view.
 - [ ] **Invoices:** generate a PDF invoice with VAT breakdown per order, attach it to the email, store it. Required for orderly bookkeeping. Quotes and credit notes for refunds.
 - [ ] **Shipping labels / DHL:** at minimum an export of shipping data for DHL business customer tools, with the age-check service flag. Direct DHL API integration later.
@@ -433,7 +441,7 @@ Not repeated here, but adjusted by this document:
 
 ### I. Quality, security and operations
 
-- [ ] **Automated tests:** `bun test` exists with 61 tests (see `tests/` and section 4). Extend it per the coverage task in section 4, add webhook-mapping tests when Mollie lands, and add Playwright for the purchase path (search, product, cart, checkout in Mollie test mode).
+- [ ] **Automated tests:** `bun test` exists with 67 tests (see `tests/` and section 4). Extend it per the coverage task in section 4, add webhook-mapping tests when Mollie lands, and add Playwright for the purchase path (search, product, cart, checkout in Mollie test mode).
 - [ ] **CI:** run `bun run check`, `bun run lint`, tests and `bun run build` on every push.
 - [ ] **Backups:** the SQLite file lives on the server (`data/` and `local.db` are excluded from deploy cleanup). Add scheduled, tested backups with off-server copies and a restore drill. Order data is business-critical.
 - [ ] **Migrations:** the project uses `drizzle-kit push` against the live database. Move to generated migrations before the variants change in C2, so changes are reviewable and reversible.
