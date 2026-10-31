@@ -508,11 +508,18 @@
 		"Выберите регион"
 	],
 	"newsletterSuccess": [
-		"Vielen Dank! Sie erhalten in Kürze eine Bestätigung per E-Mail.",
-		"Thank you! You will receive a confirmation email shortly.",
-		"شكراً! ستتلقى رسالة تأكيد عبر البريد الإلكتروني قريباً.",
-		"谢谢！您将很快收到一封确认邮件。",
-		"Спасибо! Вы скоро получите письмо с подтверждением."
+		"Fast geschafft! Bitte bestätigen Sie Ihre Anmeldung über den Link in der E-Mail, die wir Ihnen gesendet haben.",
+		"Almost done! Please confirm your subscription using the link in the email we have sent you.",
+		"أوشكت على الانتهاء! يرجى تأكيد اشتراكك عبر الرابط الموجود في البريد الإلكتروني الذي أرسلناه إليك.",
+		"即将完成！请通过我们发送给您的邮件中的链接确认订阅。",
+		"Почти готово! Подтвердите подписку по ссылке в письме, которое мы вам отправили."
+	],
+	"newsletterError": [
+		"Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+		"Please enter a valid email address.",
+		"يرجى إدخال عنوان بريد إلكتروني صالح.",
+		"请输入有效的电子邮件地址。",
+		"Пожалуйста, введите действительный адрес электронной почты."
 	],
 	"careerMessageSent": [
 		"Ihre Nachricht wurde erfolgreich gesendet. Wir melden uns so bald wie möglich bei Ihnen.",

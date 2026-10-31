@@ -43,6 +43,7 @@
 	let customerEmail = $state('');
 	let isSubscribing = $state(false);
 	let subscribeSuccess = $state(false);
+	let subscribeError = $state(false);
 
 	const methods = [
 		{
@@ -105,12 +106,14 @@
 							class="flex flex-col gap-2 sm:flex-row lg:flex-col 2xl:flex-row"
 							use:enhance={() => {
 								isSubscribing = true;
+								subscribeError = false;
 								return async ({ result, update }) => {
 									isSubscribing = false;
 									if (result.type === 'success') {
 										subscribeSuccess = true;
 										customerEmail = '';
 									} else {
+										subscribeError = true;
 										await update({ navigate: false });
 									}
 								};
@@ -137,6 +140,9 @@
 								{isSubscribing ? m.processing() : m.subscribe()}
 							</button>
 						</form>
+						{#if subscribeError}
+							<p class="mt-2 text-sm text-error" role="alert">{m.newsletterError()}</p>
+						{/if}
 					{/if}
 				</div>
 
