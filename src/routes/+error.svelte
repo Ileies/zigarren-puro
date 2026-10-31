@@ -60,10 +60,17 @@
 	.error-page {
 		display: grid;
 		flex: 1;
+		min-height: 100vh;
+		min-height: 100dvh;
 		place-items: center;
 		padding: clamp(2rem, 6vw, 5rem) 1rem;
 		background: #f7f4ee;
 		color: #302a23;
+	}
+
+	/* The normal layout already supplies the available height. */
+	:global(main) > .error-page {
+		min-height: 0;
 	}
 
 	.error-card {
