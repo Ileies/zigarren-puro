@@ -529,21 +529,37 @@ function paymentReminderEmailHtml(notice: OrderNotice, orderLabel: string): stri
 	return baseLayout(content, footer);
 }
 
-function orderCancelledEmailHtml(notice: OrderNotice, orderLabel: string): string {
+/** Why an order was cancelled: an unpaid one by the deadline, any other by the shop staff. */
+export type CancelReason = 'unpaid' | 'staff';
+
+function orderCancelledEmailHtml(
+	notice: OrderNotice,
+	orderLabel: string,
+	reason: CancelReason
+): string {
+	const intro =
+		reason === 'unpaid'
+			? `für Ihre Bestellung <strong>${orderLabel}</strong> ist innerhalb der Zahlungsfrist
+        keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder
+        freigegeben.`
+			: `wir haben Ihre Bestellung <strong>${orderLabel}</strong> storniert.`;
+	const outro =
+		reason === 'unpaid'
+			? `Haben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesen Link</a>, damit wir
+        Ihre Bestellung wiederherstellen können. Sie können jederzeit eine neue Bestellung aufgeben.`
+			: `Bei Fragen, zum Beispiel zu einer bereits erfolgten Zahlung, erreichen Sie uns unter
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesem Link</a>.`;
 	const content = `
       <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
         Ihre Bestellung wurde storniert
       </h2>
       <p style="margin:0 0 20px;color:#444;font-size:15px;line-height:1.8">
         Guten Tag ${notice.firstName},<br/>
-        für Ihre Bestellung <strong>${orderLabel}</strong> ist innerhalb der Zahlungsfrist
-        keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder
-        freigegeben.
+        ${intro}
       </p>
       <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
-        Haben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über
-        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesen Link</a>, damit wir
-        Ihre Bestellung wiederherstellen können. Sie können jederzeit eine neue Bestellung aufgeben.
+        ${outro}
       </p>`;
 
 	const footer = `<p style="margin:0;color:#666;font-size:11px">
@@ -567,14 +583,57 @@ export async function sendPaymentReminderEmail(notice: OrderNotice): Promise<voi
 	);
 }
 
-export async function sendOrderCancelledEmail(notice: OrderNotice): Promise<void> {
+export async function sendOrderCancelledEmail(
+	notice: OrderNotice,
+	reason: CancelReason = 'unpaid'
+): Promise<void> {
 	const label = formatOrderNumber(notice);
+	const text =
+		reason === 'unpaid'
+			? `für Ihre Bestellung ${label} ist innerhalb der Zahlungsfrist keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder freigegeben.\n\nHaben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über https://${PUBLIC_ORIGIN}/contact, damit wir Ihre Bestellung wiederherstellen können.`
+			: `wir haben Ihre Bestellung ${label} storniert.\n\nBei Fragen, zum Beispiel zu einer bereits erfolgten Zahlung, erreichen Sie uns unter https://${PUBLIC_ORIGIN}/contact.`;
 	await sendMail(
 		{
 			to: notice.email,
 			subject: `Ihre Bestellung ${label} wurde storniert – Zigarren Puro`,
-			html: orderCancelledEmailHtml(notice, label),
-			text: `Guten Tag ${notice.firstName},\n\nfür Ihre Bestellung ${label} ist innerhalb der Zahlungsfrist keine Zahlung eingegangen. Wir haben die Bestellung deshalb storniert und die Ware wieder freigegeben.\n\nHaben Sie in der Zwischenzeit bezahlt, melden Sie sich bitte über https://${PUBLIC_ORIGIN}/contact, damit wir Ihre Bestellung wiederherstellen können.\n\nZigarren Puro`
+			html: orderCancelledEmailHtml(notice, label, reason),
+			text: `Guten Tag ${notice.firstName},\n\n${text}\n\nZigarren Puro`
+		},
+		notice.customerId
+	);
+}
+
+function paymentReceivedEmailHtml(notice: OrderNotice, orderLabel: string): string {
+	const content = `
+      <h2 style="margin:0 0 8px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Zahlung eingegangen
+      </h2>
+      <p style="margin:0 0 20px;color:#444;font-size:15px;line-height:1.8">
+        Guten Tag ${notice.firstName},<br/>
+        für Ihre Bestellung <strong>${orderLabel}</strong> haben wir Ihre Zahlung über
+        <strong>${euro(notice.totalAmount)}</strong> erhalten. Vielen Dank! Wir bereiten Ihre
+        Bestellung jetzt für den Versand vor.
+      </p>
+      <p style="margin:0;color:#888;font-size:13px;line-height:1.7">
+        Bei Fragen erreichen Sie uns unter
+        <a href="https://${PUBLIC_ORIGIN}/contact" style="color:#b8834a">diesem Link</a>.
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+export async function sendPaymentReceivedEmail(notice: OrderNotice): Promise<void> {
+	const label = formatOrderNumber(notice);
+	await sendMail(
+		{
+			to: notice.email,
+			subject: `Zahlung für Ihre Bestellung ${label} eingegangen – Zigarren Puro`,
+			html: paymentReceivedEmailHtml(notice, label),
+			text: `Guten Tag ${notice.firstName},\n\nfür Ihre Bestellung ${label} haben wir Ihre Zahlung über ${euro(notice.totalAmount)} erhalten. Vielen Dank! Wir bereiten Ihre Bestellung jetzt für den Versand vor.\n\nZigarren Puro`
 		},
 		notice.customerId
 	);

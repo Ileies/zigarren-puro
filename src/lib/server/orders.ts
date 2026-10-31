@@ -2,18 +2,23 @@ import { and, eq, gt, isNull, lt, lte, ne, sql, type SQL } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import {
 	customerTable,
+	orderEventTable,
 	orderTable,
 	orderItemTable,
 	productTable
 } from '#lib/server/db/schema/index.js';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '#lib/types.js';
 import { bankAccount } from '#lib/config.js';
+import { orderStatusLabels, paymentStatusLabels } from '#lib/orderLabels.js';
 
 export class InsufficientStockError extends Error {
 	constructor(public productName: string) {
 		super(`Insufficient stock for "${productName}"`);
 	}
 }
+
+/** A status change the transition rules do not allow. The message is German, for the admin. */
+export class InvalidTransitionError extends Error {}
 
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 type NewOrder = typeof orderTable.$inferInsert;
@@ -153,7 +158,19 @@ export function cancelUnpaidOrder(where: SQL): boolean {
 			)
 			.returning({ id: orderTable.id })
 			.all();
-		for (const { id } of cancelled) returnStock(tx, id);
+		for (const { id } of cancelled) {
+			returnStock(tx, id);
+			tx.insert(orderEventTable)
+				.values({
+					orderId: id,
+					fromOrderStatus: OrderStatus.PENDING,
+					toOrderStatus: OrderStatus.CANCELLED,
+					fromPaymentStatus: PaymentStatus.PENDING,
+					toPaymentStatus: PaymentStatus.FAILED,
+					actor: 'system'
+				})
+				.run();
+		}
 		return cancelled.length > 0;
 	});
 }
@@ -243,19 +260,117 @@ export function claimPaymentReminders(now: Date = new Date()): string[] {
 	return claimed;
 }
 
+export type StatusPair = { orderStatus: OrderStatus; paymentStatus: PaymentStatus };
+
+/** Where an order can go from each status. A cancelled order can be revived, a refunded one is final. */
+export const ORDER_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
+	[OrderStatus.PENDING]: [OrderStatus.CONFIRMED, OrderStatus.CANCELLED],
+	[OrderStatus.CONFIRMED]: [OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.CANCELLED],
+	[OrderStatus.PROCESSING]: [OrderStatus.SHIPPED, OrderStatus.CANCELLED],
+	[OrderStatus.SHIPPED]: [OrderStatus.DELIVERED, OrderStatus.REFUNDED],
+	[OrderStatus.DELIVERED]: [OrderStatus.REFUNDED],
+	[OrderStatus.CANCELLED]: [OrderStatus.PENDING, OrderStatus.CONFIRMED],
+	[OrderStatus.REFUNDED]: []
+};
+
+export const PAYMENT_TRANSITIONS: Record<PaymentStatus, PaymentStatus[]> = {
+	[PaymentStatus.PENDING]: [PaymentStatus.AUTHORIZED, PaymentStatus.PAID, PaymentStatus.FAILED],
+	[PaymentStatus.AUTHORIZED]: [PaymentStatus.PAID, PaymentStatus.FAILED],
+	[PaymentStatus.PAID]: [PaymentStatus.REFUNDED],
+	// A payment that arrives after the deadline can still be booked
+	[PaymentStatus.FAILED]: [PaymentStatus.PENDING, PaymentStatus.PAID],
+	[PaymentStatus.REFUNDED]: []
+};
+
+/** An order can only be worked on once the money is in, or at least reserved. */
+const NEEDS_PAYMENT = [
+	OrderStatus.CONFIRMED,
+	OrderStatus.PROCESSING,
+	OrderStatus.SHIPPED,
+	OrderStatus.DELIVERED
+];
+
 /**
- * Applies an admin status change and keeps stock consistent:
+ * Why a change from one status pair to another is not allowed, or null when it is. A status that
+ * stays as it is always passes, so a change of the payment alone is checked on the payment only.
+ */
+export function transitionProblem(from: StatusPair, to: StatusPair): string | null {
+	const orderLabel = (s: string) => `"${orderStatusLabels[s]}"`;
+	const paymentLabel = (s: string) => `"${paymentStatusLabels[s]}"`;
+
+	if (to.orderStatus === from.orderStatus && to.paymentStatus === from.paymentStatus) return null;
+
+	if (
+		to.orderStatus !== from.orderStatus &&
+		!ORDER_TRANSITIONS[from.orderStatus].includes(to.orderStatus)
+	) {
+		return `Der Bestellstatus kann nicht von ${orderLabel(from.orderStatus)} auf ${orderLabel(to.orderStatus)} wechseln.`;
+	}
+	if (
+		to.paymentStatus !== from.paymentStatus &&
+		!PAYMENT_TRANSITIONS[from.paymentStatus].includes(to.paymentStatus)
+	) {
+		return `Der Zahlungsstatus kann nicht von ${paymentLabel(from.paymentStatus)} auf ${paymentLabel(to.paymentStatus)} wechseln.`;
+	}
+
+	// A refund is both at once, except that a cancelled order may have its payment refunded alone
+	const refundedOrder = to.orderStatus === OrderStatus.REFUNDED;
+	const refundedPayment = to.paymentStatus === PaymentStatus.REFUNDED;
+	if (
+		refundedOrder !== refundedPayment &&
+		(refundedOrder || to.orderStatus !== OrderStatus.CANCELLED)
+	) {
+		return 'Bestellung und Zahlung können nur gemeinsam auf "Erstattet" gesetzt werden.';
+	}
+
+	const paid =
+		to.paymentStatus === PaymentStatus.PAID || to.paymentStatus === PaymentStatus.AUTHORIZED;
+	if (NEEDS_PAYMENT.includes(to.orderStatus) && !paid) {
+		return `Eine Bestellung mit Status ${orderLabel(to.orderStatus)} braucht eine bezahlte oder autorisierte Zahlung.`;
+	}
+	if (
+		to.orderStatus === OrderStatus.PENDING &&
+		to.paymentStatus !== PaymentStatus.PENDING &&
+		to.paymentStatus !== PaymentStatus.AUTHORIZED
+	) {
+		return `Eine ausstehende Bestellung braucht den Zahlungsstatus ${paymentLabel(PaymentStatus.PENDING)}.`;
+	}
+	return null;
+}
+
+/** The emails the customer should get for a status change. */
+export function customerNotices(from: StatusPair, to: StatusPair): ('cancelled' | 'paid')[] {
+	const notices: ('cancelled' | 'paid')[] = [];
+	if (from.orderStatus !== OrderStatus.CANCELLED && to.orderStatus === OrderStatus.CANCELLED) {
+		notices.push('cancelled');
+	}
+	const nowPaid =
+		from.paymentStatus !== PaymentStatus.PAID && to.paymentStatus === PaymentStatus.PAID;
+	if (nowPaid && to.orderStatus !== OrderStatus.CANCELLED) notices.push('paid');
+	return notices;
+}
+
+/**
+ * Applies a status change by staff and keeps stock consistent:
  * cancelling returns the stock, reviving a cancelled order takes it again.
- * Throws `InsufficientStockError` when a revived order can no longer be served.
+ * Returns the status before the change, or false for an unknown order. A change that
+ * `transitionProblem` rejects throws `InvalidTransitionError`, a revived order that can no longer
+ * be served throws `InsufficientStockError`. Both leave the order untouched.
  */
 export function applyOrderStatus(
 	orderId: string,
 	orderStatus: OrderStatus,
-	paymentStatus: PaymentStatus
-): boolean {
+	paymentStatus: PaymentStatus,
+	actor = 'admin'
+): { from: StatusPair } | false {
 	return db.transaction((tx) => {
 		const order = tx.select().from(orderTable).where(eq(orderTable.id, orderId)).get();
 		if (!order) return false;
+
+		const from = { orderStatus: order.orderStatus, paymentStatus: order.paymentStatus };
+		const problem = transitionProblem(from, { orderStatus, paymentStatus });
+		if (problem) throw new InvalidTransitionError(problem);
+		if (from.orderStatus === orderStatus && from.paymentStatus === paymentStatus) return { from };
 
 		const wasCancelled = order.orderStatus === OrderStatus.CANCELLED;
 		const isCancelled = orderStatus === OrderStatus.CANCELLED;
@@ -289,8 +404,42 @@ export function applyOrderStatus(
 			})
 			.where(eq(orderTable.id, orderId))
 			.run();
-		return true;
+		tx.insert(orderEventTable)
+			.values({
+				orderId,
+				fromOrderStatus: from.orderStatus,
+				toOrderStatus: orderStatus,
+				fromPaymentStatus: from.paymentStatus,
+				toPaymentStatus: paymentStatus,
+				actor
+			})
+			.run();
+		return { from };
 	});
+}
+
+/** The status changes of an order, oldest first. */
+export function orderHistory(orderId: string) {
+	return db
+		.select()
+		.from(orderEventTable)
+		.where(eq(orderEventTable.orderId, orderId))
+		.orderBy(orderEventTable.createdAt, sql`rowid`)
+		.all();
+}
+
+export const MAX_INTERNAL_NOTE_LENGTH = 2000;
+
+/** Saves the staff note of an order. An empty text removes it. False for an unknown order. */
+export function saveInternalNote(orderId: string, text: string): boolean {
+	const note = text.trim();
+	const updated = db
+		.update(orderTable)
+		.set({ internalNote: note || null, updatedAt: new Date() })
+		.where(eq(orderTable.id, orderId))
+		.returning({ id: orderTable.id })
+		.all();
+	return updated.length > 0;
 }
 
 /**

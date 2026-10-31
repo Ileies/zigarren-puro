@@ -2,41 +2,39 @@
 	import { enhance } from '$app/forms';
 	import { formatOrderNumber } from '#lib/orderNumber.js';
 
+	import {
+		orderStatusLabels,
+		paymentStatusLabels,
+		shippingMethodLabels,
+		paymentMethodLabels
+	} from '#lib/orderLabels.js';
+
 	let { data, form } = $props();
 
 	let order = $derived(data.order);
 
-	const orderStatusLabels: Record<string, string> = {
-		pending: 'Ausstehend',
-		confirmed: 'Bestätigt',
-		processing: 'In Bearbeitung',
-		shipped: 'Versandt',
-		delivered: 'Geliefert',
-		cancelled: 'Storniert',
-		refunded: 'Erstattet'
+	const emailLabels: Record<string, string> = {
+		cancelled: 'Stornierung',
+		paid: 'Zahlungseingang'
 	};
 
-	const paymentStatusLabels: Record<string, string> = {
-		pending: 'Ausstehend',
-		authorized: 'Autorisiert',
-		paid: 'Bezahlt',
-		failed: 'Fehlgeschlagen',
-		refunded: 'Erstattet'
-	};
+	const dateTime = (value: Date | string) =>
+		new Date(value).toLocaleString('de-DE', {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 
-	const shippingMethodLabels: Record<string, string> = {
-		standard: 'Standard',
-		express: 'Express',
-		next_day: 'Nächster Tag',
-		pickup: 'Abholung'
-	};
+	// Follows the saved status, and the select can override it until the form is sent
+	let selectedOrderStatus = $derived(order.orderStatus as string);
 
-	const paymentMethodLabels: Record<string, string> = {
-		credit_card: 'Kreditkarte',
-		paypal: 'PayPal',
-		bank_transfer: 'Überweisung',
-		crypto: 'Krypto'
-	};
+	// Cancelling sends stock back and may email the customer, so staff confirm it first
+	function confirmCancel() {
+		if (selectedOrderStatus !== 'cancelled' || order.orderStatus === 'cancelled') return true;
+		return confirm('Bestellung wirklich stornieren? Der Bestand wird zurückgebucht.');
+	}
 </script>
 
 <div class="max-w-3xl p-6">
@@ -47,14 +45,24 @@
 		<span class="font-mono text-sm text-zinc-600">{formatOrderNumber(order)}</span>
 	</div>
 
-	{#if form?.success}
+	{#if form?.form === 'status' && form.success}
 		<div
 			class="mb-4 rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"
 		>
 			Status wurde aktualisiert.
+			{#if form.emailed?.length}
+				E-Mail an den Kunden gesendet: {form.emailed.map((k) => emailLabels[k]).join(', ')}.
+			{/if}
 		</div>
+		{#if form.emailFailed}
+			<div
+				class="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+			>
+				Die E-Mail an den Kunden konnte nicht gesendet werden. Der Status ist gespeichert.
+			</div>
+		{/if}
 	{/if}
-	{#if form?.error}
+	{#if form?.form === 'status' && form.error}
 		<div class="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
 			{form.error}
 		</div>
@@ -232,14 +240,64 @@
 
 	{#if order.notes}
 		<div class="mb-6 rounded-lg border border-zinc-200 bg-white p-4">
-			<h2 class="mb-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">Notizen</h2>
-			<p class="text-sm text-zinc-700">{order.notes}</p>
+			<h2 class="mb-2 text-xs font-semibold tracking-wide text-zinc-500 uppercase">
+				Hinweis des Kunden
+			</h2>
+			<p class="text-sm whitespace-pre-line text-zinc-700">{order.notes}</p>
 		</div>
 	{/if}
 
-	<div class="rounded-lg border border-zinc-200 bg-white p-5">
+	<div class="mb-6 rounded-lg border border-zinc-200 bg-white p-5">
+		<h2 class="mb-1 text-sm font-semibold text-zinc-900">Interne Notiz</h2>
+		<p class="mb-3 text-xs text-zinc-400">Nur für das Team sichtbar, nie für den Kunden.</p>
+		{#if form?.form === 'note' && form.error}
+			<div class="mb-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+				{form.error}
+			</div>
+		{/if}
+		{#if form?.form === 'note' && form.success}
+			<div
+				class="mb-3 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-800"
+			>
+				Notiz gespeichert.
+			</div>
+		{/if}
+		<form
+			method="POST"
+			action="?/saveNote"
+			use:enhance={() =>
+				({ update }) =>
+					update({ reset: false })}
+		>
+			<label class="sr-only" for="internalNote">Interne Notiz</label>
+			<textarea
+				id="internalNote"
+				name="internalNote"
+				rows="3"
+				maxlength="2000"
+				class="mb-3 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
+				>{order.internalNote ?? ''}</textarea
+			>
+			<button
+				type="submit"
+				class="rounded-md border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+			>
+				Notiz speichern
+			</button>
+		</form>
+	</div>
+
+	<div class="mb-6 rounded-lg border border-zinc-200 bg-white p-5">
 		<h2 class="mb-4 text-sm font-semibold text-zinc-900">Status aktualisieren</h2>
-		<form method="POST" action="?/updateStatus" use:enhance class="space-y-4">
+		<form
+			method="POST"
+			action="?/updateStatus"
+			use:enhance={({ cancel }) => {
+				if (!confirmCancel()) cancel();
+				return ({ update }) => update({ reset: false });
+			}}
+			class="space-y-4"
+		>
 			<div class="grid grid-cols-2 gap-4">
 				<div>
 					<label
@@ -251,10 +309,11 @@
 					<select
 						id="orderStatus"
 						name="orderStatus"
+						bind:value={selectedOrderStatus}
 						class="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
-						{#each Object.entries(orderStatusLabels) as [value, label] (value)}
-							<option {value} selected={order.orderStatus === value}>{label}</option>
+						{#each data.nextOrderStatuses as value (value)}
+							<option {value}>{orderStatusLabels[value]}</option>
 						{/each}
 					</select>
 				</div>
@@ -270,12 +329,18 @@
 						name="paymentStatus"
 						class="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm focus:border-zinc-500 focus:outline-none"
 					>
-						{#each Object.entries(paymentStatusLabels) as [value, label] (value)}
-							<option {value} selected={order.paymentStatus === value}>{label}</option>
+						{#each data.nextPaymentStatuses as value (value)}
+							<option {value} selected={order.paymentStatus === value}>
+								{paymentStatusLabels[value]}
+							</option>
 						{/each}
 					</select>
 				</div>
 			</div>
+			<label class="flex items-center gap-2 text-sm text-zinc-600">
+				<input type="checkbox" name="notify" checked class="rounded border-zinc-300" />
+				Kunden per E-Mail benachrichtigen (bei Stornierung und Zahlungseingang)
+			</label>
 			<button
 				type="submit"
 				class="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-700"
@@ -283,5 +348,34 @@
 				Status speichern
 			</button>
 		</form>
+	</div>
+
+	<div class="rounded-lg border border-zinc-200 bg-white p-5">
+		<h2 class="mb-4 text-sm font-semibold text-zinc-900">Verlauf</h2>
+		{#if data.events.length === 0}
+			<p class="text-sm text-zinc-400">Noch keine Statusänderungen erfasst.</p>
+		{:else}
+			<ol class="space-y-3 text-sm">
+				{#each data.events as event (event.id)}
+					<li class="border-l-2 border-zinc-200 pl-3">
+						<div class="text-xs text-zinc-400">
+							{dateTime(event.createdAt)} &middot; {event.actor === 'system' ? 'System' : 'Admin'}
+						</div>
+						{#if event.fromOrderStatus !== event.toOrderStatus}
+							<div class="text-zinc-700">
+								Bestellung: {orderStatusLabels[event.fromOrderStatus]} &rarr;
+								{orderStatusLabels[event.toOrderStatus]}
+							</div>
+						{/if}
+						{#if event.fromPaymentStatus !== event.toPaymentStatus}
+							<div class="text-zinc-700">
+								Zahlung: {paymentStatusLabels[event.fromPaymentStatus]} &rarr;
+								{paymentStatusLabels[event.toPaymentStatus]}
+							</div>
+						{/if}
+					</li>
+				{/each}
+			</ol>
+		{/if}
 	</div>
 </div>
