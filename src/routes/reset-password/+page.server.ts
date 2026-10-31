@@ -5,6 +5,7 @@ import db from '#lib/server/db/index.js';
 import { tokenTable, authCredentialsTable } from '#lib/server/db/schema/index.js';
 import { TokenType } from '#lib/types.js';
 import { hashPassword } from '#lib/server/auth.js';
+import * as m from '#lib/messages.js';
 
 async function resolveToken(token: string) {
 	const [row] = await db
@@ -46,20 +47,20 @@ export const actions: Actions = {
 		const confirmPassword = data.get('confirmPassword')?.toString();
 
 		if (!token || !password || !confirmPassword) {
-			return fail(400, { error: 'Alle Felder sind erforderlich.' });
+			return fail(400, { error: m.errFieldsRequired() });
 		}
 
 		if (password.length < 8) {
-			return fail(400, { error: 'Das Passwort muss mindestens 8 Zeichen lang sein.' });
+			return fail(400, { error: m.errPasswordTooShort() });
 		}
 
 		if (password !== confirmPassword) {
-			return fail(400, { error: 'Die Passwörter stimmen nicht überein.' });
+			return fail(400, { error: m.errPasswordMismatch() });
 		}
 
 		const row = await resolveToken(token);
 		if (!row || row.usedAt) {
-			return fail(400, { error: 'Dieser Link ist ungültig oder abgelaufen.' });
+			return fail(400, { error: m.errLinkInvalid() });
 		}
 
 		const passwordHash = await hashPassword(password);

@@ -1,0 +1,212 @@
+{
+	"errShippingMethod": [
+		"Ungültige Versandart.",
+		"Invalid shipping method.",
+		"طريقة الشحن غير صالحة.",
+		"无效的配送方式。",
+		"Недопустимый способ доставки."
+	],
+	"errPaymentMethod": [
+		"Ungültige Zahlungsart.",
+		"Invalid payment method.",
+		"طريقة الدفع غير صالحة.",
+		"无效的付款方式。",
+		"Недопустимый способ оплаты."
+	],
+	"errCartEmpty": [
+		"Warenkorb ist leer.",
+		"Your cart is empty.",
+		"سلة التسوق فارغة.",
+		"购物车是空的。",
+		"Корзина пуста."
+	],
+	"errProductUnavailable": [
+		"Ein Produkt ist nicht mehr verfügbar.",
+		"A product is no longer available.",
+		"منتج لم يعد متاحاً.",
+		"有商品已不再供应。",
+		"Один из товаров больше недоступен."
+	],
+	"errInsufficientStock": [
+		"\"{name}\" ist nicht in der gewünschten Menge verfügbar.",
+		"\"{name}\" is not available in the requested quantity.",
+		"\"{name}\" غير متوفر بالكمية المطلوبة.",
+		"“{name}”库存不足。",
+		"«{name}» недоступен в запрошенном количестве."
+	],
+	"errShippingAddress": [
+		"Ungültige Lieferadresse.",
+		"Invalid shipping address.",
+		"عنوان التسليم غير صالح.",
+		"无效的收货地址。",
+		"Недопустимый адрес доставки."
+	],
+	"errShippingAddressIncomplete": [
+		"Bitte füllen Sie alle Pflichtfelder der Lieferadresse aus.",
+		"Please fill in all required fields of the shipping address.",
+		"يرجى ملء جميع الحقول المطلوبة لعنوان التسليم.",
+		"请填写收货地址的所有必填项。",
+		"Заполните все обязательные поля адреса доставки."
+	],
+	"errBillingAddress": [
+		"Ungültige Rechnungsadresse.",
+		"Invalid billing address.",
+		"عنوان الفوترة غير صالح.",
+		"无效的账单地址。",
+		"Недопустимый платёжный адрес."
+	],
+	"errBillingAddressIncomplete": [
+		"Bitte füllen Sie alle Pflichtfelder der Rechnungsadresse aus.",
+		"Please fill in all required fields of the billing address.",
+		"يرجى ملء جميع الحقول المطلوبة لعنوان الفوترة.",
+		"请填写账单地址的所有必填项。",
+		"Заполните все обязательные поля платёжного адреса."
+	],
+	"errFieldsRequired": [
+		"Alle Felder sind erforderlich.",
+		"All fields are required.",
+		"جميع الحقول مطلوبة.",
+		"所有字段均为必填。",
+		"Все поля обязательны для заполнения."
+	],
+	"errRequiredFields": [
+		"Bitte füllen Sie alle Pflichtfelder aus.",
+		"Please fill in all required fields.",
+		"يرجى ملء جميع الحقول المطلوبة.",
+		"请填写所有必填项。",
+		"Пожалуйста, заполните все обязательные поля."
+	],
+	"errInvalidEmail": [
+		"Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+		"Please enter a valid email address.",
+		"يرجى إدخال عنوان بريد إلكتروني صالح.",
+		"请输入有效的电子邮箱地址。",
+		"Введите действительный адрес электронной почты."
+	],
+	"errPasswordTooShort": [
+		"Das Passwort muss mindestens 8 Zeichen lang sein.",
+		"The password must be at least 8 characters long.",
+		"يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+		"密码至少需要8个字符。",
+		"Пароль должен содержать не менее 8 символов."
+	],
+	"errNewPasswordTooShort": [
+		"Das neue Passwort muss mindestens 8 Zeichen lang sein.",
+		"The new password must be at least 8 characters long.",
+		"يجب أن تتكون كلمة المرور الجديدة من 8 أحرف على الأقل.",
+		"新密码至少需要8个字符。",
+		"Новый пароль должен содержать не менее 8 символов."
+	],
+	"errPasswordMismatch": [
+		"Die Passwörter stimmen nicht überein.",
+		"The passwords do not match.",
+		"كلمتا المرور غير متطابقتين.",
+		"两次输入的密码不一致。",
+		"Пароли не совпадают."
+	],
+	"errInvalidBirthDate": [
+		"Ungültiges Geburtsdatum.",
+		"Invalid date of birth.",
+		"تاريخ الميلاد غير صالح.",
+		"无效的出生日期。",
+		"Недопустимая дата рождения."
+	],
+	"errRegisterUnderage": [
+		"Sie müssen mindestens 18 Jahre alt sein, um sich zu registrieren.",
+		"You must be at least 18 years old to register.",
+		"يجب أن يكون عمرك 18 عامًا على الأقل للتسجيل.",
+		"您必须年满18岁才能注册。",
+		"Для регистрации вам должно быть не менее 18 лет."
+	],
+	"errAcceptTerms": [
+		"Bitte akzeptieren Sie die AGB und Datenschutzerklärung.",
+		"Please accept the terms and the privacy policy.",
+		"يرجى قبول الشروط وسياسة الخصوصية.",
+		"请接受服务条款和隐私政策。",
+		"Пожалуйста, примите условия и политику конфиденциальности."
+	],
+	"errEmailTaken": [
+		"Diese E-Mail-Adresse ist bereits vergeben.",
+		"This email address is already in use.",
+		"عنوان البريد الإلكتروني هذا مستخدم بالفعل.",
+		"该电子邮箱地址已被使用。",
+		"Этот адрес электронной почты уже используется."
+	],
+	"errCredentialsRequired": [
+		"E-Mail und Passwort sind erforderlich.",
+		"Email and password are required.",
+		"البريد الإلكتروني وكلمة المرور مطلوبان.",
+		"邮箱和密码为必填项。",
+		"Укажите адрес электронной почты и пароль."
+	],
+	"errInvalidCredentials": [
+		"E-Mail oder Passwort ist falsch.",
+		"Email or password is incorrect.",
+		"البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+		"邮箱或密码错误。",
+		"Неверный адрес электронной почты или пароль."
+	],
+	"errAccountLocked": [
+		"Konto gesperrt. Bitte warten Sie noch {minutes} Minute(n).",
+		"Account locked. Please wait {minutes} more minute(s).",
+		"الحساب مقفل. يرجى الانتظار {minutes} دقيقة أخرى.",
+		"账户已锁定。请再等待 {minutes} 分钟。",
+		"Аккаунт заблокирован. Подождите ещё {minutes} мин."
+	],
+	"errNameRequired": [
+		"Vor- und Nachname sind erforderlich.",
+		"First and last name are required.",
+		"الاسم الأول واسم العائلة مطلوبان.",
+		"名和姓为必填项。",
+		"Имя и фамилия обязательны."
+	],
+	"errCurrentPasswordWrong": [
+		"Das aktuelle Passwort ist falsch.",
+		"The current password is incorrect.",
+		"كلمة المرور الحالية غير صحيحة.",
+		"当前密码错误。",
+		"Текущий пароль неверен."
+	],
+	"errEmailSame": [
+		"Die neue E-Mail-Adresse ist identisch mit der aktuellen.",
+		"The new email address is the same as the current one.",
+		"عنوان البريد الإلكتروني الجديد مطابق للحالي.",
+		"新邮箱地址与当前地址相同。",
+		"Новый адрес электронной почты совпадает с текущим."
+	],
+	"errLinkInvalid": [
+		"Dieser Link ist ungültig oder abgelaufen.",
+		"This link is invalid or has expired.",
+		"هذا الرابط غير صالح أو منتهي الصلاحية.",
+		"此链接无效或已过期。",
+		"Эта ссылка недействительна или срок её действия истёк."
+	],
+	"errEnterEmail": [
+		"Bitte geben Sie Ihre E-Mail-Adresse ein.",
+		"Please enter your email address.",
+		"يرجى إدخال عنوان بريدك الإلكتروني.",
+		"请输入您的电子邮箱地址。",
+		"Введите ваш адрес электронной почты."
+	],
+	"errInvalidAddressType": [
+		"Ungültiger Adresstyp.",
+		"Invalid address type.",
+		"نوع العنوان غير صالح.",
+		"无效的地址类型。",
+		"Недопустимый тип адреса."
+	],
+	"errInvalidRequest": [
+		"Ungültige Anfrage.",
+		"Invalid request.",
+		"طلب غير صالح.",
+		"无效的请求。",
+		"Недопустимый запрос."
+	],
+	"errReviewRating": [
+		"Bitte wählen Sie eine Bewertung zwischen 1 und 5 Sternen.",
+		"Please choose a rating between 1 and 5 stars.",
+		"يرجى اختيار تقييم من 1 إلى 5 نجوم.",
+		"请选择1至5星的评分。",
+		"Выберите оценку от 1 до 5 звёзд."
+	]
+}

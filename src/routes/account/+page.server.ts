@@ -7,6 +7,7 @@ import * as auth from '#lib/server/auth.js';
 import type { Gender } from '#lib/types.js';
 import { sendEmailChangeConfirmation } from '#lib/server/functions.js';
 import { withdrawSubscription } from '#lib/server/newsletter.js';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -40,7 +41,7 @@ export const actions: Actions = {
 		const marketingConsent = data.get('marketingConsent') === 'on';
 
 		if (!firstName || !lastName) {
-			return fail(400, { action: 'profile', error: 'Vor- und Nachname sind erforderlich.' });
+			return fail(400, { action: 'profile', error: m.errNameRequired() });
 		}
 
 		await db
@@ -75,18 +76,15 @@ export const actions: Actions = {
 		const confirmPassword = data.get('confirmPassword')?.toString() ?? '';
 
 		if (!currentPassword || !newPassword || !confirmPassword) {
-			return fail(400, { action: 'password', error: 'Alle Felder sind erforderlich.' });
+			return fail(400, { action: 'password', error: m.errFieldsRequired() });
 		}
 
 		if (newPassword.length < 8) {
-			return fail(400, {
-				action: 'password',
-				error: 'Das neue Passwort muss mindestens 8 Zeichen lang sein.'
-			});
+			return fail(400, { action: 'password', error: m.errNewPasswordTooShort() });
 		}
 
 		if (newPassword !== confirmPassword) {
-			return fail(400, { action: 'password', error: 'Die Passwörter stimmen nicht überein.' });
+			return fail(400, { action: 'password', error: m.errPasswordMismatch() });
 		}
 
 		const [credentials] = await db
@@ -96,7 +94,7 @@ export const actions: Actions = {
 
 		const valid = await auth.verifyPassword(currentPassword, credentials.passwordHash);
 		if (!valid) {
-			return fail(401, { action: 'password', error: 'Das aktuelle Passwort ist falsch.' });
+			return fail(401, { action: 'password', error: m.errCurrentPasswordWrong() });
 		}
 
 		const passwordHash = await auth.hashPassword(newPassword);
@@ -116,15 +114,12 @@ export const actions: Actions = {
 		const currentPassword = data.get('currentPassword')?.toString() ?? '';
 
 		if (!newEmail || !currentPassword) {
-			return fail(400, { action: 'email', error: 'Alle Felder sind erforderlich.' });
+			return fail(400, { action: 'email', error: m.errFieldsRequired() });
 		}
 
 		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		if (!emailRegex.test(newEmail)) {
-			return fail(400, {
-				action: 'email',
-				error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
-			});
+			return fail(400, { action: 'email', error: m.errInvalidEmail() });
 		}
 
 		const [customer] = await db
@@ -137,10 +132,7 @@ export const actions: Actions = {
 			.where(eq(customerTable.id, locals.user.id));
 
 		if (newEmail === customer.email) {
-			return fail(400, {
-				action: 'email',
-				error: 'Die neue E-Mail-Adresse ist identisch mit der aktuellen.'
-			});
+			return fail(400, { action: 'email', error: m.errEmailSame() });
 		}
 
 		const [existing] = await db
@@ -149,7 +141,7 @@ export const actions: Actions = {
 			.where(eq(customerTable.email, newEmail));
 
 		if (existing) {
-			return fail(400, { action: 'email', error: 'Diese E-Mail-Adresse ist bereits vergeben.' });
+			return fail(400, { action: 'email', error: m.errEmailTaken() });
 		}
 
 		const [credentials] = await db
@@ -159,7 +151,7 @@ export const actions: Actions = {
 
 		const valid = await auth.verifyPassword(currentPassword, credentials.passwordHash);
 		if (!valid) {
-			return fail(401, { action: 'email', error: 'Das aktuelle Passwort ist falsch.' });
+			return fail(401, { action: 'email', error: m.errCurrentPasswordWrong() });
 		}
 
 		await sendEmailChangeConfirmation(customer.id, newEmail, customer.firstName);

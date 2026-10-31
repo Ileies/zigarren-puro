@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import { authCredentialsTable, customerTable } from '#lib/server/db/schema/index.js';
 import * as auth from '#lib/server/auth.js';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (locals.user) redirect(302, '/');
@@ -17,7 +18,7 @@ export const actions: Actions = {
 		const password = data.get('password')?.toString();
 
 		if (!email || !password) {
-			return fail(400, { email, error: 'E-Mail und Passwort sind erforderlich.' });
+			return fail(400, { email, error: m.errCredentialsRequired() });
 		}
 
 		const [customer] = await db
@@ -26,7 +27,7 @@ export const actions: Actions = {
 			.where(eq(customerTable.email, email));
 
 		if (!customer) {
-			return fail(401, { email, error: 'E-Mail oder Passwort ist falsch.' });
+			return fail(401, { email, error: m.errInvalidCredentials() });
 		}
 
 		const [credentials] = await db
@@ -35,14 +36,14 @@ export const actions: Actions = {
 			.where(eq(authCredentialsTable.customerId, customer.id));
 
 		if (!credentials) {
-			return fail(401, { email, error: 'E-Mail oder Passwort ist falsch.' });
+			return fail(401, { email, error: m.errInvalidCredentials() });
 		}
 
 		if (credentials.lockedUntil && credentials.lockedUntil > new Date()) {
 			const minutes = Math.ceil((credentials.lockedUntil.getTime() - Date.now()) / 60000);
 			return fail(429, {
 				email,
-				error: `Konto gesperrt. Bitte warten Sie noch ${minutes} Minute(n).`
+				error: m.errAccountLocked({ minutes })
 			});
 		}
 
@@ -55,7 +56,7 @@ export const actions: Actions = {
 				.update(authCredentialsTable)
 				.set({ failedAttempts: attempts, lockedUntil, updatedAt: new Date() })
 				.where(eq(authCredentialsTable.customerId, customer.id));
-			return fail(401, { email, error: 'E-Mail oder Passwort ist falsch.' });
+			return fail(401, { email, error: m.errInvalidCredentials() });
 		}
 
 		await db

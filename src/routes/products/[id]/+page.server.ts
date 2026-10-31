@@ -2,6 +2,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import db from '#lib/server/db/index.js';
 import { addToCart } from '#lib/server/cart.js';
+import * as m from '#lib/messages.js';
 import {
 	productTable,
 	producerTable,
@@ -152,9 +153,7 @@ export const actions: Actions = {
 		const body = (data.get('body') as string)?.trim() || null;
 
 		if (!rating || rating < 1 || rating > 5) {
-			return fail(400, {
-				reviewError: 'Bitte wählen Sie eine Bewertung zwischen 1 und 5 Sternen.'
-			});
+			return fail(400, { reviewError: m.errReviewRating() });
 		}
 
 		await db

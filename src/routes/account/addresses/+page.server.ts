@@ -3,6 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { and, eq } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import { addressTable } from '#lib/server/db/schema/index.js';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -29,10 +30,10 @@ export const actions: Actions = {
 		const isDefault = data.get('isDefault') === 'on';
 
 		if (!type || !['shipping', 'billing'].includes(type)) {
-			return fail(400, { error: 'Ungültiger Adresstyp.' });
+			return fail(400, { error: m.errInvalidAddressType() });
 		}
 		if (!street || !city || !country || !postalCode) {
-			return fail(400, { error: 'Bitte füllen Sie alle Pflichtfelder aus.' });
+			return fail(400, { error: m.errRequiredFields() });
 		}
 
 		if (isDefault) {
@@ -67,7 +68,7 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const id = data.get('id')?.toString();
 
-		if (!id) return fail(400, { error: 'Ungültige Anfrage.' });
+		if (!id) return fail(400, { error: m.errInvalidRequest() });
 
 		await db
 			.delete(addressTable)
@@ -83,7 +84,7 @@ export const actions: Actions = {
 		const id = data.get('id')?.toString();
 		const type = data.get('type')?.toString() as 'shipping' | 'billing';
 
-		if (!id || !type) return fail(400, { error: 'Ungültige Anfrage.' });
+		if (!id || !type) return fail(400, { error: m.errInvalidRequest() });
 
 		await db
 			.update(addressTable)

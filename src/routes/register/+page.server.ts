@@ -6,6 +6,7 @@ import { authCredentialsTable, customerTable } from '#lib/server/db/schema/index
 import * as auth from '#lib/server/auth.js';
 import { Gender } from '#lib/types.js';
 import { sendVerificationEmail } from '#lib/server/functions.js';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/');
@@ -37,41 +38,32 @@ export const actions: Actions = {
 		const fields = { email, firstName, lastName, birthDate: birthDateStr, gender, phone };
 
 		if (!email || !password || !firstName || !lastName || !birthDateStr) {
-			return fail(400, { ...fields, error: 'Bitte füllen Sie alle Pflichtfelder aus.' });
+			return fail(400, { ...fields, error: m.errRequiredFields() });
 		}
 
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-			return fail(400, { ...fields, error: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.' });
+			return fail(400, { ...fields, error: m.errInvalidEmail() });
 		}
 
 		if (password.length < 8) {
-			return fail(400, {
-				...fields,
-				error: 'Das Passwort muss mindestens 8 Zeichen lang sein.'
-			});
+			return fail(400, { ...fields, error: m.errPasswordTooShort() });
 		}
 
 		if (password !== passwordConfirm) {
-			return fail(400, { ...fields, error: 'Die Passwörter stimmen nicht überein.' });
+			return fail(400, { ...fields, error: m.errPasswordMismatch() });
 		}
 
 		const birthDate = new Date(birthDateStr);
 		if (isNaN(birthDate.getTime())) {
-			return fail(400, { ...fields, error: 'Ungültiges Geburtsdatum.' });
+			return fail(400, { ...fields, error: m.errInvalidBirthDate() });
 		}
 
 		if (getAge(birthDate) < 18) {
-			return fail(400, {
-				...fields,
-				error: 'Sie müssen mindestens 18 Jahre alt sein, um sich zu registrieren.'
-			});
+			return fail(400, { ...fields, error: m.errRegisterUnderage() });
 		}
 
 		if (!acceptTerms) {
-			return fail(400, {
-				...fields,
-				error: 'Bitte akzeptieren Sie die AGB und Datenschutzerklärung.'
-			});
+			return fail(400, { ...fields, error: m.errAcceptTerms() });
 		}
 
 		const [existing] = await db
@@ -80,7 +72,7 @@ export const actions: Actions = {
 			.where(eq(customerTable.email, email));
 
 		if (existing) {
-			return fail(409, { ...fields, error: 'Diese E-Mail-Adresse ist bereits registriert.' });
+			return fail(409, { ...fields, error: m.errEmailTaken() });
 		}
 
 		const passwordHash = await auth.hashPassword(password);

@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import { customerTable } from '#lib/server/db/schema/index.js';
 import { sendPasswordResetEmail } from '#lib/server/functions.js';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (locals.user) redirect(302, '/');
@@ -15,7 +16,7 @@ export const actions: Actions = {
 		const email = data.get('email')?.toString().trim().toLowerCase();
 
 		if (!email) {
-			return fail(400, { error: 'Bitte geben Sie Ihre E-Mail-Adresse ein.' });
+			return fail(400, { error: m.errEnterEmail() });
 		}
 
 		const [customer] = await db
