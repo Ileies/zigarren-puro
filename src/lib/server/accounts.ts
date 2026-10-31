@@ -45,18 +45,33 @@ export async function authenticate(
 	const address = normaliseEmail(email);
 	if (!address || !password) return { ok: false, error: { code: 'credentialsRequired' } };
 
-	const invalid = { ok: false, error: { code: 'invalidCredentials' } } as const;
-
 	const [customer] = await db
 		.select({ id: customerTable.id, isVerified: customerTable.isVerified })
 		.from(customerTable)
 		.where(eq(customerTable.email, address));
-	if (!customer) return invalid;
+	if (!customer) return { ok: false, error: { code: 'invalidCredentials' } };
+
+	const check = await checkPassword(customer.id, password, now);
+	if (!check.ok) return { ok: false, error: check.error };
+	return { ok: true, customer };
+}
+
+/**
+ * Checks the password of a known customer and keeps the failed-attempt counter and the lock.
+ * Login uses it, and so does every action that asks a signed-in customer for the current
+ * password, so a stolen session cannot be used to guess the password without limit.
+ */
+export async function checkPassword(
+	customerId: string,
+	password: string,
+	now: Date = new Date()
+): Promise<{ ok: true } | { ok: false; error: LoginError }> {
+	const invalid = { ok: false, error: { code: 'invalidCredentials' } } as const;
 
 	const [credentials] = await db
 		.select()
 		.from(authCredentialsTable)
-		.where(eq(authCredentialsTable.customerId, customer.id));
+		.where(eq(authCredentialsTable.customerId, customerId));
 	if (!credentials) return invalid;
 
 	const lockActive = credentials.lockedUntil !== null && credentials.lockedUntil > now;
@@ -73,15 +88,15 @@ export async function authenticate(
 		await db
 			.update(authCredentialsTable)
 			.set({ failedAttempts: attempts, lockedUntil, updatedAt: now })
-			.where(eq(authCredentialsTable.customerId, customer.id));
+			.where(eq(authCredentialsTable.customerId, customerId));
 		return invalid;
 	}
 
 	await db
 		.update(authCredentialsTable)
 		.set({ failedAttempts: 0, lockedUntil: null, updatedAt: now })
-		.where(eq(authCredentialsTable.customerId, customer.id));
-	return { ok: true, customer };
+		.where(eq(authCredentialsTable.customerId, customerId));
+	return { ok: true };
 }
 
 // ─── Registration ────────────────────────────────────────────────────────────

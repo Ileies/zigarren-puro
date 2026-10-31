@@ -208,5 +208,33 @@
 		"يرجى اختيار تقييم من 1 إلى 5 نجوم.",
 		"请选择1至5星的评分。",
 		"Выберите оценку от 1 до 5 звёзд."
+	],
+	"errAddressInUse": [
+		"Diese Adresse gehört zu einer Bestellung und kann nicht gelöscht werden.",
+		"This address belongs to an order and cannot be deleted.",
+		"هذا العنوان مرتبط بطلب ولا يمكن حذفه.",
+		"该地址已用于订单，无法删除。",
+		"Этот адрес указан в заказе, поэтому его нельзя удалить."
+	],
+	"errAddressNotFound": [
+		"Adresse nicht gefunden.",
+		"Address not found.",
+		"لم يتم العثور على العنوان.",
+		"未找到该地址。",
+		"Адрес не найден."
+	],
+	"errProductUnavailable": [
+		"Dieser Artikel ist leider nicht mehr verfügbar.",
+		"Sorry, this item is no longer available.",
+		"عذراً، هذا المنتج لم يعد متوفراً.",
+		"抱歉，该商品已无法购买。",
+		"К сожалению, этот товар больше недоступен."
+	],
+	"errOrderNotFound": [
+		"Bestellung nicht gefunden.",
+		"Order not found.",
+		"لم يتم العثور على الطلب.",
+		"未找到该订单。",
+		"Заказ не найден."
 	]
 }

@@ -1,9 +1,10 @@
-import { redirect } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import db from '#lib/server/db/index.js';
 import { productTable, producerTable, wishlistTable } from '#lib/server/db/schema/index.js';
 import { addToCart } from '#lib/server/cart.js';
 import { and, eq } from 'drizzle-orm';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -49,6 +50,14 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const productId = data.get('productId')?.toString();
 		if (!productId) return;
+
+		const product = await db.query.productTable.findFirst({
+			where: eq(productTable.id, productId),
+			columns: { stock: true }
+		});
+		if (!product || product.stock <= 0) {
+			return fail(409, { error: m.errProductUnavailable() });
+		}
 
 		addToCart(cookies, productId);
 		return { success: true };

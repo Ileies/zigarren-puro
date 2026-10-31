@@ -10,6 +10,7 @@
 	}
 
 	let addedIds = $state<Set<string>>(new Set());
+	let cartError = $state('');
 
 	function markAdded(id: string) {
 		addedIds = new Set([...addedIds, id]);
@@ -48,6 +49,11 @@
 				<a href="/shop" class="btn mt-6 btn-primary">Zum Shop</a>
 			</div>
 		{:else}
+			{#if cartError}
+				<p class="mb-3 rounded-lg bg-error/10 px-4 py-3 text-sm text-error" role="alert">
+					{cartError}
+				</p>
+			{/if}
 			<div class="flex flex-col gap-3">
 				{#each data.items as item (item.productId)}
 					<div
@@ -80,9 +86,14 @@
 								method="POST"
 								action="?/addToCart"
 								use:enhance={() =>
-									({ update }) => {
+									({ result, update }) => {
 										update({ reset: false });
-										markAdded(item.productId);
+										if (result.type === 'success') {
+											cartError = '';
+											markAdded(item.productId);
+										} else if (result.type === 'failure') {
+											cartError = String(result.data?.error ?? '');
+										}
 									}}
 							>
 								<input type="hidden" name="productId" value={item.productId} />

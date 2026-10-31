@@ -3,6 +3,7 @@ import type { PageServerLoad } from './$types';
 import db from '#lib/server/db/index.js';
 import { orderTable } from '#lib/server/db/schema/index.js';
 import { eq } from 'drizzle-orm';
+import * as m from '#lib/messages.js';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -18,7 +19,7 @@ export const load: PageServerLoad = async ({ locals, params }) => {
 		}
 	});
 
-	if (!order || order.customerId !== locals.user.id) error(404, 'Bestellung nicht gefunden');
+	if (!order || order.customerId !== locals.user.id) error(404, m.errOrderNotFound());
 
 	return { order };
 };
