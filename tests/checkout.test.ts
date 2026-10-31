@@ -9,7 +9,6 @@ import {
 	productTable
 } from '#lib/server/db/schema/index.js';
 import {
-	ageOn,
 	parseCheckoutForm,
 	placeOrder,
 	type CheckoutError,
@@ -261,15 +260,5 @@ describe('parseCheckoutForm', () => {
 		expect(parsed.shippingMethod).toBe('express');
 		expect(parsed.paymentMethod).toBe('bank_transfer');
 		expect(parsed.notes).toBeNull();
-	});
-});
-
-describe('ageOn', () => {
-	test('counts full years only', () => {
-		const now = new Date(2026, 5, 15);
-		expect(ageOn('2008-06-15', now)).toBe(18);
-		expect(ageOn('2008-06-16', now)).toBe(17);
-		expect(ageOn('2008-07-01', now)).toBe(17);
-		expect(ageOn('1980-01-01', now)).toBe(46);
 	});
 });

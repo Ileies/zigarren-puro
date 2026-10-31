@@ -1,6 +1,7 @@
 import db from '#lib/server/db/index.js';
 import {
 	addressTable,
+	authCredentialsTable,
 	beverageDetailsTable,
 	cigarDetailsTable,
 	cigarilloDetailsTable,
@@ -11,7 +12,9 @@ import {
 	producerTable,
 	productReviewTable,
 	productTable,
-	toolDetailsTable
+	sessionTable,
+	toolDetailsTable,
+	tokenTable
 } from '#lib/server/db/schema/index.js';
 import { ProductType } from '#lib/types.js';
 
@@ -21,6 +24,9 @@ export async function resetDb() {
 	await db.delete(orderItemTable);
 	await db.delete(orderTable);
 	await db.delete(addressTable);
+	await db.delete(tokenTable);
+	await db.delete(sessionTable);
+	await db.delete(authCredentialsTable);
 	await db.delete(customerTable);
 	await db.delete(cigarDetailsTable);
 	await db.delete(cigarilloDetailsTable);
