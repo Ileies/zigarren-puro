@@ -5,6 +5,7 @@ import {
 	cigarDetailsTable,
 	cigarilloDetailsTable,
 	customerTable,
+	newsletterSubscriberTable,
 	orderItemTable,
 	orderTable,
 	producerTable,
@@ -15,6 +16,7 @@ import {
 import { ProductType } from '#lib/types.js';
 
 export async function resetDb() {
+	await db.delete(newsletterSubscriberTable);
 	await db.delete(productReviewTable);
 	await db.delete(orderItemTable);
 	await db.delete(orderTable);
