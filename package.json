@@ -15,6 +15,7 @@
 		"ui:add": "bun x shadcn-svelte@1.7.1 add",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
+		"test": "bun test",
 		"db:push": "drizzle-kit push"
 	},
 	"devDependencies": {
