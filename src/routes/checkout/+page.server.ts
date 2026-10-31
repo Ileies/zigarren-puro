@@ -5,18 +5,22 @@ import db from '#lib/server/db/index.js';
 import {
 	addressTable,
 	customerTable,
-	orderTable,
-	orderItemTable,
 	productTable,
 	producerTable
 } from '#lib/server/db/schema/index.js';
 import { getCart, setCart } from '#lib/server/cart.js';
 import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '#lib/types.js';
 import { sendOrderConfirmationEmail } from '#lib/server/functions.js';
-import { freeShippingThreshold, shippingCosts } from '#lib/config.js';
-import Stripe from 'stripe';
-import { STRIPE_SECRET_KEY } from '$app/env/private';
-import { PUBLIC_ORIGIN } from '$app/env/public';
+import { InsufficientStockError, createOrderReservingStock } from '#lib/server/orders.js';
+import {
+	bankTransferAvailable,
+	defaultVatRate,
+	freeShippingThreshold,
+	shippingCosts,
+	vatRates
+} from '#lib/config.js';
+import { formatOrderNumber } from '#lib/orderNumber.js';
+import { calculateTax } from '#lib/vat.js';
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
 	if (!locals.user) redirect(302, '/login?redirect=/checkout');
@@ -60,6 +64,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 		items,
 		addresses,
 		customer: customerRows[0] ?? null,
+		bankTransferAvailable,
 		firstName: locals.user.firstName,
 		lastName: locals.user.lastName,
 		email: locals.user.email
@@ -92,11 +97,11 @@ export const actions: Actions = {
 		if (!shippingMethodRaw || !['standard', 'express'].includes(shippingMethodRaw)) {
 			return fail(400, { error: 'Ungültige Versandart.' });
 		}
-		if (!['bank_transfer', 'credit_card'].includes(paymentMethodRaw)) {
+		// Bank transfer is the only payment method until the Mollie integration lands
+		if (paymentMethodRaw !== 'bank_transfer' || !bankTransferAvailable) {
 			return fail(400, { error: 'Ungültige Zahlungsart.' });
 		}
 		const shippingMethodKey = shippingMethodRaw as 'standard' | 'express';
-		const useStripe = paymentMethodRaw === 'credit_card';
 
 		// Age verification
 		const [customer] = await db
@@ -123,7 +128,9 @@ export const actions: Actions = {
 				id: productTable.id,
 				name: productTable.name,
 				price: productTable.price,
-				stock: productTable.stock
+				stock: productTable.stock,
+				sku: productTable.sku,
+				productType: productTable.productType
 			})
 			.from(productTable)
 			.where(inArray(productTable.id, ids));
@@ -211,101 +218,70 @@ export const actions: Actions = {
 			resolvedBillingId = newAddr.id;
 		}
 
-		// Create order
-		const [order] = await db
-			.insert(orderTable)
-			.values({
-				customerId: locals.user.id,
-				orderStatus: OrderStatus.PENDING,
-				paymentStatus: PaymentStatus.PENDING,
-				paymentMethod: useStripe ? PaymentMethod.CREDIT_CARD : PaymentMethod.BANK_TRANSFER,
-				shippingMethod:
-					shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
-				shippingAddressId: resolvedShippingId,
-				billingAddressId: resolvedBillingId,
-				subtotalAmount: subtotal,
-				shippingAmount: shippingCost,
-				taxAmount: 0,
-				totalAmount: total,
-				notes,
-				// placedAt is set by webhook for Stripe; immediately for bank transfer
-				placedAt: useStripe ? null : new Date()
-			})
-			.returning({ id: orderTable.id });
-
-		// Create order items
-		await db.insert(orderItemTable).values(
-			cartItems.map((cartItem) => {
-				const p = products.find((p) => p.id === cartItem.id)!;
-				return {
-					orderId: order.id,
-					productId: cartItem.id,
-					quantity: cartItem.qty,
-					unitPrice: p.price,
-					subtotal: p.price * cartItem.qty
-				};
-			})
+		const orderLines = cartItems.map((cartItem) => {
+			const p = products.find((p) => p.id === cartItem.id)!;
+			return {
+				productId: cartItem.id,
+				name: p.name,
+				sku: p.sku,
+				vatRate: vatRates[p.productType],
+				quantity: cartItem.qty,
+				unitPrice: p.price
+			};
+		});
+		const tax = calculateTax(
+			orderLines.map((l) => ({ gross: l.unitPrice * l.quantity, rate: l.vatRate })),
+			shippingCost,
+			defaultVatRate
 		);
+
+		// Create order, order items and take the stock in one transaction
+		let order: { id: string; orderNumber: number };
+		try {
+			order = createOrderReservingStock(
+				{
+					customerId: locals.user.id,
+					orderStatus: OrderStatus.PENDING,
+					paymentStatus: PaymentStatus.PENDING,
+					paymentMethod: PaymentMethod.BANK_TRANSFER,
+					shippingMethod:
+						shippingMethodKey === 'express' ? ShippingMethod.EXPRESS : ShippingMethod.STANDARD,
+					shippingAddressId: resolvedShippingId,
+					billingAddressId: resolvedBillingId,
+					subtotalAmount: subtotal,
+					shippingAmount: shippingCost,
+					taxAmount: tax.total,
+					totalAmount: total,
+					notes,
+					placedAt: new Date()
+				},
+				orderLines
+			);
+		} catch (err) {
+			if (err instanceof InsufficientStockError) {
+				return fail(400, {
+					error: `"${err.productName}" ist nicht in der gewünschten Menge verfügbar.`
+				});
+			}
+			throw err;
+		}
 
 		setCart(cookies, []);
 
-		if (useStripe) {
-			// Create Stripe Checkout Session
-			const stripe = new Stripe(STRIPE_SECRET_KEY);
-
-			const lineItems = cartItems.map((cartItem) => {
-				const p = products.find((p) => p.id === cartItem.id)!;
-				return {
-					price_data: {
-						currency: 'eur',
-						product_data: { name: p.name },
-						unit_amount: Math.round(p.price * 100)
-					},
-					quantity: cartItem.qty
-				};
-			});
-
-			if (shippingCost > 0) {
-				lineItems.push({
-					price_data: {
-						currency: 'eur',
-						product_data: { name: 'Versandkosten' },
-						unit_amount: Math.round(shippingCost * 100)
-					},
-					quantity: 1
-				});
-			}
-
-			const session = await stripe.checkout.sessions.create({
-				mode: 'payment',
-				ui_mode: 'embedded_page',
-				line_items: lineItems,
-				customer_email: locals.user.email,
-				metadata: { orderId: order.id },
-				return_url: `https://${PUBLIC_ORIGIN}/checkout/confirmation?id=${order.id}`
-			});
-
-			await db
-				.update(orderTable)
-				.set({ stripeSessionId: session.id })
-				.where(eq(orderTable.id, order.id));
-
-			return { clientSecret: session.client_secret!, orderId: order.id };
-		}
-
-		// Bank transfer: send confirmation email and redirect
 		try {
 			await sendOrderConfirmationEmail(
 				locals.user.id,
 				locals.user.email,
 				locals.user.firstName,
 				order.id,
+				formatOrderNumber(order),
 				cartItems.map((item) => {
 					const p = products.find((p) => p.id === item.id)!;
 					return { name: p.name, qty: item.qty, unitPrice: p.price };
 				}),
 				subtotal,
 				shippingCost,
+				tax.total,
 				total,
 				'bank_transfer'
 			);

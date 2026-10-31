@@ -24,6 +24,7 @@ export const load: PageServerLoad = async () => {
 	const recentOrders = await db
 		.select({
 			id: orderTable.id,
+			orderNumber: orderTable.orderNumber,
 			orderStatus: orderTable.orderStatus,
 			paymentStatus: orderTable.paymentStatus,
 			totalAmount: orderTable.totalAmount,

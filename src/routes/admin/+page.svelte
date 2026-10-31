@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatOrderNumber } from '#lib/orderNumber.js';
+
 	let { data } = $props();
 
 	let pendingOrders = $derived(data.orderCounts.find((o) => o.status === 'pending')?.total ?? 0);
@@ -62,7 +64,7 @@
 									href="/admin/orders/{order.id}"
 									class="font-mono text-xs text-zinc-400 hover:text-zinc-800"
 								>
-									{order.id.slice(0, 8)}&hellip;
+									{formatOrderNumber(order)}
 								</a>
 							</td>
 							<td class="px-4 py-2 text-zinc-700">

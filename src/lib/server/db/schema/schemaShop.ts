@@ -1,4 +1,12 @@
-import { integer, sqliteTable, primaryKey, text, real, unique } from 'drizzle-orm/sqlite-core';
+import {
+	integer,
+	sqliteTable,
+	primaryKey,
+	text,
+	real,
+	unique,
+	uniqueIndex
+} from 'drizzle-orm/sqlite-core';
 import { productTable } from './schemaProducts';
 import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
@@ -46,34 +54,40 @@ export const addressTable = sqliteTable('addresses', {
 	isDefault: integer('is_default', { mode: 'boolean' }).default(false).notNull()
 });
 
-export const orderTable = sqliteTable('orders', {
-	id: text('id')
-		.$defaultFn(() => crypto.randomUUID())
-		.primaryKey(),
-	customerId: text('customer_id')
-		.references(() => customerTable.id)
-		.notNull(),
-	orderStatus: text('order_status').notNull().$type<OrderStatus>(),
-	paymentStatus: text('payment_status').notNull().$type<PaymentStatus>(),
-	paymentMethod: text('payment_method').notNull().$type<PaymentMethod>(),
-	shippingMethod: text('shipping_method').notNull().$type<ShippingMethod>(),
-	shippingAddressId: text('shipping_address_id')
-		.references(() => addressTable.id)
-		.notNull(),
-	billingAddressId: text('billing_address_id')
-		.references(() => addressTable.id)
-		.notNull(),
-	subtotalAmount: real('subtotal_amount').notNull(),
-	shippingAmount: real('shipping_amount').notNull(),
-	taxAmount: real('tax_amount').notNull(),
-	totalAmount: real('total_amount').notNull(),
-	notes: text('notes'),
-	stripeSessionId: text('stripe_session_id'),
-	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
-	placedAt: integer('placed_at', { mode: 'timestamp' }),
-	cancelledAt: integer('cancelled_at', { mode: 'timestamp' })
-});
+export const orderTable = sqliteTable(
+	'orders',
+	{
+		id: text('id')
+			.$defaultFn(() => crypto.randomUUID())
+			.primaryKey(),
+		// Sequential, human readable number. Null only for orders created before numbers existed.
+		orderNumber: integer('order_number'),
+		customerId: text('customer_id')
+			.references(() => customerTable.id)
+			.notNull(),
+		orderStatus: text('order_status').notNull().$type<OrderStatus>(),
+		paymentStatus: text('payment_status').notNull().$type<PaymentStatus>(),
+		paymentMethod: text('payment_method').notNull().$type<PaymentMethod>(),
+		shippingMethod: text('shipping_method').notNull().$type<ShippingMethod>(),
+		shippingAddressId: text('shipping_address_id')
+			.references(() => addressTable.id)
+			.notNull(),
+		billingAddressId: text('billing_address_id')
+			.references(() => addressTable.id)
+			.notNull(),
+		subtotalAmount: real('subtotal_amount').notNull(),
+		shippingAmount: real('shipping_amount').notNull(),
+		taxAmount: real('tax_amount').notNull(),
+		totalAmount: real('total_amount').notNull(),
+		notes: text('notes'),
+		stripeSessionId: text('stripe_session_id'),
+		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
+		updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
+		placedAt: integer('placed_at', { mode: 'timestamp' }),
+		cancelledAt: integer('cancelled_at', { mode: 'timestamp' })
+	},
+	(table) => [uniqueIndex('orders_order_number_unique').on(table.orderNumber)]
+);
 
 export const orderItemTable = sqliteTable('order_items', {
 	id: text('id')
@@ -85,6 +99,11 @@ export const orderItemTable = sqliteTable('order_items', {
 	productId: text('product_id')
 		.references(() => productTable.id)
 		.notNull(),
+	// Snapshot of the product at order time, so old orders stay correct after catalogue edits.
+	// Null only for orders created before snapshots existed.
+	productName: text('product_name'),
+	sku: text('sku'),
+	vatRate: real('vat_rate'),
 	quantity: integer('quantity').notNull(),
 	unitPrice: real('unit_price').notNull(),
 	subtotal: real('subtotal').notNull(),

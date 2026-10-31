@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ArrowLeft, MapPin, Package, Truck } from '@lucide/svelte';
+	import { formatOrderNumber } from '#lib/orderNumber.js';
 
 	let { data } = $props();
 
@@ -49,7 +50,7 @@
 </script>
 
 <svelte:head>
-	<title>Bestellung #{order.id.slice(0, 8).toUpperCase()} – Zigarren Puro</title>
+	<title>Bestellung {formatOrderNumber(order)} – Zigarren Puro</title>
 </svelte:head>
 
 <div class="min-h-screen bg-base-200">
@@ -60,7 +61,7 @@
 			</a>
 			<div>
 				<h1 class="text-2xl font-semibold text-base-content">
-					Bestellung <span class="font-mono text-lg">#{order.id.slice(0, 8).toUpperCase()}</span>
+					Bestellung <span class="font-mono text-lg">{formatOrderNumber(order)}</span>
 				</h1>
 				<p class="text-sm text-base-content/60">
 					{new Date(order.createdAt).toLocaleDateString('de-DE', {
@@ -190,8 +191,10 @@
 										href="/products/{item.product.id}"
 										class="transition-colors hover:text-primary"
 									>
-										{item.product.name}
+										{item.productName ?? item.product.name}
 									</a>
+								{:else if item.productName}
+									{item.productName}
 								{:else}
 									<span class="text-base-content/40">Produkt nicht mehr verfügbar</span>
 								{/if}
@@ -223,7 +226,7 @@
 					<span>{Number(order.shippingAmount).toFixed(2)} €</span>
 				</div>
 				<div class="flex justify-between text-base-content/60">
-					<span>MwSt.</span>
+					<span>Enthaltene MwSt.</span>
 					<span>{Number(order.taxAmount).toFixed(2)} €</span>
 				</div>
 				<div

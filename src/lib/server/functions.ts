@@ -260,6 +260,7 @@ function orderConfirmationEmailHtml(
 	items: { name: string; qty: number; unitPrice: number }[],
 	subtotal: number,
 	shippingCost: number,
+	vat: number,
 	total: number,
 	unsubscribeUrl: string,
 	paymentMethod: 'bank_transfer' | 'credit_card' = 'bank_transfer'
@@ -290,7 +291,7 @@ function orderConfirmationEmailHtml(
 
       <div style="background:#f9f7f4;border-radius:4px;padding:16px 20px;margin-bottom:28px">
         <p style="margin:0 4px 0 0;color:#888;font-size:12px;text-transform:uppercase;letter-spacing:1px">Bestellnummer</p>
-        <p style="margin:4px 0 0;color:#1a1a1a;font-size:18px;font-weight:bold;font-family:monospace">#${orderShort}</p>
+        <p style="margin:4px 0 0;color:#1a1a1a;font-size:18px;font-weight:bold;font-family:monospace">${orderShort}</p>
       </div>
 
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px">
@@ -308,6 +309,10 @@ function orderConfirmationEmailHtml(
             <td style="padding:12px 0 0;color:#1a1a1a;font-size:16px;font-weight:bold;border-top:2px solid #e0e0e0">Gesamt</td>
             <td style="padding:12px 0 0;color:#1a1a1a;font-size:16px;font-weight:bold;text-align:right;border-top:2px solid #e0e0e0">${fmt(total)}</td>
           </tr>
+          <tr>
+            <td style="padding:4px 0;color:#888;font-size:12px">Enthaltene MwSt.</td>
+            <td style="padding:4px 0;color:#888;font-size:12px;text-align:right">${fmt(vat)}</td>
+          </tr>
         </tfoot>
       </table>
 
@@ -323,7 +328,7 @@ function orderConfirmationEmailHtml(
           <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>${bankAccount.accountHolder}</strong></td></tr>
           <tr><td style="padding-right:16px;color:#888">IBAN</td><td><strong>${bankAccount.iban}</strong></td></tr>
           <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>${bankAccount.bic}</strong></td></tr>
-          <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>#${orderShort}</strong></td></tr>
+          <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>${orderShort}</strong></td></tr>
         </table>
       </div>`
 					: `
@@ -356,34 +361,36 @@ export async function sendOrderConfirmationEmail(
 	email: string,
 	firstName: string,
 	orderId: string,
+	orderLabel: string,
 	items: { name: string; qty: number; unitPrice: number }[],
 	subtotal: number,
 	shippingCost: number,
+	vat: number,
 	total: number,
 	paymentMethod: 'bank_transfer' | 'credit_card' = 'bank_transfer'
 ): Promise<void> {
-	const orderShort = orderId.slice(0, 8).toUpperCase();
 	const unsubscribeUrl = await generateUnsubscribeLink(customerId);
 
 	await sendMail(
 		{
 			to: email,
-			subject: `Ihre Bestellung #${orderShort} bei Zigarren Puro`,
+			subject: `Ihre Bestellung ${orderLabel} bei Zigarren Puro`,
 			html: orderConfirmationEmailHtml(
 				firstName,
 				orderId,
-				orderShort,
+				orderLabel,
 				items,
 				subtotal,
 				shippingCost,
+				vat,
 				total,
 				unsubscribeUrl,
 				paymentMethod
 			),
 			text:
 				paymentMethod === 'credit_card'
-					? `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nIhre Kartenzahlung wurde erfolgreich verarbeitet.\n\nZigarren Puro`
-					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung #${orderShort} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck #${orderShort}.\n\nZigarren Puro`
+					? `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nIhre Kartenzahlung wurde erfolgreich verarbeitet.\n\nZigarren Puro`
+					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck ${orderLabel}.\n\nZigarren Puro`
 		},
 		customerId
 	);

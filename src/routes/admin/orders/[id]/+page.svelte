@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { formatOrderNumber } from '#lib/orderNumber.js';
 
 	let { data, form } = $props();
 
@@ -43,7 +44,7 @@
 		<a href="/admin/orders" class="text-sm text-zinc-400 hover:text-zinc-700">&larr; Bestellungen</a
 		>
 		<span class="text-zinc-300">/</span>
-		<span class="font-mono text-sm text-zinc-600">{order.id.slice(0, 8)}&hellip;</span>
+		<span class="font-mono text-sm text-zinc-600">{formatOrderNumber(order)}</span>
 	</div>
 
 	{#if form?.success}
@@ -189,7 +190,9 @@
 			<tbody>
 				{#each order.items as item (item.id)}
 					<tr class="border-b border-zinc-50 last:border-0">
-						<td class="px-4 py-3 text-zinc-800">{item.product?.name ?? 'Unbekannt'}</td>
+						<td class="px-4 py-3 text-zinc-800"
+							>{item.productName ?? item.product?.name ?? 'Unbekannt'}</td
+						>
 						<td class="px-4 py-3 text-right text-zinc-600"
 							>{Number(item.unitPrice).toFixed(2)} &euro;</td
 						>
@@ -215,7 +218,7 @@
 				<span>{Number(order.shippingAmount).toFixed(2)} &euro;</span>
 			</div>
 			<div class="flex justify-between text-zinc-500">
-				<span>MwSt.</span>
+				<span>Enthaltene MwSt.</span>
 				<span>{Number(order.taxAmount).toFixed(2)} &euro;</span>
 			</div>
 			<div

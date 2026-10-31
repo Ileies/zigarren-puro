@@ -13,6 +13,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	const orders = await db
 		.select({
 			id: orderTable.id,
+			orderNumber: orderTable.orderNumber,
 			orderStatus: orderTable.orderStatus,
 			paymentStatus: orderTable.paymentStatus,
 			shippingMethod: orderTable.shippingMethod,

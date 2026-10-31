@@ -2,10 +2,11 @@
 	import { CheckCircle, Package, Building2, CreditCard, Truck, ArrowRight } from '@lucide/svelte';
 	import * as m from '#lib/messages.js';
 	import { bankAccount } from '#lib/config.js';
+	import { formatOrderNumber } from '#lib/orderNumber.js';
 
 	let { data } = $props();
 
-	const orderShort = $derived(data.order.id.slice(0, 8).toUpperCase());
+	const orderShort = $derived(formatOrderNumber(data.order));
 	const isCreditCard = $derived(data.order.paymentMethod === 'credit_card');
 
 	function formatPrice(n: string | number) {
@@ -36,7 +37,7 @@
 				<p class="text-xs tracking-wide text-base-content/50 uppercase">
 					{m.checkoutOrderNumber()}
 				</p>
-				<p class="mt-0.5 font-mono text-xl font-bold tracking-wider">#{orderShort}</p>
+				<p class="mt-0.5 font-mono text-xl font-bold tracking-wider">{orderShort}</p>
 			</div>
 			<div class="text-right">
 				<p class="text-xs tracking-wide text-base-content/50 uppercase">Gesamt</p>
@@ -87,7 +88,7 @@
 					</div>
 					<div class="flex justify-between gap-4">
 						<span class="shrink-0 text-base-content/50">Verwendungszweck</span>
-						<span class="font-bold">#{orderShort}</span>
+						<span class="font-bold">{orderShort}</span>
 					</div>
 				</div>
 			</div>

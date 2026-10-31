@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ArrowLeft, Package } from '@lucide/svelte';
+	import { formatOrderNumber } from '#lib/orderNumber.js';
 
 	let { data } = $props();
 
@@ -73,7 +74,7 @@
 							</div>
 							<div>
 								<p class="font-mono text-xs text-base-content/40">
-									#{order.id.slice(0, 8).toUpperCase()}
+									{formatOrderNumber(order)}
 								</p>
 								<p class="mt-0.5 text-sm font-medium text-base-content">
 									{new Date(order.createdAt).toLocaleDateString('de-DE', {

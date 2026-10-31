@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { formatOrderNumber } from '#lib/orderNumber.js';
+
 	let { data } = $props();
 
 	const orderStatusLabels: Record<string, string> = {
@@ -94,7 +96,7 @@
 								href="/admin/orders/{order.id}"
 								class="font-mono text-xs text-zinc-500 hover:text-zinc-900"
 							>
-								{order.id.slice(0, 8)}&hellip;
+								{formatOrderNumber(order)}
 							</a>
 						</td>
 						<td class="px-4 py-3">

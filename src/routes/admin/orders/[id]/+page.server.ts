@@ -4,6 +4,7 @@ import { orderTable } from '#lib/server/db/schema/index.js';
 import { eq } from 'drizzle-orm';
 import { error } from '@sveltejs/kit';
 import { OrderStatus, PaymentStatus } from '#lib/types.js';
+import { InsufficientStockError, applyOrderStatus } from '#lib/server/orders.js';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const order = await db.query.orderTable.findFirst({
@@ -36,15 +37,18 @@ export const actions: Actions = {
 			return { error: 'Ungültiger Status' };
 		}
 
-		const extra: { cancelledAt?: Date } = {};
-		if (orderStatus === OrderStatus.CANCELLED) {
-			extra.cancelledAt = new Date();
+		try {
+			if (!applyOrderStatus(params.id, orderStatus, paymentStatus)) {
+				return { error: 'Bestellung nicht gefunden' };
+			}
+		} catch (err) {
+			if (err instanceof InsufficientStockError) {
+				return {
+					error: `Bestand von "${err.productName}" reicht nicht, um die Bestellung wieder zu aktivieren.`
+				};
+			}
+			throw err;
 		}
-
-		await db
-			.update(orderTable)
-			.set({ orderStatus, paymentStatus, updatedAt: new Date(), ...extra })
-			.where(eq(orderTable.id, params.id));
 
 		return { success: true };
 	}
