@@ -5,8 +5,8 @@
 	"homepage": "https://zigarren-puro.de",
 	"type": "module",
 	"scripts": {
-		"dev": "bun run --bun vite dev",
-		"build": "bun run --bun vite build",
+		"dev": "bun scripts/db-bootstrap.ts && bun run --bun vite dev",
+		"build": "bun scripts/db-bootstrap.ts && bun run --bun vite build",
 		"preview": "bun run --bun vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"deploy": "bun run scripts/deploy.ts",
