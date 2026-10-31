@@ -11,7 +11,11 @@ import {
 import { getCart, setCart } from '#lib/server/cart.js';
 import { OrderStatus, PaymentStatus, PaymentMethod, ShippingMethod } from '#lib/types.js';
 import { sendOrderConfirmationEmail } from '#lib/server/functions.js';
-import { InsufficientStockError, createOrderReservingStock } from '#lib/server/orders.js';
+import {
+	InsufficientStockError,
+	createOrderReservingStock,
+	paymentDeadline
+} from '#lib/server/orders.js';
 import {
 	bankTransferAvailable,
 	defaultVatRate,
@@ -253,7 +257,8 @@ export const actions: Actions = {
 					taxAmount: tax.total,
 					totalAmount: total,
 					notes,
-					placedAt: new Date()
+					placedAt: new Date(),
+					paymentDueAt: paymentDeadline()
 				},
 				orderLines
 			);

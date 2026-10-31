@@ -1,12 +1,18 @@
-import { sequence, type Handle } from '@sveltejs/kit/hooks';
+import { sequence, type Handle, type ServerInit } from '@sveltejs/kit/hooks';
 import { error, isHttpError } from '@sveltejs/kit';
 import * as auth from '#lib/server/auth.js';
+import { startOrderSweep } from '#lib/server/orderSweep.js';
 import { cookieName, getTextDirection, locales, runWithLocale } from '#lib/messages.js';
 import Logger from '#lib/server/Logger.js';
 import db from '#lib/server/db/index.js';
 import { sql } from 'drizzle-orm';
 import { ADMIN_PASSWORD } from '$app/env/private';
 import errorTemplate from './error.html?raw';
+
+// Cancels unpaid orders after their payment deadline so reserved stock does not stay blocked
+export const init: ServerInit = () => {
+	startOrderSweep();
+};
 
 const handleAdmin: Handle = async ({ event, resolve }) => {
 	if (!event.url.pathname.startsWith('/admin')) {

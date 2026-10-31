@@ -2,6 +2,7 @@ import { and, eq, lt, ne, sql, type SQL } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import { orderTable, orderItemTable, productTable } from '#lib/server/db/schema/index.js';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '#lib/types.js';
+import { bankAccount } from '#lib/config.js';
 
 export class InsufficientStockError extends Error {
 	constructor(public productName: string) {
@@ -21,6 +22,11 @@ export type OrderLine = {
 };
 
 export const FIRST_ORDER_NUMBER = 10001;
+
+/** The moment an unpaid bank-transfer order created at `from` expires. */
+export function paymentDeadline(from: Date = new Date()): Date {
+	return new Date(from.getTime() + bankAccount.paymentDeadlineDays * 24 * 60 * 60 * 1000);
+}
 
 function nextOrderNumber(tx: Tx) {
 	const row = tx
@@ -144,6 +150,29 @@ export function expireStaleCardOrders(maxAgeMs: number) {
 }
 
 /**
+ * Cancels every unpaid order whose payment deadline has passed and gives its stock back.
+ * Orders without a deadline are left alone. Returns how many orders were cancelled.
+ */
+export function expireOverdueOrders(now: Date = new Date()): number {
+	const overdue = db
+		.select({ id: orderTable.id })
+		.from(orderTable)
+		.where(
+			and(
+				eq(orderTable.orderStatus, OrderStatus.PENDING),
+				eq(orderTable.paymentStatus, PaymentStatus.PENDING),
+				lt(orderTable.paymentDueAt, now)
+			)
+		)
+		.all();
+	let cancelled = 0;
+	for (const { id } of overdue) {
+		if (cancelUnpaidOrder(eq(orderTable.id, id))) cancelled++;
+	}
+	return cancelled;
+}
+
+/**
  * Applies an admin status change and keeps stock consistent:
  * cancelling returns the stock, reviving a cancelled order takes it again.
  * Throws `InsufficientStockError` when a revived order can no longer be served.
@@ -176,12 +205,16 @@ export function applyOrderStatus(
 			for (const item of items) takeStock(tx, item.productId, item.name, item.quantity);
 		}
 
+		// A revived unpaid order gets a fresh deadline, otherwise the sweep would cancel it again
+		const revivedUnpaid = wasCancelled && !isCancelled && paymentStatus === PaymentStatus.PENDING;
+
 		tx.update(orderTable)
 			.set({
 				orderStatus,
 				paymentStatus,
 				updatedAt: new Date(),
-				...(isCancelled && !wasCancelled ? { cancelledAt: new Date() } : {})
+				...(isCancelled && !wasCancelled ? { cancelledAt: new Date() } : {}),
+				...(revivedUnpaid ? { paymentDueAt: paymentDeadline() } : {})
 			})
 			.where(eq(orderTable.id, orderId))
 			.run();

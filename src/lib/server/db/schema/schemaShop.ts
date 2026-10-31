@@ -82,6 +82,9 @@ export const orderTable = sqliteTable(
 		totalAmount: real('total_amount').notNull(),
 		notes: text('notes'),
 		stripeSessionId: text('stripe_session_id'),
+		// Unpaid orders are cancelled after this moment and their stock is released.
+		// Null for orders created before deadlines existed, the sweep leaves those alone.
+		paymentDueAt: integer('payment_due_at', { mode: 'timestamp' }),
 		createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull(),
 		updatedAt: integer('updated_at', { mode: 'timestamp' }).defaultNow().notNull(),
 		placedAt: integer('placed_at', { mode: 'timestamp' }),
