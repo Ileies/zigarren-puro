@@ -1,7 +1,8 @@
 import type { PageServerLoad } from './$types';
 import db from '#lib/server/db/index.js';
 import { customerTable, orderTable } from '#lib/server/db/schema/index.js';
-import { asc, count, eq, sql } from 'drizzle-orm';
+import { asc, count, eq, or } from 'drizzle-orm';
+import { likeContains } from '#lib/server/like.js';
 
 export const load: PageServerLoad = async ({ url }) => {
 	const search = url.searchParams.get('search')?.trim() ?? '';
@@ -20,9 +21,11 @@ export const load: PageServerLoad = async ({ url }) => {
 		.leftJoin(orderTable, eq(customerTable.id, orderTable.customerId))
 		.where(
 			search
-				? sql`lower(${customerTable.email}) like ${'%' + search.toLowerCase() + '%'}
-				   or lower(${customerTable.firstName}) like ${'%' + search.toLowerCase() + '%'}
-				   or lower(${customerTable.lastName}) like ${'%' + search.toLowerCase() + '%'}`
+				? or(
+						likeContains(customerTable.email, search),
+						likeContains(customerTable.firstName, search),
+						likeContains(customerTable.lastName, search)
+					)
 				: undefined
 		)
 		.groupBy(customerTable.id)

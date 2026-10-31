@@ -1,8 +1,9 @@
 import type { PageServerLoad, Actions } from './$types';
 import db from '#lib/server/db/index.js';
 import { productTable, producerTable } from '#lib/server/db/schema/index.js';
-import { asc, eq, desc, or, like, and } from 'drizzle-orm';
+import { asc, eq, desc, or, and } from 'drizzle-orm';
 import type { SQL } from 'drizzle-orm';
+import { likeContains } from '#lib/server/like.js';
 import type { ProductType } from '#lib/types.js';
 
 export const load: PageServerLoad = async ({ url }) => {
@@ -14,7 +15,10 @@ export const load: PageServerLoad = async ({ url }) => {
 	const conditions: SQL[] = [];
 
 	if (search) {
-		const cond = or(like(productTable.name, `%${search}%`), like(productTable.sku, `%${search}%`));
+		const cond = or(
+			likeContains(productTable.name, search),
+			likeContains(productTable.sku, search)
+		);
 		if (cond) conditions.push(cond);
 	}
 

@@ -1,15 +1,11 @@
 import type { PageServerLoad } from './$types';
 import db from '#lib/server/db/index.js';
 import { productTable, producerTable } from '#lib/server/db/schema/index.js';
-import { asc, desc, eq, sql, or, and } from 'drizzle-orm';
+import { asc, desc, eq, or, and } from 'drizzle-orm';
+import { likeContains } from '#lib/server/like.js';
 import { ProductType } from '#lib/types.js';
 
 const VALID_TYPES = Object.values(ProductType) as string[];
-
-// SQLite has no ILIKE. LIKE is case-insensitive for ASCII only, which is acceptable here.
-function containsPattern(q: string) {
-	return `%${q.replace(/[\\%_]/g, '\\$&')}%`;
-}
 
 export const load: PageServerLoad = async ({ url }) => {
 	const q = url.searchParams.get('q')?.trim() || '';
@@ -35,12 +31,8 @@ export const load: PageServerLoad = async ({ url }) => {
 
 	const conditions = [];
 	if (q) {
-		const pattern = containsPattern(q);
 		conditions.push(
-			or(
-				sql`${productTable.name} like ${pattern} escape '\\'`,
-				sql`${productTable.description} like ${pattern} escape '\\'`
-			)
+			or(likeContains(productTable.name, q), likeContains(productTable.description, q))
 		);
 	}
 	if (activeType) {

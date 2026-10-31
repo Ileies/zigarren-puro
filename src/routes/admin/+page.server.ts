@@ -2,6 +2,7 @@ import type { PageServerLoad } from './$types';
 import db from '#lib/server/db/index.js';
 import { productTable, orderTable, customerTable } from '#lib/server/db/schema/index.js';
 import { count, desc, eq, and, gt, lte } from 'drizzle-orm';
+import { lowStockThreshold } from '#lib/config.js';
 
 export const load: PageServerLoad = async () => {
 	const [{ total: totalProducts }] = await db.select({ total: count() }).from(productTable);
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async () => {
 	const [{ total: lowStock }] = await db
 		.select({ total: count() })
 		.from(productTable)
-		.where(and(gt(productTable.stock, 0), lte(productTable.stock, 4)));
+		.where(and(gt(productTable.stock, 0), lte(productTable.stock, lowStockThreshold)));
 
 	const orderCounts = await db
 		.select({ status: orderTable.orderStatus, total: count() })

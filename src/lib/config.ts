@@ -37,6 +37,9 @@ export const shippingCosts = {
 	express: 12.99 // EUR
 };
 
+/** In the admin, a product with this many units or fewer (but not zero) counts as low on stock. */
+export const lowStockThreshold = 4;
+
 // ─── Bankverbindung ───────────────────────────────────────────────────────────
 
 export const bankAccount = {

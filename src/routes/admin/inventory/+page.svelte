@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
+	import { lowStockThreshold } from '#lib/config.js';
 
 	let { data } = $props();
 
 	const typeLabels: Record<string, string> = {
-		CIGAR: 'Zigarre',
-		CIGARILLO: 'Zigarillo',
-		BEVERAGE: 'Getränk',
-		TOOL: 'Zubehör'
+		cigar: 'Zigarre',
+		cigarillo: 'Zigarillo',
+		beverage: 'Getränk',
+		tool: 'Zubehör'
 	};
 
 	const typeOptions = [
@@ -226,7 +227,11 @@
 				{#each data.products as product (product.id)}
 					<tr
 						class="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50
-						       {product.stock === 0 ? 'bg-red-50' : product.stock <= 4 ? 'bg-amber-50' : ''}"
+						       {product.stock === 0
+							? 'bg-red-50'
+							: product.stock <= lowStockThreshold
+								? 'bg-amber-50'
+								: ''}"
 					>
 						<td class="px-4 py-3 font-medium text-zinc-900">{product.name}</td>
 						<td class="px-4 py-3 text-zinc-500">{product.producerName ?? '-'}</td>
@@ -243,7 +248,7 @@
 									<span class="rounded bg-red-100 px-2 py-1 text-xs font-medium text-red-700"
 										>Ausverkauft</span
 									>
-								{:else if product.stock <= 4}
+								{:else if product.stock <= lowStockThreshold}
 									<span class="rounded bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700"
 										>Gering</span
 									>
@@ -287,7 +292,7 @@
 										class="font-medium tabular-nums hover:underline
 										       {product.stock === 0
 											? 'text-red-600'
-											: product.stock <= 4
+											: product.stock <= lowStockThreshold
 												? 'text-amber-600'
 												: 'text-zinc-800'}"
 										title="Bestand bearbeiten"
