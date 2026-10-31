@@ -42,19 +42,19 @@ It is not launchable yet, for five reasons:
 
 These block or shape work below. Ask early, in this order.
 
-| #   | Question                                                                                                                                                                                                                                                       | Blocks                |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| D1  | **Does Mollie accept this business?** Get written confirmation from Mollie that cigars (including Cuban origin), cigarillos and spirits are approved, and which payment methods are enabled for tobacco. See A1.                                              | All of workstream A   |
-| D2  | **Germany only at launch?** Research recommends yes. Cross-border tobacco distance sales need an authority registration, an age-verification system and destination-country tax. The wireframe itself asks "Versand innerhalb der EU erlaubt???? glaube nein". | Checkout, shipping page |
-| D3  | **Which age-verification method?** Options in B1. This affects cost per order and conversion.                                                                                                                                                                  | Checkout, accounts    |
-| D4  | **Legal review of advertising.** One lawyer review of the planned content: "Sale", "Neuheiten", "Empfehlung der Woche", "Zigarre des Monats", brand carousels, awards, discount banners, promotional newsletters. See B2.                                       | Homepage, header, newsletter |
-| D5  | **Commercial terms:** free-shipping threshold (code says 150 EUR, the wireframe shows 49 EUR copied from another shop), shipping costs, the "3 % discount on whole boxes" from the wireframe, express shipping.                                                  | Cart, checkout, copy  |
-| D6  | **Pack sizes.** Which products are sold as single cigar, 5-pack, box? Who maintains this data and from which source (supplier lists)?                                                                                                                          | Catalogue model       |
-| D7  | **Languages.** The wireframe asks "Chinesisch? Arabisch? Türkisch?". Current locales are DE, EN, AR, CN and RU. Is Turkish wanted? Are all five actually needed for launch, given most pages are German only today?                                              | i18n scope            |
-| D8  | **Out-of-scope product groups from the wireframe:** pipes, pipe tobacco, shisha tobacco, e-cigarettes, gift ideas, sale. Which are in the first release? Research suggests skipping e-cigarettes in phase 1 (extra duties, payment restrictions).             | Catalogue, navigation |
-| D9  | **Loyalty programme** (points, bronze/silver/gold/platinum tiers): launch feature or later? It also touches advertising rules.                                                                                                                                 | Workstream H          |
-| D10 | **Content and imagery:** the wireframe notes "Bilder müssen besorgt werden" for most sections. Who supplies brand logos, product photos (with usage rights) and the humidor photos?                                                                            | Homepage, catalogue   |
-| D11 | **Bank details and company data:** the real IBAN/BIC (still placeholders), VAT ID, register entry for the imprint.                                                                                                                                             | Checkout, legal pages |
+| #   | Question                                                                                                                                                                                                                                                       | Blocks                       |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| D1  | **Does Mollie accept this business?** Get written confirmation from Mollie that cigars (including Cuban origin), cigarillos and spirits are approved, and which payment methods are enabled for tobacco. See A1.                                               | All of workstream A          |
+| D2  | **Germany only at launch?** Research recommends yes. Cross-border tobacco distance sales need an authority registration, an age-verification system and destination-country tax. The wireframe itself asks "Versand innerhalb der EU erlaubt???? glaube nein". | Checkout, shipping page      |
+| D3  | **Which age-verification method?** Options in B1. This affects cost per order and conversion.                                                                                                                                                                  | Checkout, accounts           |
+| D4  | **Legal review of advertising.** One lawyer review of the planned content: "Sale", "Neuheiten", "Empfehlung der Woche", "Zigarre des Monats", brand carousels, awards, discount banners, promotional newsletters. See B2.                                      | Homepage, header, newsletter |
+| D5  | **Commercial terms:** free-shipping threshold (code says 150 EUR, the wireframe shows 49 EUR copied from another shop), shipping costs, the "3 % discount on whole boxes" from the wireframe, express shipping.                                                | Cart, checkout, copy         |
+| D6  | **Pack sizes.** Which products are sold as single cigar, 5-pack, box? Who maintains this data and from which source (supplier lists)?                                                                                                                          | Catalogue model              |
+| D7  | **Languages.** The wireframe asks "Chinesisch? Arabisch? Türkisch?". Current locales are DE, EN, AR, CN and RU. Is Turkish wanted? Are all five actually needed for launch, given most pages are German only today?                                            | i18n scope                   |
+| D8  | **Out-of-scope product groups from the wireframe:** pipes, pipe tobacco, shisha tobacco, e-cigarettes, gift ideas, sale. Which are in the first release? Research suggests skipping e-cigarettes in phase 1 (extra duties, payment restrictions).              | Catalogue, navigation        |
+| D9  | **Loyalty programme** (points, bronze/silver/gold/platinum tiers): launch feature or later? It also touches advertising rules.                                                                                                                                 | Workstream H                 |
+| D10 | **Content and imagery:** the wireframe notes "Bilder müssen besorgt werden" for most sections. Who supplies brand logos, product photos (with usage rights) and the humidor photos?                                                                            | Homepage, catalogue          |
+| D11 | **Bank details and company data:** the real IBAN/BIC (still placeholders), VAT ID, register entry for the imprint.                                                                                                                                             | Checkout, legal pages        |
 
 ---
 
@@ -64,72 +64,72 @@ Source: `_Webshop.pdf`. "Done" means present in the code. It does not mean polis
 
 ### Global elements
 
-| Concept item                                                                                  | State       | Notes                                                                                                                                     |
-| --------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Top service bar (3 % box discount, free shipping threshold, DHL), language switch DE/EN, social icons | Partial     | Language selector and social icons exist. The service line must match real terms (D5).                                                   |
-| Header: logo, search, account, cart widget                                                    | Partial     | Search inputs are not working forms. Some links use unsupported parameters (`?t=`, `?flag=sale`). See B/D workstreams.                    |
-| Main navigation: Zigarren, Zigarillos, Pfeifen & Tabak, Zubehör, Spirituosen, Geschenkidee, Sale, News & Infos | Partial | Cigars, cigarillos, accessories, spirits link to `/shop?type=`. Pipes, gifts and sale point to nothing real. News exists as a static page. |
-| Mega menu (Ebene 1): countries, popular brands, strength, aroma, "Sonstiges"                  | Not started | Currently a flat list.                                                                                                                    |
-| Footer: address, hours, links, awards, 18+ notice, social, payment marks, newsletter          | Done        | Preserved as the visual anchor. Payment marks list methods that are not implemented (Nachnahme, Klarna, SEPA). Update after D1.         |
-| Newsletter block                                                                              | Partial     | Only works for existing customers, no double opt-in. See B4.                                                                              |
-| Trusted Shops / Käuferschutz badge, "Top Shop" seals                                          | Not started | Needs a decision and an account.                                                                                                          |
+| Concept item                                                                                                   | State       | Notes                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Top service bar (3 % box discount, free shipping threshold, DHL), language switch DE/EN, social icons          | Partial     | Language selector and social icons exist. The service line must match real terms (D5).                                                     |
+| Header: logo, search, account, cart widget                                                                     | Partial     | Search inputs are not working forms. Some links use unsupported parameters (`?t=`, `?flag=sale`). See B/D workstreams.                     |
+| Main navigation: Zigarren, Zigarillos, Pfeifen & Tabak, Zubehör, Spirituosen, Geschenkidee, Sale, News & Infos | Partial     | Cigars, cigarillos, accessories, spirits link to `/shop?type=`. Pipes, gifts and sale point to nothing real. News exists as a static page. |
+| Mega menu (Ebene 1): countries, popular brands, strength, aroma, "Sonstiges"                                   | Not started | Currently a flat list.                                                                                                                     |
+| Footer: address, hours, links, awards, 18+ notice, social, payment marks, newsletter                           | Done        | Preserved as the visual anchor. Payment marks list methods that are not implemented (Nachnahme, Klarna, SEPA). Update after D1.            |
+| Newsletter block                                                                                               | Partial     | Guests and customers subscribe with a double opt-in. No send mechanism yet, copy still promotional. See B4.                                |
+| Trusted Shops / Käuferschutz badge, "Top Shop" seals                                                           | Not started | Needs a decision and an account.                                                                                                           |
 
 ### Homepage
 
-| Concept item                                                                  | State       | Notes                                                                                                                                         |
-| ----------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Dynamic rotating banner with link to product ("Mehr Info")                    | Partial     | A gallery carousel exists. Content is static assets. The design direction recommends removing automatic carousels, and B2 may restrict banners. |
-| Brand strip (Rocky Patel, Flor de Copan, Macanudo, ...)                       | Done        | `AllBrandsCarousel` with 27 logos. Links to working brand pages are missing (no brand pages yet).                                             |
-| Featured tiles (Vegafina, Kubanische Zigarren, Kubanische Zigarillos)         | Partial     | `FeaturedBrands` exists. Destinations are not real catalogue filters.                                                                         |
-| Partner logos (Davidoff, Laura Chavin, John Aylesbury, Capitol, Arnold André, Flor de Copan) | Partial | Partly covered by the brand carousel.                                                                                                         |
-| Pipes, cigars, pipe tobacco, accessories tiles, "Empfehlung der Woche"        | Not started | `Recommendations.svelte` uses hardcoded products. Needs real catalogue data and a legal check (B2).                                          |
-| Neuheiten, Zigarre des Monats, Zigarillo des Monats, Zigarren-Sampler tiles   | Not started | Needs curation workflow in admin.                                                                                                             |
-| Workshops, "Zigarrendreher auf Ihrer Veranstaltung", Tastings                 | Partial     | `/tastings` and the `Tasting` component exist. No booking or enquiry flow.                                                                    |
-| Whisky, Rum, Gin tiles                                                        | Partial     | `Spirits.svelte` exists. Beverage types in the schema: wine, whiskey, rum, cognac, vodka. No gin.                                             |
-| Walk-in humidor story, store address and hours                                | Partial     | Exists in `about` and footer. Real photography needed (D10).                                                                                  |
+| Concept item                                                                                 | State       | Notes                                                                                                                                           |
+| -------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Dynamic rotating banner with link to product ("Mehr Info")                                   | Partial     | A gallery carousel exists. Content is static assets. The design direction recommends removing automatic carousels, and B2 may restrict banners. |
+| Brand strip (Rocky Patel, Flor de Copan, Macanudo, ...)                                      | Done        | `AllBrandsCarousel` with 27 logos. Links to working brand pages are missing (no brand pages yet).                                               |
+| Featured tiles (Vegafina, Kubanische Zigarren, Kubanische Zigarillos)                        | Partial     | `FeaturedBrands` exists. Destinations are not real catalogue filters.                                                                           |
+| Partner logos (Davidoff, Laura Chavin, John Aylesbury, Capitol, Arnold André, Flor de Copan) | Partial     | Partly covered by the brand carousel.                                                                                                           |
+| Pipes, cigars, pipe tobacco, accessories tiles, "Empfehlung der Woche"                       | Not started | `Recommendations.svelte` uses hardcoded products. Needs real catalogue data and a legal check (B2).                                             |
+| Neuheiten, Zigarre des Monats, Zigarillo des Monats, Zigarren-Sampler tiles                  | Not started | Needs curation workflow in admin.                                                                                                               |
+| Workshops, "Zigarrendreher auf Ihrer Veranstaltung", Tastings                                | Partial     | `/tastings` and the `Tasting` component exist. No booking or enquiry flow.                                                                      |
+| Whisky, Rum, Gin tiles                                                                       | Partial     | `Spirits.svelte` exists. Beverage types in the schema: wine, whiskey, rum, cognac, vodka. No gin.                                               |
+| Walk-in humidor story, store address and hours                                               | Partial     | Exists in `about` and footer. Real photography needed (D10).                                                                                    |
 
 ### Category and origin pages (Ebene 1 and 2)
 
-| Concept item                                                                                          | State       | Notes                                                                                   |
-| ----------------------------------------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------- |
-| Category landing with SEO text and sidebar of origin countries (Kuba, Dom. Rep., Honduras, Nicaragua, Peru, Costa Rica, Mexiko, Brasilien/Sumatra, Niederlande) | Not started | `/shop` is one flat page with a type filter. |
-| Origin landing pages with intro text, flags, brand list                                               | Not started | Needs origin as a first-class, filterable attribute (it is stored per cigar today).     |
-| Filters: Format, Preis, Stärke, Aroma, Hersteller, Herkunft, Ringmaß, Durchmesser, Länge, Rauchdauer, weitere Eigenschaften, Bewertung | Not started | Only type and sort exist. Schema lacks aroma, smoking time and format. See workstream C. |
-| Sorting                                                                                               | Partial     | Name and price only.                                                                    |
-| Pagination                                                                                            | Not started | The whole catalogue is loaded at once.                                                  |
-| Strength classes: Sehr mild, Mild, Mittelkräftig, Stark                                               | Partial     | Schema has three values (mild, medium, full). The customer wants four, and competitors use more. |
-| Aroma classes: aromatisierte vs. naturbelassene Zigarillos                                            | Not started | `filterType` is about filters, not flavouring. A flavoured flag is missing.             |
-| Plain "Zigarillos" category, with "Was ist anders als bei Zigarren?" content                          | Partial     | Product type exists. Content is not written.                                            |
+| Concept item                                                                                                                                                    | State       | Notes                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------ |
+| Category landing with SEO text and sidebar of origin countries (Kuba, Dom. Rep., Honduras, Nicaragua, Peru, Costa Rica, Mexiko, Brasilien/Sumatra, Niederlande) | Not started | `/shop` is one flat page with a type filter.                                                     |
+| Origin landing pages with intro text, flags, brand list                                                                                                         | Not started | Needs origin as a first-class, filterable attribute (it is stored per cigar today).              |
+| Filters: Format, Preis, Stärke, Aroma, Hersteller, Herkunft, Ringmaß, Durchmesser, Länge, Rauchdauer, weitere Eigenschaften, Bewertung                          | Not started | Only type and sort exist. Schema lacks aroma, smoking time and format. See workstream C.         |
+| Sorting                                                                                                                                                         | Partial     | Name and price only.                                                                             |
+| Pagination                                                                                                                                                      | Not started | The whole catalogue is loaded at once.                                                           |
+| Strength classes: Sehr mild, Mild, Mittelkräftig, Stark                                                                                                         | Partial     | Schema has three values (mild, medium, full). The customer wants four, and competitors use more. |
+| Aroma classes: aromatisierte vs. naturbelassene Zigarillos                                                                                                      | Not started | `filterType` is about filters, not flavouring. A flavoured flag is missing.                      |
+| Plain "Zigarillos" category, with "Was ist anders als bei Zigarren?" content                                                                                    | Partial     | Product type exists. Content is not written.                                                     |
 
 ### Product listing cards and product page (Ebene 3)
 
-| Concept item                                                                                       | State       | Notes                                                                                           |
-| -------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------- |
-| Card: image, brand, name, rating, strength/aroma scales, length, ring gauge, price                 | Not started | Cards show a package icon, name, producer, price and stock badge only.                          |
-| Several pack sizes per product (single, 5-pack, box) with price, quantity field, stock per size    | Not started | One price and one stock per product. See C2.                                                    |
-| "In den Warenkorb" disabled until a quantity is entered; sold out greyed out                       | Partial     | Sold out is handled. No per-size quantity.                                                      |
-| Sale and "neu" corner ribbons                                                                      | Not started | Needs legal clearance (B2). Price-reduction labels also need the 30-day lowest price (PAngV §11). |
-| Product page: gallery, description, "Teilen", zoom                                                 | Partial     | One image, no gallery, no zoom, no share.                                                       |
-| Info block: Deckblatt/Umblatt/Einlage origin, filler type, hand made, flavoured, box-pressed, manufacturer taste notes | Partial | Only origin, length, ring gauge, strength, wrapper, ageing exist.                               |
-| Customer aroma ratings (average per aroma) and sub-ratings (Verarbeitung, Abbrand, Zugwiderstand, Rauchvolumen, Intensität, Aroma) | Not started | Reviews have one star rating, a title and a body. |
-| Customer "Fazit" text                                                                              | Done        | Review title and body.                                                                          |
-| "Produkte mit ähnlichem Aroma anzeigen"                                                            | Not started | Needs aroma data.                                                                               |
-| Wishlist ("Zigarren im Humidor speichern für zukünftige Bestellungen")                              | Partial     | Wishlist exists. No humidor concept, no "reorder" shortcuts.                                    |
-| Spirits product page with "Über [Marke]" brand story and "Kunden kauften auch"                     | Not started | Producer has a description. No brand page, no cross-sell.                                       |
-| "Product not available? Tell us, we will search for it"                                            | Not started | Easy win. See E7.                                                                               |
-| Trust block: free shipping, dispatch next day, secure packaging, "all goods taxed and shipped within the EU" | Not started | The last claim conflicts with D2. Do not publish it as drawn.                                  |
+| Concept item                                                                                                                       | State       | Notes                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------- |
+| Card: image, brand, name, rating, strength/aroma scales, length, ring gauge, price                                                 | Not started | Cards show a package icon, name, producer, price and stock badge only.                            |
+| Several pack sizes per product (single, 5-pack, box) with price, quantity field, stock per size                                    | Not started | One price and one stock per product. See C2.                                                      |
+| "In den Warenkorb" disabled until a quantity is entered; sold out greyed out                                                       | Partial     | Sold out is handled. No per-size quantity.                                                        |
+| Sale and "neu" corner ribbons                                                                                                      | Not started | Needs legal clearance (B2). Price-reduction labels also need the 30-day lowest price (PAngV §11). |
+| Product page: gallery, description, "Teilen", zoom                                                                                 | Partial     | One image, no gallery, no zoom, no share.                                                         |
+| Info block: Deckblatt/Umblatt/Einlage origin, filler type, hand made, flavoured, box-pressed, manufacturer taste notes             | Partial     | Only origin, length, ring gauge, strength, wrapper, ageing exist.                                 |
+| Customer aroma ratings (average per aroma) and sub-ratings (Verarbeitung, Abbrand, Zugwiderstand, Rauchvolumen, Intensität, Aroma) | Not started | Reviews have one star rating, a title and a body.                                                 |
+| Customer "Fazit" text                                                                                                              | Done        | Review title and body.                                                                            |
+| "Produkte mit ähnlichem Aroma anzeigen"                                                                                            | Not started | Needs aroma data.                                                                                 |
+| Wishlist ("Zigarren im Humidor speichern für zukünftige Bestellungen")                                                             | Partial     | Wishlist exists. No humidor concept, no "reorder" shortcuts.                                      |
+| Spirits product page with "Über [Marke]" brand story and "Kunden kauften auch"                                                     | Not started | Producer has a description. No brand page, no cross-sell.                                         |
+| "Product not available? Tell us, we will search for it"                                                                            | Not started | Easy win. See E7.                                                                                 |
+| Trust block: free shipping, dispatch next day, secure packaging, "all goods taxed and shipped within the EU"                       | Not started | The last claim conflicts with D2. Do not publish it as drawn.                                     |
 
 ### Account, loyalty, other
 
-| Concept item                                                   | State       | Notes                                                                      |
-| -------------------------------------------------------------- | ----------- | -------------------------------------------------------------------------- |
-| Account, orders, addresses, wishlist                           | Done        | Account area exists.                                                       |
-| Cart                                                           | Done        | Cookie-based.                                                              |
-| No PayPal for tobacco and Cuban goods                          | Done        | PayPal is not offered. Keep it that way.                                   |
-| Points programme with membership levels (bronze to platinum, "VIP-Lounge") | Not started | See H1 and D9.                                                             |
-| "Zigarre des Jahres" and Cigar Journal partner block           | Not started | Editorial block, needs rights to the imagery.                              |
-| Pipes, Pfeifenzubehör, Shisha                                  | Not started | See D8.                                                                    |
-| Age notice "Ab 18" on products                                 | Partial     | Footer notice and registration check exist. No per-product warning.        |
+| Concept item                                                               | State       | Notes                                                               |
+| -------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------- |
+| Account, orders, addresses, wishlist                                       | Done        | Account area exists.                                                |
+| Cart                                                                       | Done        | Cookie-based.                                                       |
+| No PayPal for tobacco and Cuban goods                                      | Done        | PayPal is not offered. Keep it that way.                            |
+| Points programme with membership levels (bronze to platinum, "VIP-Lounge") | Not started | See H1 and D9.                                                      |
+| "Zigarre des Jahres" and Cigar Journal partner block                       | Not started | Editorial block, needs rights to the imagery.                       |
+| Pipes, Pfeifenzubehör, Shisha                                              | Not started | See D8.                                                             |
+| Age notice "Ab 18" on products                                             | Partial     | Footer notice and registration check exist. No per-product warning. |
 
 ---
 
@@ -149,7 +149,7 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 - [ ] **P1 Checkout hardcodes `country: 'DE'`** for new addresses, while `/shipping` advertises EU delivery with transit times and carriers. Align after D2.
 - [ ] **P1 Payment marks in the footer** list Nachnahme, Klarna and SEPA, which are not implemented. Show only enabled methods.
 - [ ] **P1 Header and nav links point to nothing:** `/search?t=pipes+tobacco`, `/search?t=gifts`, `/search?flag=sale`. Remove or implement. The existing migration plan already says this.
-- [ ] **P1 Newsletter subscription silently does nothing for guests.** The form reports success for any valid email but only updates existing customers. See B4.
+- [x] **P1 Newsletter subscription silently does nothing for guests.** Guests can now subscribe with a double opt-in (new `newsletter_subscribers` table, confirmation mail, working unsubscribe link). The footer form also shows an error for an invalid address instead of a false success. Still open: see B4.
 - [ ] **P2 Admin dashboard and tables are German only and DaisyUI based.** Acceptable for staff, but note it for workstream D.
 - [ ] **P2 Repo hygiene:** `TODO.md` moved to `docs/TODO.md` (uncommitted), while `CLAUDE.md` still links `./TODO.md`. `README.md` and `CLAUDE.md` still mention Stripe, and so do `docs/TODO.md` and `docs/ui-migration-plan.md`. Update them in one pass (section 8).
 - [ ] **P1 No online payment path.** Stripe is removed and bank transfer is gated on the real IBAN (D11), so checkout currently shows a "not possible yet" notice and the submit button is disabled. Going live needs either the real IBAN (bank transfer only) or the Mollie integration (workstream A).
@@ -175,6 +175,16 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 - The VAT rates (19 %) are an assumption until the tax adviser confirms them. Prices are treated as gross, so the order total did not change, only the VAT part that is stored and shown ("Enthaltene MwSt." on the order pages and in the email).
 - Not done in Milestone 1: **variants and detail extensions (step 4, C2)** are waiting for D6 (which pack sizes exist) and the strength scale decision, and they break cart cookies, orders and the admin forms. The **catalogue import (step 5, C1)** is waiting for the customer's product list, and its CSV format depends on the variant model, so it should follow step 4. **Generated migrations** are still open (workstream I), and need a baseline for the existing live database before the variants change.
 - Tests: 42 in total, adding VAT maths, order numbers, snapshots and the seed (including that every seeded product opens on its product page). The checkout `placeOrder` action itself is still untested, because it imports SvelteKit-only modules (see the coverage task above).
+
+**Milestone 2 implementation notes (2026-10-31), newsletter double opt-in (B4):**
+
+- Done: `newsletter_subscribers` table, `src/lib/server/newsletter.ts` (request, confirm, unsubscribe, withdraw), confirmation and welcome emails, `/newsletter/confirm` page, subscriber fallback on `/unsubscribe`, and a footer error state. Messages `newsletterSuccess` (now asks to confirm) and `newsletterError` are in all five languages. The `List-Unsubscribe` header set by a caller is no longer overwritten by `sendMail`.
+- **Schema change, apply with `db:push`:** one new table, `newsletter_subscribers`. No existing table changes.
+- Behaviour: the form answers the same way for new, pending and confirmed addresses, so it does not reveal who subscribed. A repeated request inside 10 minutes sends nothing, a later one sends a fresh link and voids the old one. Links last 48 hours. Opening the confirmation link only shows a page, a button press confirms, so mail scanners cannot subscribe anyone. Confirming also turns on `marketingConsent` for a customer with the same email, and every unsubscribe path turns it off.
+- Not done: the open items under B4 (content decision, send mechanism, admin view, rate limiting, retention). The existing `unsubscribe` page still unsubscribes on a plain GET, which a link scanner can trigger. Revisit it together with the send mechanism.
+- Not done in this chunk: the **unpaid-order expiry and scheduled sweep** (section 4) and **age verification (B1)**. The sweep is independent of Mollie but needs the payment deadline decision, B1 needs D3.
+- Tests: 52 in total, ten new ones in `tests/newsletter.test.ts` (confirmation, cooldown, expiry, single use, customer consent sync, unsubscribe, re-subscribe). The two server actions import SvelteKit-only modules and are not covered by `bun test`.
+- Lint: `bun run lint` fails on two things that were already there, `scripts/entry.cjs` (`require` imports) and Prettier formatting of this document before this change. The document is now formatted.
 
 ---
 
@@ -270,10 +280,14 @@ Everything here comes from desk research and is not legal advice. Items marked "
 
 **B4. Newsletter.**
 
-- [ ] Add a `newsletter_subscribers` table (email, status, consent timestamp, confirmation token, language). Guests must be able to subscribe.
-- [ ] Double opt-in email, working unsubscribe link for subscribers without an account, and recorded consent.
-- [ ] Decide what the newsletter may contain (B2). Product promotions may be restricted. Service, store and event information is the safer content.
-- [ ] Create a send mechanism (export to a mail tool, or a simple admin broadcast). The customer wireframe asks for a newsletter "Zigarrenpost".
+- [x] Add a `newsletter_subscribers` table (email, status, consent timestamp, confirmation token, language). Guests can subscribe.
+- [x] Double opt-in email, working unsubscribe link for subscribers without an account, and recorded consent (`confirmed_at`). Logic in `src/lib/server/newsletter.ts`, confirm page at `/newsletter/confirm`.
+- [ ] Decide what the newsletter may contain (B2). Product promotions may be restricted. Service, store and event information is the safer content. Until then the new emails are neutral, but the footer text (`newsletterDesc`) and the `/news` and `/tastings` call-outs still promise "exklusive Angebote und Neuheiten".
+- [ ] Create a send mechanism (export to a mail tool, or a simple admin broadcast). The customer wireframe asks for a newsletter "Zigarrenpost". It has to combine confirmed rows of `newsletter_subscribers` with customers whose `marketingConsent` is on, and skip duplicates by email.
+- [ ] Admin view and CSV export of subscribers (status, confirmed date), so consent can be shown on request.
+- [ ] Consent given through the registration checkbox or the account page has no double opt-in. It rests on the verified account email, which a lawyer should confirm (D4). Switching an account flag off also unsubscribes the matching subscriber row, switching it on does not create one.
+- [ ] Rate limiting for the subscribe form (only a 10 minute resend cooldown per address exists), see workstream I.
+- [ ] Delete pending rows that were never confirmed after a retention period, and add the newsletter to the privacy policy processor and retention text.
 
 ### C. Catalogue data model, import and curation
 
@@ -409,7 +423,7 @@ Not repeated here, but adjusted by this document:
 
 ### I. Quality, security and operations
 
-- [ ] **Automated tests:** `bun test` exists with 42 tests (see `tests/` and section 4). Extend it per the coverage task in section 4, add webhook-mapping tests when Mollie lands, and add Playwright for the purchase path (search, product, cart, checkout in Mollie test mode).
+- [ ] **Automated tests:** `bun test` exists with 52 tests (see `tests/` and section 4). Extend it per the coverage task in section 4, add webhook-mapping tests when Mollie lands, and add Playwright for the purchase path (search, product, cart, checkout in Mollie test mode).
 - [ ] **CI:** run `bun run check`, `bun run lint`, tests and `bun run build` on every push.
 - [ ] **Backups:** the SQLite file lives on the server (`data/` and `local.db` are excluded from deploy cleanup). Add scheduled, tested backups with off-server copies and a restore drill. Order data is business-critical.
 - [ ] **Migrations:** the project uses `drizzle-kit push` against the live database. Move to generated migrations before the variants change in C2, so changes are reviewable and reversible.
