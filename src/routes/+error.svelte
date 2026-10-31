@@ -5,6 +5,9 @@
 
 	const isServerError = $derived(page.status >= 500);
 	const copy = $derived.by(() => {
+		if (page.error?.code === 'DATABASE_UNAVAILABLE') {
+			return { title: m.errorDatabaseTitle(), description: m.errorDatabaseDescription() };
+		}
 		switch (page.status) {
 			case 401:
 				return { title: m.errorUnauthorizedTitle(), description: m.errorUnauthorizedDescription() };

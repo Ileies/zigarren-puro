@@ -57,11 +57,14 @@ export default class Logger {
 			data: data || null // Ensure data is null if undefined
 		};
 
-		// Save the log to the database
-		await db.insert(logTable).values(logEntry);
-
 		// Format and output the log to the console
 		const formattedDate = logEntry.createdAt.toISOString();
-		console.log(`[${formattedDate}] [${type.toUpperCase()}]: ${message}`);
+		const output = type === LogLevel.ERROR ? console.error : console.log;
+		output(`[${formattedDate}] [${type.toUpperCase()}]: ${message}`, data ?? '');
+		try {
+			await db.insert(logTable).values(logEntry);
+		} catch (error) {
+			console.error('[Logger] Could not persist log; console entry retained.', String(error));
+		}
 	}
 }

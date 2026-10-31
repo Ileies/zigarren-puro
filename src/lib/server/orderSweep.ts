@@ -1,6 +1,8 @@
 import { claimPaymentReminders, expireOverdueOrders, loadOrderNotice } from '#lib/server/orders.js';
 import { sendOrderCancelledEmail, sendPaymentReminderEmail } from '#lib/server/functions.js';
 import Logger from '#lib/server/Logger.js';
+import { checkDatabase, databasePath } from '#lib/server/db/index.js';
+import { databaseFailure, databaseDiagnostic } from '#lib/server/db/errors.js';
 
 export const SWEEP_INTERVAL_MS = 15 * 60 * 1000;
 
@@ -24,6 +26,7 @@ async function notify(
 
 async function sweep() {
 	try {
+		checkDatabase();
 		// Cancel first, so an order that just expired is not reminded as well
 		const cancelled = expireOverdueOrders();
 		const reminded = claimPaymentReminders();
@@ -36,7 +39,11 @@ async function sweep() {
 		await notify(cancelled, sendOrderCancelledEmail);
 		await notify(reminded, sendPaymentReminderEmail);
 	} catch (error) {
-		console.error('Order sweep failed', error);
+		await Logger.error(databaseFailure(error) ? databaseDiagnostic(error) : 'Order sweep failed', {
+			operation: 'order sweep',
+			path: databasePath,
+			error: String(error)
+		});
 	}
 }
 

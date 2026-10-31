@@ -4,8 +4,9 @@ import * as auth from '#lib/server/auth.js';
 import { startOrderSweep } from '#lib/server/orderSweep.js';
 import { cookieName, getTextDirection, locales, runWithLocale } from '#lib/messages.js';
 import Logger from '#lib/server/Logger.js';
-import db from '#lib/server/db/index.js';
-import { sql } from 'drizzle-orm';
+import { checkDatabase, databasePath } from '#lib/server/db/index.js';
+import { databaseFailure, databaseDiagnostic } from '#lib/server/db/errors.js';
+import * as m from '#lib/messages.js';
 import { ADMIN_PASSWORD } from '$app/env/private';
 import errorTemplate from './error.html?raw';
 
@@ -62,21 +63,25 @@ const handleChecks: Handle = async ({ event, resolve }) => {
 	console.log(new Date().toISOString(), event.url.href);
 
 	try {
-		db.run(sql`select 1`);
+		checkDatabase();
 		event.locals.dbOffline = false;
-	} catch {
+	} catch (cause) {
 		event.locals.dbOffline = true;
-		try {
-			await Logger.error('Database is offline.');
-		} catch {
-			console.error('Database is offline (logger also unavailable).');
-		}
+		await Logger.error(databaseDiagnostic(cause), { path: databasePath, error: String(cause) });
+		return databaseUnavailable(event);
 	}
 
 	const userAgent = event.request.headers.get('user-agent') || '';
 	event.locals.isDesktop = !/mobile/i.test(userAgent);
 
-	return resolve(event);
+	try {
+		const response = await resolve(event);
+		return event.locals.dbOffline ? databaseUnavailable(event) : response;
+	} catch (cause) {
+		if (!databaseFailure(cause)) throw cause;
+		await Logger.error(databaseDiagnostic(cause), { path: databasePath, error: String(cause) });
+		return databaseUnavailable(event);
+	}
 };
 
 const handleAuth: Handle = async ({ event, resolve }) => {
@@ -115,6 +120,32 @@ const handleLocale: Handle = ({ event, resolve }) => {
 
 export const handle: Handle = sequence(handleAdmin, handleChecks, handleAuth, handleLocale);
 
+function databaseUnavailable(event: import('@sveltejs/kit').RequestEvent) {
+	const raw = event.cookies.get(cookieName) ?? 'de';
+	const locale = (locales as readonly string[]).includes(raw) ? raw : 'de';
+	return runWithLocale(locale, () => {
+		const message = m.errorDatabaseDescription();
+		const headers = { 'Retry-After': '60', 'Cache-Control': 'no-store' };
+		if (event.isDataRequest || event.request.headers.get('accept')?.includes('application/json')) {
+			return Response.json(
+				{ type: 'error', status: 503, error: { message, code: 'DATABASE_UNAVAILABLE' } },
+				{ status: 503, headers }
+			);
+		}
+		return new Response(
+			errorTemplate
+				.replaceAll('%sveltekit.status%', '503')
+				.replace('<html lang="de">', `<html lang="${locale}" dir="${getTextDirection(locale)}">`)
+				.replace('Diese Seite ist gerade nicht erreichbar.', m.errorDatabaseTitle())
+				.replace(
+					/<p class="description">[\s\S]*?<\/p>/,
+					() => `<p class="description">${message}</p>`
+				),
+			{ status: 503, headers: { ...headers, 'Content-Type': 'text/html; charset=utf-8' } }
+		);
+	});
+}
+
 export const handleError = ({
 	error,
 	event
@@ -124,14 +155,21 @@ export const handleError = ({
 }) => {
 	const expected = isHttpError(error);
 	const status = expected ? (error as { status: number }).status : 500;
-	const message = expected
-		? error.body.message
-		: error instanceof Error
-			? error.message
-			: String(error);
+	const failure = databaseFailure(error);
+	if (failure) event.locals.dbOffline = true;
+	const message = failure
+		? m.errorDatabaseDescription()
+		: expected
+			? error.body.message
+			: m.errorServerDescription();
 	const stack = error instanceof Error ? error.stack : undefined;
 	if (!expected || status >= 500) {
-		console.error(`[${status}] ${event.url.pathname}`, stack ?? message);
+		void Logger.error(failure ? databaseDiagnostic(error) : 'Request failed', {
+			status,
+			path: event.url.pathname,
+			databasePath: failure ? databasePath : undefined,
+			error: stack ?? String(error)
+		});
 	}
-	return { message };
+	return { message, ...(failure ? { code: 'DATABASE_UNAVAILABLE' } : {}) };
 };

@@ -1,4 +1,18 @@
 {
+	"errorDatabaseTitle": [
+		"Datenbank vorübergehend nicht erreichbar.",
+		"Database temporarily unavailable.",
+		"قاعدة البيانات غير متاحة مؤقتاً.",
+		"数据库暂时无法访问。",
+		"База данных временно недоступна."
+	],
+	"errorDatabaseDescription": [
+		"Unsere Datenbank ist derzeit nicht verfügbar oder kann nicht korrekt gelesen werden. Bitte versuchen Sie es später erneut. Bei anhaltenden Problemen kontaktieren Sie uns bitte.",
+		"Our database is currently unavailable or cannot be read correctly. Please try again later. If the problem persists, please contact us.",
+		"قاعدة بياناتنا غير متاحة حالياً أو لا يمكن قراءتها بشكل صحيح. يرجى المحاولة لاحقاً والتواصل معنا إذا استمرت المشكلة.",
+		"我们的数据库当前不可用或无法正确读取。请稍后重试。如问题持续，请联系我们。",
+		"Наша база данных сейчас недоступна или не может быть прочитана корректно. Попробуйте позже. Если проблема сохраняется, свяжитесь с нами."
+	],
 	"errorNotFoundTitle": [
 		"Eine kleine Abzweigung.",
 		"A little detour.",
