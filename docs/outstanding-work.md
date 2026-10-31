@@ -150,7 +150,8 @@ Found by reading code and running the queries against SQLite 3.53 through `bun:s
 - [x] **P1 Payment marks in the footer** listed cards, Nachnahme, Klarna and SEPA, which are not implemented. The footer now shows only "Vorkasse", and only while bank transfer is available (`bankTransferAvailable`). With no method live the whole block is hidden. Add the other marks back with the Mollie integration (A3), the icons are still in `static/payment-methods`.
 - [x] **P1 Header and nav links point to nothing:** the pipes and tobacco, gifts and sale links (`/search?t=...`, `/search?flag=sale`) are removed from the main navigation. Add them back when the catalogue has these groups (D8) and, for sale, after the advertising review (B2). The message keys `pipestobacco`, `gifts` and `sale` are still in `messages/` for that. The header search inputs (desktop and mobile) are now GET forms to `/search?q=...`. Still open: suggestions and filters on the result page (E1).
 - [x] **P1 Newsletter subscription silently does nothing for guests.** Guests can now subscribe with a double opt-in (new `newsletter_subscribers` table, confirmation mail, working unsubscribe link). The footer form also shows an error for an invalid address instead of a false success. Still open: see B4.
-- [ ] **P2 Admin dashboard and tables are German only and DaisyUI based.** Acceptable for staff, but note it for workstream D.
+- [ ] **P2 Admin dashboard and tables are German only and DaisyUI based.** German only is acceptable for staff. The look, the missing settings and the form quality are tracked in workstream J (admin back office), which also replaces the Phase 6 note in workstream D.
+- [ ] **P2 Admin inventory list shows raw product types.** `typeLabels` in `src/routes/admin/inventory/+page.svelte` is keyed `CIGAR`, `CIGARILLO` and so on, but the stored values are lowercase (`cigar`), so the Typ column shows `cigar` instead of "Zigarre". The edit page uses lowercase keys and works.
 - [x] **P2 Repo hygiene:** `CLAUDE.md` now links `docs/TODO.md`, and `README.md`, `CLAUDE.md`, `docs/TODO.md` and `docs/ui-migration-plan.md` no longer name Stripe as a live provider (the struck-through history line in `docs/TODO.md` stays). Still open: `CLAUDE.md` describes the project in German and has other parts that may be out of date (for example the order and newsletter tables), review it once the schema settles.
 - [ ] **P1 No online payment path.** Stripe is removed and bank transfer is gated on the real IBAN (D11), so checkout currently shows a "not possible yet" notice and the submit button is disabled. Going live needs either the real IBAN (bank transfer only) or the Mollie integration (workstream A).
 - [x] **P1 Unpaid bank-transfer orders hold their stock forever.** Bank-transfer orders now store `paymentDueAt` (created at + `bankAccount.paymentDeadlineDays`, 7 days, which the terms already state). The confirmation email and page show the deadline and say the order is cancelled after it, and the admin order list shows "Zahlbar bis" or "Überfällig seit". The sweep also sends a reminder two days before the deadline and a cancellation email when it cancels (see the notes below). Confirm the 7 days with the customer in D11.
@@ -340,7 +341,8 @@ Not repeated here, but adjusted by this document:
 - [ ] **Phase 1 (shop) additions:** per-variant price and stock on cards, strength and ring gauge spec line, origin filter from the schema, URL-backed filters, server-side pagination. Also fix search (section 4) in the same slice because both pages share the listing contract.
 - [ ] **Phase 2 (homepage) adjustments:** the homepage content must pass the advertising review (B2). Prefer catalogue routes (origin, brand, category) over promotional tiles. The brand gallery carousel and awards in the header were added recently and conflict with the plan's "no automatic carousels" rule and with B2.
 - [ ] **Phase 4 (checkout) rewrite:** Stripe is already removed from the checkout, so the plan's step 3 and Stripe lifecycle items no longer apply. Add the age-verification step (B1) and the Mollie redirect (A2). Keep the `bankTransferAvailable` gate and the "no payment possible" notice behaviour until a payment method is live.
-- [ ] **Phase 5 and 6:** the account area and admin pages are as in the plan. Add the new admin screens from workstream F.
+- [ ] **Phase 5:** the account area is as in the plan.
+- [ ] **Phase 6 (admin):** replaced by workstream J. Do not wait for the storefront phases. The admin has no dependency on the catalogue model, so J1 to J3 can run in parallel with Phases 1 to 4. The footer parts of Phase 6 stay as written in the plan.
 - [ ] Capture the footer baseline screenshots (still unchecked) before touching shared layout.
 - [ ] The design direction says "Do not equate cigar smoking with ...". It should add a short advertising-law note linking to B2.
 
@@ -390,15 +392,13 @@ Not repeated here, but adjusted by this document:
 
 ### F. Orders, fulfilment and admin
 
+The admin-only items in this list (order screens, inventory, dashboard, security, curation) are specified with priorities in workstream J. The fulfilment items below stay here.
+
 - [ ] **Order lifecycle emails** beyond confirmation: payment received, shipped (with tracking link), cancelled by an admin, refunded. Done: the payment reminder and the cancellation after a missed deadline. The set is now confirmation, reminder, deadline cancellation, verification, reset, email change.
 - [ ] **Tracking:** add carrier and tracking number to orders, an admin action "mark as shipped" that sends the email, and show it in the customer's order view.
 - [ ] **Invoices:** generate a PDF invoice with VAT breakdown per order, attach it to the email, store it. Required for orderly bookkeeping. Quotes and credit notes for refunds.
 - [ ] **Shipping labels / DHL:** at minimum an export of shipping data for DHL business customer tools, with the age-check service flag. Direct DHL API integration later.
-- [ ] **Admin order screens:** filter by status and payment status, search by order number or customer, print pick list, note field, history of status changes. The current detail screen only edits two status dropdowns.
-- [ ] **Admin inventory:** stock adjustment log, low-stock threshold per product, bulk edit, import and export (C1), edit all detail tables (verify that the edit page covers the detail tables as the create page does).
-- [ ] **Admin dashboard:** revenue, orders awaiting shipment, pending payments, sold-out items. Currently shows counts only.
-- [ ] **Admin security:** a single shared password via HTTP Basic Auth, fixed username `admin`, a non-constant-time string comparison, no rate limiting, no audit trail. Move to named staff accounts with roles (owner, staff), reuse the customer auth stack, add login throttling and an audit log of changes. (P2, P1 if more than one person uses it.)
-- [ ] **Curation tools:** admin screens for homepage picks ("Empfehlung der Woche" style, subject to B2), brand and origin page content, and navigation. Today only hero text and social links are editable in `site_content`.
+- [ ] **Admin order screens, inventory, dashboard, security and curation tools:** see J5 to J8. Admin settings are J4.
 - [ ] **Store pickup** (click and collect at Weidengasse 25). Competitors offer it and the Cologne shop is a real asset. `ShippingMethod.PICKUP` exists in the enum but isn't offered at checkout. Age check happens in the shop. (P2)
 - [ ] **Returns workflow** matching the cancellation terms. (P2)
 
@@ -454,6 +454,100 @@ Not repeated here, but adjusted by this document:
 - [ ] **Data protection:** retention of birth dates and ID verification data, data export and deletion on request, a processor list (SMTP, Mollie, age-check provider, PostHog if enabled).
 - [ ] **Documentation:** update `README.md` and `CLAUDE.md` (Mollie, new schema, tests, `docs/TODO.md` path). Add a short operations runbook (deploy, backup, restore, rotate keys, handle a failed payment).
 
+### J. Admin back office
+
+Added after a review of the admin routes (2026-10-31). The admin has 19 files and about 3,400 lines: dashboard, inventory (list, create, edit), producers, orders (list, detail), customers (list) and content. It works, but it is thin, has almost nothing to configure and looks inconsistent. The review read the layout, dashboard, inventory list and edit, producers, orders detail, content and the loaders of orders and customers. It did not read the inventory create page, the orders list page or the customers page line by line, so items that depend on them say "verify".
+
+J1 to J3 have no dependency on the catalogue model or the legal answers and can start now. They supersede the single Phase 6 bullet in `ui-migration-plan.md` for everything except the footer.
+
+**What the review found**
+
+- **Two looks.** Inventory, orders, customers, content and the dashboard use hand-written Tailwind (zinc palette). Producers uses DaisyUI (`btn`, `card`, `alert`, `input-bordered`) and the browser `confirm()` dialog for deletes.
+- **Form styling is copy-pasted.** `inputClass` and `labelClass` are string constants repeated per file (27 uses in inventory create alone). The four detail blocks (cigar, cigarillo, beverage, tool) are written out twice, in the 402-line create page and the 557-line edit page. A new field, such as gin or flavoured, has to be added in both places and in two server actions.
+- **Form feedback is weak.**
+  - Server validation returns one message for the whole form (`Ungültige Eingabe`, `Zigarren-Details unvollständig`), never per field.
+  - Success and error banners appear at the top of the page, far away from the save button on long forms.
+  - There is no unsaved-changes hint, no disabled or busy state on submit, and the hero text form rejects an empty field instead of reverting to the default.
+- **Partial saves.** The inventory update action writes the product row first and validates the detail fields afterwards. If the details are incomplete the user sees an error, but the base fields are already saved. Number fields from the detail forms are parsed without a `NaN` check.
+- **Layout.** The sidebar is a fixed 13 rem column with no mobile layout. The dashboard repeats the sidebar links at the bottom. There is no settings entry and no way to see who is logged in.
+- **Inventory list.** Filter and sort changes navigate with `window.location.href` (full page reloads), there is no pagination, the search does not escape `%` and `_`, and the low-stock threshold `4` is hardcoded in both the list and the dashboard loader. Stock edits have no history. The type column is broken (section 4).
+- **Orders.** The detail page edits only two status dropdowns. Contradictory combinations are possible (for example delivered with a failed payment), nothing is confirmed before cancelling or refunding, an admin cancellation sends no email, and the payment method labels still include PayPal and crypto. The list loader filters by status only and loads every order.
+- **Customers.** A read-only list with search. There is no detail page, no order history per customer, no consent or age-verification state and no action.
+- **Dashboard.** Four counts, the last eight orders and a status table. No revenue, no "needs action" view (paid and not shipped, overdue payments), and pending orders count unpaid and paid ones together.
+- **Content.** Only the hero (subtitle, tagline, button, image) and two social links are editable. The defaults in `src/lib/server/content.ts` are "Premium · Since 2024" and "Exklusive Zigarren und Spirituosen ...", which the admin shows as placeholders. That wording conflicts with B2 and with the design direction's no-invented-claims rule. The tag field placeholder suggests "Bestseller, Kubanisch, Premium", which also conflicts with B2.
+- **Settings live in code.** `src/lib/config.ts` holds the company name, store and legal address, phone, email, social links, VAT rates, the free-shipping threshold, shipping costs and the bank details with the payment deadline. Changing any of them needs a deploy. `bankTransferAvailable` is computed once at import time from the IBAN constant.
+
+**J1. Shared form kit (P1)**
+
+- [ ] Build admin form components on top of the installed shadcn-svelte primitives (Input, Label, Textarea, Checkbox, Button): a field wrapper (label, hint, required mark, per-field error), select, number input with unit, and a form section card. One place for spacing, focus and error styling.
+- [ ] A form footer pattern: sticky save bar with a busy state (`use:enhance` submitting flag), a "saved" confirmation next to the button, and a disabled state while nothing changed.
+- [ ] Per-field errors from server actions: validate with zod and return `fail(400, { errors, values })`, so the form keeps what was typed. Use it first for product, producer, content and the new settings screen.
+- [ ] A shared `ConfirmDialog` for destructive actions (delete product, delete producer, cancel or refund an order), replacing the inline "Sicher?" block and `confirm()`.
+- [ ] One `ProductForm` with the type-specific detail sections, used by create and edit. The detail field definitions live in one list so a new field (C2) is added once. Keep every existing field name so the actions keep working.
+- [ ] Acceptance: the same component renders every admin form, keyboard and screen reader labelling work, and `inventory/create` and `inventory/[id]` shrink to a thin wrapper each.
+
+**J2. Admin shell and consistent look (P2)**
+
+- [ ] Layout: collapsible sidebar with a mobile drawer (the installed Sheet), the settings entry, a link to the storefront and the signed-in identity (once J8 exists). Remove the duplicate link row from the dashboard.
+- [ ] One table style for lists (sticky header, sortable columns as real links so they work without JavaScript, empty states, pagination).
+- [ ] Define the admin look in `design-direction.md`: dense and calm, the same charcoal and brass tokens as the storefront, status colours used only for status. The existing direction is storefront only.
+- [ ] Restyle the producers page last, since it is the only DaisyUI page and goes away with Phase 7.
+
+**J3. Defects found in the review (P1)**
+
+- [ ] Inventory update: validate the product fields and the detail fields first, then write both in one transaction. Check numeric fields for `NaN` and sensible ranges.
+- [ ] Inventory list: fix the type labels (section 4), escape `%` and `_` in the search (same helper as the storefront search), make filters and sort plain GET links or a GET form, and add pagination.
+- [ ] Remove "Bestseller" from the tag placeholder and the promotional defaults in `content.ts` (hero subtitle and tagline). Neutral factual defaults until D4 is answered.
+- [ ] Order detail: drop PayPal and crypto from the payment labels, or keep them only as labels for old data and say so.
+- [ ] Product delete: verify what happens to existing order items and wishlists when a product that was ordered is deleted. Order items store a snapshot, but check the foreign key and offer "deactivate" instead of delete for products with orders.
+- [ ] Hero image upload: the file name is fixed (`hero-bg.<ext>`), so the URL does not change and browsers and the preview can show the old image. Add a version query or a unique name, and remove the old file.
+
+**J4. Settings screen (P1, needs D5 and D11 answers for the values only)**
+
+- [ ] New `settings` store (key and JSON value, validated with zod, cached per process) with a loader that falls back to the constants in `config.ts`. `config.ts` stays as the defaults, so nothing breaks before anyone saves.
+- [ ] Admin pages grouped as: **Company** (name, store and legal address, phone, email, VAT ID, register entry, opening hours), **Shipping** (methods, costs, free-shipping threshold, Germany only flag, dispatch time), **Payment** (IBAN, BIC, account holder, payment deadline, which methods are on), **Tax** (VAT rate per product type, with the note that the adviser must confirm), **Social and links**.
+- [ ] Make the storefront read these values at request time: checkout totals, `bankTransferAvailable` (today computed at import), footer, imprint data, emails and the order sweep. Opening hours and addresses are currently also hardcoded in components and legal pages, so list every place and replace it with the setting (verify the count, the audit did not grep it).
+- [ ] The IBAN and the VAT rates change money flows. Restrict to the owner role (J8), require the current admin password again to save, show the old and new value in a confirmation step and write an audit entry. This is the main fraud risk of a settings screen.
+- [ ] This lets the customer enter the real IBAN themselves, which closes the P0 placeholder item in section 4 without a deploy, and gives D5 and D11 a place to land.
+- [ ] Optional later: editable email texts (order confirmation, shipping), and the low-stock threshold per product or globally.
+
+**J5. Orders (P1 before launch)**
+
+- [ ] Order list: search by order number, name or email, filters for order and payment status, shipping method and date, "needs action" presets (paid and not shipped, overdue payment), pagination, CSV export.
+- [ ] Order detail: guard status changes with an allowed-transitions table instead of two free dropdowns, confirm cancel and refund, internal note field, a status history (who, when, from, to), tracking number and carrier with "mark as shipped" (F), and a printable pick list and delivery note.
+- [ ] Send the customer an email for admin cancellations and for "paid" (F lists both).
+- [ ] Refund action when Mollie lands (A4), using the same confirm dialog.
+- [ ] Show the age-verification state on the order once B1 exists.
+
+**J6. Inventory, producers, customers, dashboard (P2)**
+
+- [ ] Inventory: low-stock threshold setting, stock adjustment log (who, when, delta, reason), bulk edit for price and stock, CSV import and export (C1), several images per product (gallery in `TODO.md`), and the variants editor once C2 lands.
+- [ ] Producers: slug, logo, long description, country and awards for brand pages (C2), and a list of the producer's products.
+- [ ] Customers: detail page with profile, addresses, order history, consent flags, age-verification state and review queue (B1), marketing consent and newsletter status, and a way to disable an account. Data export and deletion on request (I).
+- [ ] Newsletter: subscriber list with status and CSV export, and a broadcast form when the content decision (B4) is made.
+- [ ] Dashboard: replace counts with "needs action" cards (to ship, overdue payments, sold out, awaiting age review), revenue per day, week and month, and a short activity feed. Count paid and unpaid pending orders separately.
+- [ ] Product requests inbox (E7) and back-in-stock requests (E6) when those features exist.
+
+**J7. Content and curation (P2, subject to B2)**
+
+- [ ] Generalise `site_content` into a small content manager: homepage blocks (order, visibility, text, image, link), brand and origin page texts, the service line in the top bar, FAQ entries and the news and tastings lists. Each field shows its default and a "reset" action.
+- [ ] A shared image picker over the uploaded files (the gallery in `TODO.md`) with size and format checks, instead of one upload field per form.
+- [ ] A review step for promotional blocks: a "legal review needed" flag on anything that is a banner, a recommendation or a discount notice, until D4 is answered.
+- [ ] Homepage picks ("Empfehlung der Woche" style) only after the legal review. The admin can ship without them.
+
+**J8. Admin security and audit (P2, P1 if more than one person uses it)**
+
+- Moved from workstream F, unchanged in content: the admin is one shared password over HTTP Basic Auth, with the fixed user `admin`, a non-constant-time comparison and no rate limiting.
+- [ ] Named staff accounts with roles (owner, staff) on the customer auth stack, login throttling, a session timeout and a visible logout.
+- [ ] Role gates: staff manage orders, inventory and content, only owners change settings, staff accounts and payment actions.
+- [ ] Audit log table (actor, action, entity, before and after, time) written by every admin action, with a read-only admin page. Settings and refunds first.
+- [ ] Until this exists, at least compare the password in constant time and rate limit `/admin`.
+
+**J9. Tests (P1 with each slice)**
+
+- [ ] The admin loaders and actions have no tests (section 4). Add them with each slice: inventory update (transaction, validation, SKU conflict), stock update, order status transitions with stock return, settings validation and fallback, customers search. Reuse the temporary SQLite helpers in `tests/`.
+- [ ] Keep upload tests for the MIME and size checks, and add a content sniff (I lists it as open).
+
 ---
 
 ## 6. Recommended sequence
@@ -469,6 +563,7 @@ Not repeated here, but adjusted by this document:
 4. Variants and detail extensions (C2) with generated migrations.
 5. Import script and the customer's catalogue (C1). Seed data for development.
 6. Order numbers, VAT handling, order item snapshots.
+   6a. Admin form kit and the defects found in the review (J1, J3). These do not depend on the catalogue and can run in parallel with steps 4 and 5. Build the settings screen (J4) before the money work below, so the real IBAN, shipping terms and VAT rates are entered through the admin and not in code.
 
 **Milestone 2: money and compliance.**
 
@@ -483,9 +578,9 @@ Not repeated here, but adjusted by this document:
 
 **Milestone 4: operations for launch.**
 
-12. Order emails, tracking, invoices, admin order tools (F).
+12. Order emails, tracking, invoices, admin order tools (F, J5), the rest of the admin (J2, J6 to J8).
 13. Monitoring, backups, deploy hardening, security pass (I).
-14. UI migration Phases 5 to 7, remove DaisyUI.
+14. UI migration Phases 5 and 7, remove DaisyUI. The admin part of Phase 6 is workstream J.
 15. Pilot with a few existing customers, as the design direction suggests, then launch.
 
 **After launch.** Reviews with sub-ratings, humidor and back-in-stock alerts, product request form, vouchers and samplers, store pickup, events and loyalty programme, then the Later items.

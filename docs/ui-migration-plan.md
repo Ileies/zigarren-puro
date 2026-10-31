@@ -143,7 +143,7 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 
 ## Phase 6 Administration and footer compatibility
 
-- [ ] Migrate `admin/+layout.svelte` and every admin route, including inventory create/edit, producer uploads, content, orders and customers. Retain useful tables, filters and compact staff navigation. Keep server loads/actions and upload field names intact.
+- [ ] Migrate `admin/+layout.svelte` and every admin route, including inventory create/edit, producer uploads, content, orders and customers. Retain useful tables, filters and compact staff navigation. Keep server loads/actions and upload field names intact. The admin work (shared form kit, settings screen, consistent look, order tools) is specified in workstream J of [`outstanding-work.md`](./outstanding-work.md) and can start before the storefront phases; this bullet is done when J1 and J2 are done and the producers page no longer uses DaisyUI.
 - [ ] Remove remaining DaisyUI styling from `src/routes/+layout.svelte` and any shared component only after its consumers are ready. Keep `.puro-ui` off the footer.
 - [ ] Replace only the footer's newsletter input/button and social-button implementation as needed. Preserve `use:enhance`, submitting/success states, names and action URLs. Add local footer styles/tokens to retain the current charcoal, black, brass, white and age-notice colours when DaisyUI is removed.
 - [ ] Preserve the footer's current compact control sizes with explicit local variants or overrides. Compare screenshots against Phase 1 at each breakpoint; retain columns, logo size, serif headings, gaps, links, contact details, payment marks and age notice. Include focus and disabled states in the comparison.
