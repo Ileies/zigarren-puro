@@ -90,6 +90,18 @@
 						<span class="shrink-0 text-base-content/50">Verwendungszweck</span>
 						<span class="font-bold">{orderShort}</span>
 					</div>
+					{#if data.order.paymentDueAt}
+						<div class="flex justify-between gap-4">
+							<span class="shrink-0 text-base-content/50">Zahlbar bis</span>
+							<span class="font-bold">
+								{new Date(data.order.paymentDueAt).toLocaleDateString('de-DE', {
+									day: '2-digit',
+									month: '2-digit',
+									year: 'numeric'
+								})}
+							</span>
+						</div>
+					{/if}
 				</div>
 			</div>
 		</div>

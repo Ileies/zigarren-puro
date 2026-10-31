@@ -3,6 +3,8 @@
 
 	let { data } = $props();
 
+	const now = new Date();
+
 	const orderStatusLabels: Record<string, string> = {
 		pending: 'Ausstehend',
 		confirmed: 'Bestätigt',
@@ -127,6 +129,13 @@
 						</td>
 						<td class="px-4 py-3 text-xs text-zinc-500">
 							{paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}
+							{#if order.paymentStatus === 'pending' && order.orderStatus === 'pending' && order.paymentDueAt}
+								{@const due = new Date(order.paymentDueAt)}
+								<div class={due < now ? 'font-medium text-red-600' : 'text-zinc-400'}>
+									{due < now ? 'Überfällig seit' : 'Zahlbar bis'}
+									{due.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })}
+								</div>
+							{/if}
 						</td>
 						<td class="px-4 py-3 text-right">
 							<a

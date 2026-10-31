@@ -16,6 +16,7 @@ export const load: PageServerLoad = async ({ url }) => {
 			orderNumber: orderTable.orderNumber,
 			orderStatus: orderTable.orderStatus,
 			paymentStatus: orderTable.paymentStatus,
+			paymentDueAt: orderTable.paymentDueAt,
 			shippingMethod: orderTable.shippingMethod,
 			totalAmount: orderTable.totalAmount,
 			createdAt: orderTable.createdAt,

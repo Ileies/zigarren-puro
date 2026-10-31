@@ -411,7 +411,7 @@ function orderConfirmationEmailHtml(
       <div style="background:#fffbf0;border:1px solid #d4af37;border-radius:4px;padding:20px;margin-bottom:28px">
         <p style="margin:0 0 12px;color:#1a1a1a;font-size:14px;font-weight:bold">Bankverbindung für die Überweisung</p>
         <p style="margin:0 0 6px;color:#444;font-size:13px;line-height:1.8">
-          Bitte überweisen Sie <strong>${fmt(total)}</strong> innerhalb von 7 Tagen an:
+          Bitte überweisen Sie <strong>${fmt(total)}</strong> innerhalb von ${bankAccount.paymentDeadlineDays} Tagen an:
         </p>
         <table role="presentation" cellpadding="0" cellspacing="0" style="font-size:13px;color:#444;line-height:2">
           <tr><td style="padding-right:16px;color:#888">Kontoinhaber</td><td><strong>${bankAccount.accountHolder}</strong></td></tr>
@@ -419,6 +419,9 @@ function orderConfirmationEmailHtml(
           <tr><td style="padding-right:16px;color:#888">BIC</td><td><strong>${bankAccount.bic}</strong></td></tr>
           <tr><td style="padding-right:16px;color:#888">Verwendungszweck</td><td><strong>${orderShort}</strong></td></tr>
         </table>
+        <p style="margin:12px 0 0;color:#888;font-size:12px;line-height:1.7">
+          Geht die Zahlung nicht innerhalb dieser Frist ein, wird die Bestellung storniert.
+        </p>
       </div>`
 					: `
       <div style="background:#f0faf4;border:1px solid #4caf50;border-radius:4px;padding:20px;margin-bottom:28px">
@@ -479,7 +482,7 @@ export async function sendOrderConfirmationEmail(
 			text:
 				paymentMethod === 'credit_card'
 					? `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nIhre Kartenzahlung wurde erfolgreich verarbeitet.\n\nZigarren Puro`
-					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nBitte überweisen Sie den Betrag mit dem Verwendungszweck ${orderLabel}.\n\nZigarren Puro`
+					: `Guten Tag ${firstName},\n\nvielen Dank für Ihre Bestellung ${orderLabel} bei Zigarren Puro.\n\nGesamtbetrag: ${total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} (inkl. ${vat.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })} MwSt.)\n\nBitte überweisen Sie den Betrag innerhalb von ${bankAccount.paymentDeadlineDays} Tagen mit dem Verwendungszweck ${orderLabel}. Geht die Zahlung nicht rechtzeitig ein, wird die Bestellung storniert.\n\nZigarren Puro`
 		},
 		customerId
 	);
