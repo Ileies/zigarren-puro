@@ -618,13 +618,7 @@
 					{#if form?.error}
 						<div class="alert alert-error">
 							<AlertCircle class="h-4 w-4 shrink-0" />
-							<span class="text-sm">
-								{#if form.error === 'age'}
-									{m.checkoutAgeError()}
-								{:else}
-									{form.error}
-								{/if}
-							</span>
+							<span class="text-sm">{form.error}</span>
 						</div>
 					{/if}
 
