@@ -9,14 +9,13 @@
 	let { user, cartCount = 0 }: { user: SessionValidationResult['user']; cartCount?: number } =
 		$props();
 
+	// Only destinations that exist. Pipes and tobacco, gifts and sale come back once the catalogue
+	// has them (and, for sale, once the advertising review has cleared it).
 	const navigation = [
 		{ title: m.cigars(), href: '/shop?type=cigar' },
 		{ title: m.zigarillos(), href: '/shop?type=cigarillo' },
-		{ title: m.pipestobacco(), href: '/search?t=pipes+tobacco' },
 		{ title: m.accessories(), href: '/shop?type=tool' },
 		{ title: m.spirits(), href: '/shop?type=beverage' },
-		{ title: m.gifts(), href: '/search?t=gifts' },
-		{ title: m.sale(), href: '/search?flag=sale' },
 		{ title: m.news(), href: '/news' }
 	];
 
