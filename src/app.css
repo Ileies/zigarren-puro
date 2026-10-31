@@ -57,6 +57,52 @@
 	button {
 		font-size: max(1em, 1rem);
 	}
+
+	/* Match the storefront on desktop while retaining native touch and high-contrast controls. */
+	@media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (forced-colors: none) {
+		/* Firefox uses the standard colours; WebKit allows a softly inset thumb. */
+		@supports not selector(::-webkit-scrollbar) {
+			html:root,
+			* {
+				scrollbar-color: var(--brass) var(--background);
+			}
+		}
+
+		@supports selector(::-webkit-scrollbar) {
+			/* DaisyUI sets a root colour that otherwise disables these pseudo-elements. */
+			html:root,
+			* {
+				scrollbar-color: auto;
+			}
+
+			*::-webkit-scrollbar {
+				width: 12px;
+				height: 12px;
+			}
+
+			*::-webkit-scrollbar-track,
+			*::-webkit-scrollbar-corner {
+				background: var(--background);
+			}
+
+			*::-webkit-scrollbar-thumb {
+				min-height: 40px;
+				min-width: 40px;
+				border: 2px solid var(--background);
+				border-radius: 999px;
+				background: var(--brass);
+				box-shadow: inset 0 0 0 1px rgb(255 252 246 / 18%);
+			}
+
+			*::-webkit-scrollbar-thumb:hover {
+				background: var(--muted-foreground);
+			}
+
+			*::-webkit-scrollbar-thumb:active {
+				background: var(--primary);
+			}
+		}
+	}
 }
 
 @layer utilities {
