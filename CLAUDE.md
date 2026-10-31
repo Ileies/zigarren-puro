@@ -2,7 +2,7 @@
 
 Premium-Webshop für Zigarren und Spirituosen. SvelteKit 3 + Drizzle ORM + SQLite (`bun:sqlite`). Gehostet auf eigenem Server mit `@sveltejs/adapter-bun`.
 
-Offene Tasks: [`TODO.md`](./TODO.md)
+Offene Tasks: [`docs/TODO.md`](./docs/TODO.md), vollständiger Plan: [`docs/outstanding-work.md`](./docs/outstanding-work.md). Zahlungsanbieter ist Mollie (Stripe wurde entfernt).
 
 ## Design und UI Migration
 
@@ -173,7 +173,6 @@ Eigenes Vite-Plugin -- kein Paraglide.
 | `FROM_EMAIL`               | `info@zigarren-puro.de`              |
 | `SMTP_HOST/PORT/USER/PASS` | Netcup-SMTP-Zugangsdaten             |
 | `OPENAI_API_KEY`           | Konfiguriert (Produktbeschreibungen) |
-| `STRIPE_SECRET_KEY`        | Leer -- noch nicht implementiert     |
 | `PUBLIC_POSTHOG_KEY`       | Leer -- Analytics noch nicht aktiv   |
 | `GOOGLE_CLIENT_ID/SECRET`  | Leer -- OAuth nicht implementiert    |
 

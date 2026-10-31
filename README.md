@@ -61,4 +61,4 @@ Neue Komponenten über `bun run ui:add <name>` hinzufügen und aus `#lib/compone
 | `SMTP_HOST/PORT/USER/PASS` | SMTP-Zugangsdaten                           |
 | `OPENAI_API_KEY`           | Für Produktbeschreibungen                   |
 
-Weitere Variablen (Stripe, PostHog, Google OAuth) sind vorbereitet, aber noch nicht aktiv.
+Weitere Variablen (PostHog, Google OAuth, später Mollie) sind vorbereitet, aber noch nicht aktiv.

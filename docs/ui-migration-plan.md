@@ -125,9 +125,9 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 - [ ] Rework `cart/+page.svelte` into flat product rows and a compact summary. Use actual images, readable full names, explicit quantities, accessible update/remove controls and clear empty-cart feedback.
 - [ ] Replace `checkout/+page.svelte`'s repeated card containers and DaisyUI inputs with a calm form layout, Input, Label, Checkbox and native radios or Radio Group. Preserve address names, hidden captured fields and billing/shipping bindings.
 - [ ] Present checkout steps as a labelled ordered list with the current step identified. Keep errors next to their fields with `aria-invalid` and `aria-describedby`, plus a summary when several fields fail.
-- [ ] Preserve saved/new address selection, shipping choice, available payment methods, age checks, bank-transfer action and Stripe Embedded Checkout lifecycle. Keep Stripe-managed controls within its supported styling surface.
+- [ ] Preserve saved/new address selection, shipping choice, available payment methods, age checks, bank-transfer action and the payment redirect lifecycle (Mollie hosted checkout, see `outstanding-work.md` A2).
 - [ ] Restyle `checkout/confirmation/+page.svelte` with a clear order number, status and next step. Match actual payment status rather than assuming every return is paid.
-- [ ] Exercise guest/login redirects, invalid addresses, unavailable stock, quantity changes, duplicate submission protection, bank transfer, Stripe test success/cancellation/failure and a failed server response. Use test configuration and avoid real orders or charges.
+- [ ] Exercise guest/login redirects, invalid addresses, unavailable stock, quantity changes, duplicate submission protection, bank transfer, Mollie test-mode success/cancellation/failure/expiry and a failed server response. Use test configuration and avoid real orders or charges.
 
 **Done when:** totals and order/payment outcomes match the existing server behaviour, all available purchase paths work, errors remain actionable and checkout has no DaisyUI styling dependency.
 
