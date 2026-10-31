@@ -15,7 +15,9 @@ Migrate the storefront in reviewable increments, applying the [design direction]
 - [x] Adapt buttons and text fields to 16px text, restrained radii and primary control heights of at least 44px.
 - [x] Add the sheet close label in all five locales through `messages/ui.json`.
 
-This foundation intentionally leaves existing page templates and the DaisyUI theme in place. The unchecked phases below are the remaining redesign and migration work.
+This foundation intentionally leaves existing page templates and the DaisyUI theme in place. Status reviewed against the repository on 2026-10-31: checked items below identify implemented parts, not completion of an entire phase. Unchecked items retain the remaining redesign, integration and verification work. In-progress changes by another agent are not counted as complete.
+
+Backend and launch status stays in [`outstanding-work.md`](./outstanding-work.md). Its workstream D sequences the catalogue model before the listing redesign, B2 gates promotional content, and J specifies the admin work. Keep these dependencies when working through the UI phases.
 
 ## Working with the new components
 
@@ -99,11 +101,13 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 ## Phase 2 Header and homepage
 
 - [ ] Replace `Header.svelte`'s DaisyUI drawer with Sheet and Button. Use CSS breakpoint layout instead of initial `window.innerWidth` rendering and the unmanaged resize listener. Preserve logo, account identity and cart count.
-- [ ] Turn desktop and mobile search into labelled GET forms targeting `/search` with `name="q"`. Fix `t` links to use supported parameters. Remove category or sale destinations until the backend actually implements their meaning.
+- [x] Turn desktop and mobile search into labelled GET forms targeting `/search` with `name="q"`. `Header.svelte` supplies translated accessible input labels. Preserve this behavior through the Sheet migration.
+- [x] Replace the header's unsupported `t`/sale destinations with the supported `/shop?type=cigar|cigarillo|tool|beverage` links. Pipes, gifts and sale are absent from the main navigation until supported.
 - [ ] Migrate `LanguageSelector.svelte` to an accessible language control and retain locale selection behaviour. Keep category navigation readable and use a single factual service line.
-- [ ] Rework `homepage/Hero.svelte` into one static editorial opening, with the existing logo identity, a short serif heading and one shop action. Remove the full-viewport minimum and animated scroll prompt. Keep the assortment close to the first screen.
+- [x] Remove the full-viewport hero and animated scroll prompt from the rendered homepage. `+page.svelte` no longer imports `Hero.svelte` or `HeroCarousel.svelte`; those files still exist and need the unused-component review in Phase 7.
+- [ ] Consolidate the current `GalleryCarousel.svelte` and `Gallery.svelte` opening into one static editorial opening, with the existing logo identity, a short serif heading and one shop action. Keep the assortment close to the first screen. The current manual carousel plus gallery still repeats the same photographs.
 - [ ] Simplify `src/routes/+page.svelte` to the homepage order in the design direction. Remove duplicate promotional entry points rather than recreating every current section using shadcn Card.
-- [ ] Replace `HeroCarousel.svelte` and the homepage use of `AllBrandsCarousel.svelte` with static, useful category/brand/origin links. Update `FeaturedBrands.svelte` and `BrandCard.svelte` into restrained image-and-text links to working catalogue destinations.
+- [ ] Replace the active `GalleryCarousel.svelte` and homepage use of `AllBrandsCarousel.svelte` with static, useful category/brand/origin links. Update `Gallery.svelte`, `FeaturedBrands.svelte` and `BrandCard.svelte` into restrained image-and-text links to working catalogue destinations. The gallery currently sends every brand to the same cigar category.
 - [ ] Replace `Recommendations.svelte`'s hardcoded products with curated existing product records loaded by `src/routes/+page.server.ts`. Reuse ProductCard, verify stock and images, and remove unsupported bestseller/sale claims and broken asset paths.
 - [ ] Simplify `CallToAction.svelte`, `About.svelte`, `Tasting.svelte` and `Spirits.svelte`: remove gold gradients, floating blobs, heavy shadows and image zoom. Retain only useful, current content. Keep genuine merchant and tasting photography.
 - [ ] Translate new storefront copy using the existing format: message-key arrays in `messages/*.json` for DE/EN/AR/CN/RU. Regenerate `messages.ts` only with `bun run dev` or `bun run build`.
@@ -112,7 +116,8 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 
 ## Phase 3 Search and product detail
 
-- [ ] Reuse the Phase 1 listing, filters, sort, price formatting and pagination on `/search`. Preserve `q` across all interactions and validate searches against SQLite's supported case-insensitive matching. Test actual query execution rather than relying on type checks.
+- [x] Fix search query execution for SQLite and test the real loader. `search/+page.server.ts` uses `LIKE` with escaped wildcards; `tests/routes.test.ts` covers ASCII case-insensitive name matching, description matching, literal `%`/`_` and combined query/type/sort. This does not establish full Unicode case or diacritic folding.
+- [ ] Reuse the Phase 1 listing, filters, sort, price formatting and pagination on `/search`. Preserve `q` across all interactions and extend the SQLite execution tests to the new filters, pagination and query validation.
 - [ ] Recompose `products/[id]/+page.svelte` around the real image and one purchase area. Show brand/name, sold quantity, price, availability and dimensions/strength near the action. Keep the current detail image support and honest fallback.
 - [ ] Replace decorative product specification panels with a semantic `dl`. Keep origin, length, ring gauge, wrapper and strength visible; use Accordion for secondary delivery/care information. Do not invent missing blend or format data.
 - [ ] Migrate cart, wishlist and review controls to the owned primitives. Preserve named actions, author permissions, rating values, error messages, edit/delete flow and successful action feedback. Use keyboard-operable rating choices.
@@ -121,6 +126,8 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 **Done when:** the shop and search present the same product consistently. Purchase, wishlist and review actions behave as before, with essential buying facts visible without opening panels.
 
 ## Phase 4 Cart and checkout
+
+Existing server behavior to retain: atomic stock reservation/release, order numbers, item snapshots, VAT calculation and unpaid-order expiry have regression coverage in `tests/orders.test.ts`, `tests/vat.test.ts` and `tests/orderExpiry.test.ts`. These do not complete the checkout UI, duplicate-submission checks or Mollie purchase scenarios below.
 
 - [ ] Rework `cart/+page.svelte` into flat product rows and a compact summary. Use actual images, readable full names, explicit quantities, accessible update/remove controls and clear empty-cart feedback.
 - [ ] Replace `checkout/+page.svelte`'s repeated card containers and DaisyUI inputs with a calm form layout, Input, Label, Checkbox and native radios or Radio Group. Preserve address names, hidden captured fields and billing/shipping bindings.
@@ -133,6 +140,8 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 
 ## Phase 5 Account and remaining public pages
 
+The existing account, auth, checkout and review form-error messages already use five-language keys in `messages/serverErrors.json`. Preserve them during migration; hardcoded template labels, emails and some route error texts still need translation. This does not complete the page migrations below.
+
 - [ ] Migrate `login`, `register`, `forgot-password`, `reset-password`, `verify-email`, `unsubscribe` and `account/confirm-email`. Preserve field names, autocomplete, verification flows, redirects and action errors. Use plain forms and readable headings.
 - [ ] Rework `account/+page.svelte`, `account/addresses`, `account/orders`, `account/orders/[id]` and `account/wishlist` as customer-service pages. Replace large navigation tiles with modest links. Use Tabs only for actual local panels and Dialog for the logout confirmation.
 - [ ] Migrate `WelcomeModal.svelte` to Dialog if it is retained. Preserve welcome visibility and close behaviour; do not let this prompt interrupt an ongoing purchase unnecessarily.
@@ -143,6 +152,7 @@ Start with `/shop` as a complete vertical slice. Its new catalogue entry becomes
 
 ## Phase 6 Administration and footer compatibility
 
+- [x] Make footer payment marks reflect configured availability and distinguish newsletter action success from failure. `Footer.svelte` shows Vorkasse only when `bankTransferAvailable` is true, hides the payment block otherwise and reports unsuccessful subscription actions. Preserve these behaviors during migration; this does not verify live payments or SMTP delivery.
 - [ ] Migrate `admin/+layout.svelte` and every admin route, including inventory create/edit, producer uploads, content, orders and customers. Retain useful tables, filters and compact staff navigation. Keep server loads/actions and upload field names intact. The admin work (shared form kit, settings screen, consistent look, order tools) is specified in workstream J of [`outstanding-work.md`](./outstanding-work.md) and can start before the storefront phases; this bullet is done when J1 and J2 are done and the producers page no longer uses DaisyUI.
 - [ ] Remove remaining DaisyUI styling from `src/routes/+layout.svelte` and any shared component only after its consumers are ready. Keep `.puro-ui` off the footer.
 - [ ] Replace only the footer's newsletter input/button and social-button implementation as needed. Preserve `use:enhance`, submitting/success states, names and action URLs. Add local footer styles/tokens to retain the current charcoal, black, brass, white and age-notice colours when DaisyUI is removed.
