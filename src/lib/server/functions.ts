@@ -210,6 +210,95 @@ function passwordResetEmailHtml(firstName: string, resetUrl: string): string {
 	return baseLayout(content, footer);
 }
 
+function newsletterConfirmationEmailHtml(confirmUrl: string): string {
+	const content = `
+      <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Newsletter-Anmeldung bestätigen
+      </h2>
+      <p style="margin:0 0 32px;color:#444;font-size:15px;line-height:1.8">
+        Guten Tag, für diese E-Mail-Adresse wurde eine Anmeldung zum Newsletter von Zigarren Puro
+        angefordert. Bitte bestätigen Sie die Anmeldung, damit wir Ihnen den Newsletter zusenden dürfen.
+      </p>
+
+      <table role="presentation" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background:#d4af37;border-radius:2px">
+            <a href="${confirmUrl}"
+               style="display:inline-block;padding:15px 40px;color:#1a1a1a;font-size:13px;font-weight:bold;text-decoration:none;letter-spacing:2px;text-transform:uppercase">
+              Anmeldung bestätigen
+            </a>
+          </td>
+        </tr>
+      </table>
+
+      <p style="margin:32px 0 0;color:#888;font-size:13px;line-height:1.7">
+        Dieser Link ist <strong>48 Stunden</strong> gültig. Falls Sie den Newsletter nicht angefordert
+        haben, können Sie diese E-Mail ignorieren. Es wird dann nichts gespeichert, was Sie bindet.
+      </p>
+
+      <div style="margin:32px 0 28px;border-top:1px solid #eeeeee"></div>
+
+      <p style="margin:0;color:#aaa;font-size:12px;line-height:1.7">
+        Falls der Button nicht funktioniert, kopieren Sie diesen Link in Ihren Browser:<br />
+        <a href="${confirmUrl}" style="color:#b8834a;word-break:break-all">${confirmUrl}</a>
+      </p>`;
+
+	const footer = `<p style="margin:0;color:#666;font-size:11px">
+        Diese E-Mail wurde automatisch versandt – bitte antworten Sie nicht darauf.
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+function newsletterWelcomeEmailHtml(unsubscribeUrl: string): string {
+	const content = `
+      <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
+        Anmeldung bestätigt
+      </h2>
+      <p style="margin:0;color:#444;font-size:15px;line-height:1.8">
+        Vielen Dank, Ihre Anmeldung zum Newsletter von Zigarren Puro ist bestätigt. Sie können sich
+        jederzeit über den Link am Ende jeder E-Mail wieder abmelden.
+      </p>`;
+
+	const footer = `<p style="margin:0;font-size:11px">
+        <a href="${unsubscribeUrl}" style="color:#666;text-decoration:none">Newsletter abbestellen</a>
+      </p>`;
+
+	return baseLayout(content, footer);
+}
+
+export async function sendNewsletterConfirmationEmail(
+	email: string,
+	confirmToken: string
+): Promise<void> {
+	const confirmUrl = `https://${PUBLIC_ORIGIN}/newsletter/confirm?token=${confirmToken}`;
+
+	await sendMail({
+		to: email,
+		subject: 'Bitte bestätigen Sie Ihre Newsletter-Anmeldung – Zigarren Puro',
+		html: newsletterConfirmationEmailHtml(confirmUrl),
+		text: `Guten Tag,\n\nfür diese E-Mail-Adresse wurde eine Anmeldung zum Newsletter von Zigarren Puro angefordert. Bitte bestätigen Sie sie unter folgendem Link:\n${confirmUrl}\n\nDieser Link ist 48 Stunden gültig. Falls Sie den Newsletter nicht angefordert haben, ignorieren Sie diese E-Mail.\n\nZigarren Puro`
+	});
+}
+
+export async function sendNewsletterWelcomeEmail(
+	email: string,
+	unsubscribeToken: string
+): Promise<void> {
+	const unsubscribeUrl = `https://${PUBLIC_ORIGIN}/unsubscribe?token=${unsubscribeToken}`;
+
+	await sendMail({
+		to: email,
+		subject: 'Newsletter-Anmeldung bestätigt – Zigarren Puro',
+		html: newsletterWelcomeEmailHtml(unsubscribeUrl),
+		text: `Vielen Dank, Ihre Anmeldung zum Newsletter von Zigarren Puro ist bestätigt.\n\nAbmelden: ${unsubscribeUrl}\n\nZigarren Puro`,
+		headers: {
+			'List-Unsubscribe': `<${unsubscribeUrl}>`,
+			'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'
+		}
+	});
+}
+
 function emailChangeEmailHtml(firstName: string, confirmUrl: string, newEmail: string): string {
 	const content = `
       <h2 style="margin:0 0 24px;color:#1a1a1a;font-size:20px;font-weight:normal;letter-spacing:0.5px">
@@ -454,7 +543,7 @@ export async function sendMail(mailOptions: Options, customerId?: string): Promi
 		headers['List-Unsubscribe'] = `<${unsubscribeUrl}>`;
 		headers['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
 	} else {
-		headers['List-Unsubscribe'] = `<https://${PUBLIC_ORIGIN}/unsubscribe>`;
+		headers['List-Unsubscribe'] ??= `<https://${PUBLIC_ORIGIN}/unsubscribe>`;
 	}
 
 	const transporter = nodemailer.createTransport({

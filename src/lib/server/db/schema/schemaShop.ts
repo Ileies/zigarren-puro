@@ -12,6 +12,7 @@ import { relations } from 'drizzle-orm';
 import { authCredentialsTable, sessionTable, tokenTable } from './schemaAuth';
 import type {
 	Gender,
+	NewsletterStatus,
 	OrderStatus,
 	PaymentMethod,
 	PaymentStatus,
@@ -143,6 +144,23 @@ export const wishlistTable = sqliteTable(
 	},
 	(table) => [primaryKey({ columns: [table.customerId, table.productId] })]
 );
+
+// Newsletter subscribers with double opt-in. Independent of customers so guests can subscribe.
+export const newsletterSubscriberTable = sqliteTable('newsletter_subscribers', {
+	id: text('id')
+		.$defaultFn(() => crypto.randomUUID())
+		.primaryKey(),
+	email: text('email').notNull().unique(), // always stored lowercase
+	status: text('status').notNull().$type<NewsletterStatus>(),
+	language: text('language'),
+	confirmToken: text('confirm_token').unique(), // cleared once confirmed
+	confirmExpiresAt: integer('confirm_expires_at', { mode: 'timestamp' }),
+	unsubscribeToken: text('unsubscribe_token').notNull().unique(),
+	requestedAt: integer('requested_at', { mode: 'timestamp' }).defaultNow().notNull(), // last confirmation mail
+	confirmedAt: integer('confirmed_at', { mode: 'timestamp' }), // proof of consent
+	unsubscribedAt: integer('unsubscribed_at', { mode: 'timestamp' }),
+	createdAt: integer('created_at', { mode: 'timestamp' }).defaultNow().notNull()
+});
 
 export const customerRelations = relations(customerTable, ({ one, many }) => ({
 	orders: many(orderTable),

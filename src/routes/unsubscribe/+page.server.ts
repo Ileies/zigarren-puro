@@ -3,6 +3,7 @@ import { and, eq, gt, isNull } from 'drizzle-orm';
 import db from '#lib/server/db/index.js';
 import { tokenTable, customerTable } from '#lib/server/db/schema/index.js';
 import { TokenType } from '#lib/types.js';
+import { unsubscribeSubscriber, withdrawSubscription } from '#lib/server/newsletter.js';
 
 async function processToken(
 	token: string
@@ -12,7 +13,7 @@ async function processToken(
 			token: tokenTable.token,
 			usedAt: tokenTable.usedAt,
 			customerId: tokenTable.customerId,
-			marketingConsent: customerTable.marketingConsent
+			email: customerTable.email
 		})
 		.from(tokenTable)
 		.innerJoin(customerTable, eq(tokenTable.customerId, customerTable.id))
@@ -25,7 +26,8 @@ async function processToken(
 			)
 		);
 
-	if (!result) return 'invalid';
+	// not a customer token: it may belong to a newsletter subscriber without an account
+	if (!result) return unsubscribeSubscriber(token);
 	if (result.usedAt) return 'already_unsubscribed';
 
 	db.transaction((tx) => {
@@ -35,6 +37,7 @@ async function processToken(
 			.run();
 		tx.update(tokenTable).set({ usedAt: new Date() }).where(eq(tokenTable.token, token)).run();
 	});
+	withdrawSubscription(result.email);
 
 	return 'success';
 }

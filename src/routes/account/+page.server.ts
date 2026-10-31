@@ -6,6 +6,7 @@ import { authCredentialsTable, customerTable } from '#lib/server/db/schema/index
 import * as auth from '#lib/server/auth.js';
 import type { Gender } from '#lib/types.js';
 import { sendEmailChangeConfirmation } from '#lib/server/functions.js';
+import { withdrawSubscription } from '#lib/server/newsletter.js';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) redirect(302, '/login');
@@ -53,6 +54,14 @@ export const actions: Actions = {
 				updatedAt: new Date()
 			})
 			.where(eq(customerTable.id, locals.user.id));
+
+		if (!marketingConsent) {
+			const [customer] = await db
+				.select({ email: customerTable.email })
+				.from(customerTable)
+				.where(eq(customerTable.id, locals.user.id));
+			if (customer) withdrawSubscription(customer.email);
+		}
 
 		return { action: 'profile', success: true };
 	},

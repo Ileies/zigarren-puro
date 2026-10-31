@@ -30,6 +30,11 @@ export enum TokenType {
 	REFRESH_TOKEN = 'refresh_token',
 	NEWSLETTER_UNSUBSCRIBE = 'newsletter_unsubscribe'
 }
+export enum NewsletterStatus {
+	PENDING = 'pending',
+	CONFIRMED = 'confirmed',
+	UNSUBSCRIBED = 'unsubscribed'
+}
 export enum ProductType {
 	CIGAR = 'cigar',
 	CIGARILLO = 'cigarillo',
