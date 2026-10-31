@@ -7,7 +7,8 @@
 		facebook as defaultFacebook,
 		instagram as defaultInstagram,
 		phone,
-		email
+		email,
+		bankTransferAvailable
 	} from '#lib/config.js';
 	import * as m from '#lib/messages.js';
 	import { enhance } from '$app/forms';
@@ -45,39 +46,9 @@
 	let subscribeSuccess = $state(false);
 	let subscribeError = $state(false);
 
-	const methods = [
-		{
-			title: 'VISA & MC',
-			icon: 'visa-mc',
-			description: 'VISA & MC'
-		},
-		{
-			title: 'Amex',
-			icon: 'amex',
-			description: 'Amex'
-		},
-		{
-			title: 'Vorkasse',
-			icon: 'vorkasse',
-			description: 'Vorkasse'
-		},
-		{
-			title: 'SEPA',
-			icon: 'sepa',
-			description: 'SEPA'
-		},
-		{
-			title: 'Nachnahme',
-			icon: 'nachnahme',
-			description: 'Nachnahme'
-		},
-		{
-			title: 'Klarna',
-			icon: 'klarna-sofort',
-			description: 'Klarna'
-		}
-	];
-	// TODO: maybe add Giro, Google, Apple
+	// Only methods the checkout really offers. Cards and the rest return with the Mollie
+	// integration (icons for visa-mc, amex, sepa, klarna-sofort stay in static/payment-methods).
+	const methods = bankTransferAvailable ? [{ title: 'Vorkasse', icon: 'vorkasse' }] : [];
 </script>
 
 <footer class="bg-neutral text-neutral-content">
@@ -265,19 +236,21 @@
 				</ul>
 
 				<!-- Payment Methods -->
-				<div class="mt-6">
-					<h4 class="mb-3 font-medium">{m.paymentMethods()}</h4>
-					<div class="grid max-w-[200px] grid-cols-3 gap-2">
-						{#each methods as method (method)}
-							<img
-								src={`/payment-methods/${method.icon}.svg`}
-								alt={method.title}
-								title={method.title}
-								class="h-10"
-							/>
-						{/each}
+				{#if methods.length > 0}
+					<div class="mt-6">
+						<h4 class="mb-3 font-medium">{m.paymentMethods()}</h4>
+						<div class="grid max-w-[200px] grid-cols-3 gap-2">
+							{#each methods as method (method.icon)}
+								<img
+									src={`/payment-methods/${method.icon}.svg`}
+									alt={method.title}
+									title={method.title}
+									class="h-10"
+								/>
+							{/each}
+						</div>
 					</div>
-				</div>
+				{/if}
 			</div>
 		</div>
 	</div>
